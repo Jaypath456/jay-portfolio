@@ -43,7 +43,7 @@ export default function AIChatWidget() {
   };
 
   return (
-    <div className="bg-slate-800/40 border border-slate-700/40 rounded-xl p-4 h-[380px] flex flex-col justify-between backdrop-blur-md shadow-2xl relative z-10">
+    <div className="bg-slate-800/40 border border-slate-700/40 rounded-xl p-4 h-[335px] flex flex-col justify-between backdrop-blur-md shadow-2xl relative z-10">
       <div className="flex items-center gap-2 pb-2 border-b border-slate-700/50 mb-2">
         <span className="relative flex h-2 w-2">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
