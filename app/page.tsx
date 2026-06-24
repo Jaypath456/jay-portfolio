@@ -1,10 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import AIChatWidget from '../components/AIChatWidget';
 
 export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isResumeOpen, setIsResumeOpen] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -13,6 +15,23 @@ export default function Home() {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  // Simulates a fast technical loading bar when the modal pops up
+  useEffect(() => {
+    if (isResumeOpen) {
+      setLoadingProgress(0);
+      const interval = setInterval(() => {
+        setLoadingProgress((prev) => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            return 100;
+          }
+          return prev + 8;
+        });
+      }, 30);
+      return () => clearInterval(interval);
+    }
+  }, [isResumeOpen]);
 
   const cardVariants = {
     hover: { y: -4, backgroundColor: "rgba(30, 41, 59, 0.7)", borderColor: "rgba(148, 163, 184, 0.15)" }
@@ -44,7 +63,7 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Navigation Anchors - Added 'awards' here */}
+              {/* Navigation Anchors */}
               <nav className="hidden lg:block space-y-4 pt-4">
                 {['about', 'experience', 'projects', 'awards'].map((item) => (
                   <a key={item} href={`#${item}`} className="group flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-textDim hover:text-heading transition-colors">
@@ -57,6 +76,79 @@ export default function Home() {
               {/* Chatbot Module */}
               <div className="pt-2 max-w-sm">
                 <AIChatWidget />
+              </div>
+
+              {/* ── INTERACTIVE TERMINAL CAT RESUME CARD ── */}
+              <div className="pt-2 max-w-sm">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -2 }}
+                  className="w-full relative overflow-hidden rounded-xl bg-slate-900/50 border border-slate-800 p-5 text-left shadow-xl"
+                >
+                  <div className="flex justify-between items-center gap-4">
+                    {/* Left Column: Terminal Content */}
+                    <div className="space-y-3 font-mono text-xs flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-teal-400 font-bold">$</span>
+                        <span className="text-slate-200">cat resume.txt</span>
+                      </div>
+                      
+                      <div className="text-slate-300 leading-relaxed">
+                        Warning: May cause sudden urge to hire.
+                      </div>
+
+                      <div className="space-y-1">
+                        <div className="text-slate-400 text-[11px]">Side effects include:</div>
+                        <ul className="space-y-1 text-slate-300 text-[11px] pl-1">
+                          <li className="flex items-center gap-2">
+                            <span className="w-1 h-1 rounded-full bg-teal-400 inline-block" />
+                            Impressed nodding
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <span className="w-1 h-1 rounded-full bg-teal-400 inline-block" />
+                            Technical discussions
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <span className="w-1 h-1 rounded-full bg-teal-400 inline-block" />
+                            Calendar invites
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Right Column: Clean, Polished ASCII Hacker Cat */}
+                    <div className="font-mono text-[10px] text-teal-400/70 leading-none select-none pt-1 pr-1 hidden sm:block tracking-wider">
+                      <pre>
+{`    /\\_____/\\
+   /  o   o  \\
+  ( ==  ^  == )
+   )         (
+  /  _______  \\
+ |  |  </>  |  |
+ |__|_______|__|`}
+                      </pre>
+                    </div>
+                  </div>
+
+                  {/* Interactive Trigger Button Row */}
+                  <div className="mt-5 flex flex-wrap items-center gap-3 pt-3 border-t border-slate-800/60">
+                    <motion.button
+                      whileHover={{ scale: 1.03, backgroundColor: "rgba(20, 184, 166, 0.15)" }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => setIsResumeOpen(true)}
+                      className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-teal-500/40 bg-teal-950/20 text-teal-400 font-mono text-[11px] font-bold tracking-wide transition-colors shadow-sm"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      VIEW RESUME.PDF
+                    </motion.button>
+                    <span className="text-[10px] font-mono text-slate-500 italic">
+                      (It's not a virus, promise)
+                    </span>
+                  </div>
+                </motion.div>
               </div>
             </div>
 
@@ -97,13 +189,13 @@ export default function Home() {
               <h2 className="text-xs font-bold uppercase tracking-widest text-heading lg:hidden mb-4">About</h2>
               <div className="space-y-4 text-sm text-textDim leading-relaxed">
                 <p>
-                  I am a software engineer driven by building efficient backend structures, machine learning pipelines, and robust full-stack software architectures. I enjoy solving complex structural problems—whether that involves parsing structural intelligence out of messy data sets or building clean application layers that handle logic flawlessly.
+                  I am a software engineer driven by building efficient backend structures, machine learning pipelines, and robust full-stack software architectures[cite: 1]. I enjoy solving complex structural problems—whether that involves parsing structural intelligence out of messy data sets or building clean application layers that handle logic flawlessly[cite: 1].
                 </p>
                 <p>
-                  Currently, I am pursuing my <strong className="text-heading">Master of Science in Computer Science at the University at Buffalo</strong> (expected graduation in December 2026). Alongside my studies, I contribute to the campus ecosystem as a Public Safety Aide and host specialized engineering workshops.
+                  Currently, I am pursuing my <strong className="text-heading">Master of Science in Computer Science at the University at Buffalo</strong> (expected graduation in December 2026)[cite: 1]. Alongside my studies, I contribute to the campus ecosystem as a Public Safety Aide and host specialized engineering workshops[cite: 1].
                 </p>
                 <p>
-                  Before moving to Buffalo, I earned my Bachelor's degree in Information Technology from Mumbai University (VESIT) and spent a year working in industry as a <strong className="text-heading">Software Engineer at Thesis Mumbai Tech</strong>. When I'm not configuring systems, I analyze chess matches or study advanced developments in Graph Neural Networks and Large Language Models.
+                  Before moving to Buffalo, I earned my Bachelor's degree in Information Technology from Mumbai University (VESIT) and spent a year working in industry as a <strong className="text-heading">Software Engineer at Thesis Mumbai Tech</strong>[cite: 1]. When I'm not configuring systems, I analyze chess matches or study advanced developments in Graph Neural Networks and Large Language Models[cite: 1].
                 </p>
               </div>
             </section>
@@ -117,7 +209,7 @@ export default function Home() {
                 <div className="text-xs font-semibold tracking-wide text-textDim uppercase pt-1">2026 — Present</div>
                 <div className="sm:col-span-3 space-y-2">
                   <h3 className="font-semibold text-heading group-hover:text-accent transition-colors">Public Safety Aide · University at Buffalo</h3>
-                  <p className="text-xs text-textDim leading-relaxed">Assisting campus safety operations, managing student and facility logistics, and managing shifts and timesheet configurations efficiently across university infrastructures.</p>
+                  <p className="text-xs text-textDim leading-relaxed">Assisting campus safety operations, managing student and facility logistics, and managing shifts and timesheet configurations efficiently across university infrastructures[cite: 1].</p>
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {['Operations', 'Logistics', 'Event Coordination'].map(t => (
                       <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-teal-400/5 text-accent font-medium">{t}</span>
@@ -131,7 +223,7 @@ export default function Home() {
                 <div className="text-xs font-semibold tracking-wide text-textDim uppercase pt-1">2024 — 2025</div>
                 <div className="sm:col-span-3 space-y-2">
                   <h3 className="font-semibold text-heading group-hover:text-accent transition-colors">Software Engineer · Thesis Mumbai Tech</h3>
-                  <p className="text-xs text-textDim leading-relaxed">Engineered reliable, production-ready software solutions using Python, Django, and ReactJS. Maintained backend relational architectures on PostgreSQL, streamlined environment isolated services using Docker containerization strategies, and managed cloud deployments with AWS configurations.</p>
+                  <p className="text-xs text-textDim leading-relaxed">Engineered reliable, production-ready software solutions using Python, Django, and ReactJS[cite: 1]. Maintained backend relational architectures on PostgreSQL, streamlined environment isolated services using Docker containerization strategies, and managed cloud deployments with AWS configurations[cite: 1].</p>
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {['Python', 'Django', 'ReactJS', 'PostgreSQL', 'Docker', 'AWS'].map(t => (
                       <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-teal-400/5 text-accent font-medium">{t}</span>
@@ -150,7 +242,7 @@ export default function Home() {
                 <div className="hidden sm:flex items-center justify-center h-16 bg-slate-900 rounded border border-slate-800 text-teal-400/40">⚡</div>
                 <div className="sm:col-span-3 space-y-2">
                   <h3 className="font-semibold text-heading group-hover:text-accent transition-colors">AI-Powered Metadata Extraction Pipeline</h3>
-                  <p className="text-xs text-textDim leading-relaxed">Architected and compiled an intelligent documentation mining pipeline designed to process over 1,000 legal journals for HeinOnline. Leveraged DeepSeek-OCR and text segmentation strategies to systematically discover and parse layout metadata directly from print artifacts.</p>
+                  <p className="text-xs text-textDim leading-relaxed">Architected and compiled an intelligent documentation mining pipeline designed to process over 1,000 legal journals for HeinOnline[cite: 1]. Leveraged DeepSeek-OCR and text segmentation strategies to systematically discover and parse layout metadata directly from print artifacts[cite: 1].</p>
                   <div className="flex flex-wrap gap-1.5">
                     {['Python', 'DeepSeek-OCR', 'LLMs', 'Computer Vision'].map(t => (
                       <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-teal-400/5 text-accent font-medium">{t}</span>
@@ -164,7 +256,7 @@ export default function Home() {
                 <div className="hidden sm:flex items-center justify-center h-16 bg-slate-900 rounded border border-slate-800 text-teal-400/40">📊</div>
                 <div className="sm:col-span-3 space-y-2">
                   <h3 className="font-semibold text-heading group-hover:text-accent transition-colors">GraphSAGE Financial Fraud Detector</h3>
-                  <p className="text-xs text-textDim leading-relaxed">Implemented a deep learning graph classification pipeline trained on the IEEE-CIS financial fraud dataset. Developed using PyTorch Geometric to construct GraphSAGE and Graph Attention Networks (GAT), mapping non-linear relational anomalies across highly imbalanced transactional topologies.</p>
+                  <p className="text-xs text-textDim leading-relaxed">Implemented a deep learning graph classification pipeline trained on the IEEE-CIS financial fraud dataset[cite: 1]. Developed using PyTorch Geometric to construct GraphSAGE and Graph Attention Networks (GAT), mapping non-linear relational anomalies across highly imbalanced transactional topologies[cite: 1].</p>
                   <div className="flex flex-wrap gap-1.5">
                     {['PyTorch', 'GraphSAGE', 'GAT Models', 'Deep Learning'].map(t => (
                       <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-teal-400/5 text-accent font-medium">{t}</span>
@@ -178,7 +270,7 @@ export default function Home() {
                 <div className="hidden sm:flex items-center justify-center h-16 bg-slate-900 rounded border border-slate-800 text-teal-400/40">🌐</div>
                 <div className="sm:col-span-3 space-y-2">
                   <h3 className="font-semibold text-heading group-hover:text-accent transition-colors">CampusSense IoT Monitoring Platform</h3>
-                  <p className="text-xs text-textDim leading-relaxed">Designed an interconnected physical hardware and web tracking platform monitoring temperature differentials across active campus buildings. Integrated telemetry components with an Arduino Uno microcontroller layer and fed data real-time into a ReactJS dashboard application.</p>
+                  <p className="text-xs text-textDim leading-relaxed">Designed an interconnected physical hardware and web tracking platform monitoring temperature differentials across active campus buildings[cite: 1]. Integrated telemetry components with an Arduino Uno microcontroller layer and fed data real-time into a ReactJS dashboard application[cite: 1].</p>
                   <div className="flex flex-wrap gap-1.5">
                     {['Arduino Uno', 'ReactJS', 'IoT Architecture', 'Full-Stack'].map(t => (
                       <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-teal-400/5 text-accent font-medium">{t}</span>
@@ -188,7 +280,7 @@ export default function Home() {
               </motion.div>
             </section>
 
-            {/* ── NEW SECTION: Extra Curriculum / Awards ── */}
+            {/* Extra Curriculum / Awards Section */}
             <section id="awards" className="scroll-mt-24 space-y-4">
               <h2 className="text-xs font-bold uppercase tracking-widest text-heading mb-6">Extra Curriculum / Awards</h2>
 
@@ -197,7 +289,7 @@ export default function Home() {
                 <div className="sm:col-span-3 space-y-2">
                   <h3 className="font-semibold text-heading group-hover:text-accent transition-colors">Event Manager &amp; Technical Lead · University at Buffalo</h3>
                   <p className="text-xs text-textDim leading-relaxed">
-                    Organized, coordinated, and conducted a specialized Git and GitHub interactive workshop for the Department of Computer Science &amp; Engineering. Provided hands-on mentorship to participants covering repository workflows, branching logic, and collaborative development practices, and received a Certificate of Appreciation for outstanding leadership.
+                    Organized, coordinated, and conducted a specialized Git and GitHub interactive workshop for the Department of Computer Science &amp; Engineering[cite: 1]. Provided hands-on mentorship to participants covering repository workflows, branching logic, and collaborative development practices, and received a Certificate of Appreciation for outstanding leadership[cite: 1].
                   </p>
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {['Git', 'GitHub', 'Technical Training', 'Event Management'].map(t => (
@@ -215,6 +307,87 @@ export default function Home() {
           </main>
         </div>
       </div>
+
+      {/* ════════════ HIGH-FIDELITY BYPASS MODAL ════════════ */}
+      <AnimatePresence>
+        {isResumeOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+            onClick={() => setIsResumeOpen(false)}
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 15, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 15, opacity: 0 }}
+              transition={{ type: "spring", duration: 0.4 }}
+              className="bg-slate-900 border border-teal-500/30 rounded-xl p-6 w-full max-w-md shadow-2xl space-y-4 relative overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header bar decorative layout */}
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500/70 block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/70 block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/70 block" />
+                  <span className="text-xs font-mono text-slate-500 ml-2">resume_fetcher.sh</span>
+                </div>
+                <button 
+                  onClick={() => setIsResumeOpen(false)}
+                  className="text-slate-500 hover:text-heading text-sm transition-colors font-mono"
+                >
+                  [ESC]
+                </button>
+              </div>
+
+              {/* Dynamic script simulation readout */}
+              <div className="font-mono text-xs space-y-2 p-3 bg-slate-950 rounded-lg border border-slate-800 text-slate-400">
+                <div><span className="text-teal-400">jay@ub-node:~$</span> sh fetch_credentials.sh</div>
+                {loadingProgress > 10 && <div className="text-slate-500">&gt; Connecting to encrypted static cloud asset...</div>}
+                {loadingProgress > 40 && <div className="text-slate-500">&gt; Parsing experience map (Thesis Tech / UB Psa)...</div>}
+                {loadingProgress > 70 && <div className="text-emerald-400">&gt; Verification successful. Handshake closed.</div>}
+                
+                {/* Visual loading track line */}
+                <div className="w-full bg-slate-900 h-1.5 rounded-full mt-3 overflow-hidden relative">
+                  <motion.div 
+                    className="bg-gradient-to-r from-teal-400 to-emerald-400 h-full rounded-full"
+                    style={{ width: `${loadingProgress}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Call-to-action choices fade in when compilation finishes */}
+              {loadingProgress === 100 ? (
+                <motion.div 
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="grid grid-cols-2 gap-3 pt-2"
+                >
+                  <a 
+                    href="/resume.pdf" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 bg-teal-400/10 hover:bg-teal-400/20 text-teal-300 border border-teal-500/30 font-semibold p-2.5 rounded-lg text-xs transition-all"
+                  >
+                    ↗️ Launch in Tab
+                  </a>
+                  <a 
+                    href="/resume.pdf" 
+                    download="Jay_Pathare_Resume.pdf"
+                    className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-heading border border-slate-700 font-semibold p-2.5 rounded-lg text-xs transition-all"
+                  >
+                    💾 Download PDF
+                  </a>
+                </motion.div>
+              ) : (
+                <div className="h-10" /> // Preserves spatial balance while loading
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
