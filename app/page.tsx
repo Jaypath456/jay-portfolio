@@ -1,125 +1,520 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import AIChatWidget from '../components/AIChatWidget';
 
+// ─── Reusable scroll-reveal wrapper ───────────────────────────────────────────
+function Reveal({
+  children,
+  delay = 0,
+  className = '',
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-72px' }}
+      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// ─── Stagger list variants ─────────────────────────────────────────────────────
+const listVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+};
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+};
+
+// ─── Gradient-border card style (applied via inline style) ────────────────────
+const gradientBorder = (hovered: boolean) => ({
+  background: hovered
+    ? 'linear-gradient(#1a2540, #1a2540) padding-box, linear-gradient(135deg, rgba(100,255,218,0.35), rgba(99,102,241,0.2)) border-box'
+    : 'linear-gradient(transparent, transparent) padding-box, linear-gradient(135deg, transparent, transparent) border-box',
+  border: '1px solid transparent',
+  transition: 'background 0.3s ease, box-shadow 0.3s ease',
+  boxShadow: hovered ? '0 8px 32px rgba(100,255,218,0.04)' : 'none',
+});
+
+// ─── Preloader ────────────────────────────────────────────────────────────────
+function Preloader({ onDone }: { onDone: () => void }) {
+  const [lines, setLines] = useState<string[]>([]);
+  const [barWidth, setBarWidth] = useState(0);
+  const [done, setDone] = useState(false);
+
+  const sequence = [
+    '> Initializing portfolio.config.ts...',
+    '> Loading experience.json...',
+    '> Compiling components...',
+    '> Ready.',
+  ];
+
+  useEffect(() => {
+    let i = 0;
+    const addLine = () => {
+      if (i < sequence.length) {
+        setLines((prev) => [...prev, sequence[i]]);
+        i++;
+        setTimeout(addLine, 320);
+      } else {
+        let p = 0;
+        const bar = setInterval(() => {
+          p += 6;
+          setBarWidth(Math.min(p, 100));
+          if (p >= 100) {
+            clearInterval(bar);
+            setTimeout(() => {
+              setDone(true);
+              setTimeout(onDone, 500);
+            }, 200);
+          }
+        }, 22);
+      }
+    };
+    const t = setTimeout(addLine, 200);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <AnimatePresence>
+      {!done && (
+        <motion.div
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
+          className="fixed inset-0 z-[100] bg-[#0a1122] flex items-center justify-center"
+        >
+          <div className="w-full max-w-sm px-6 space-y-4">
+            {/* Dot cluster */}
+            <div className="flex gap-1.5 mb-4">
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500/70" />
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500/70" />
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/70" />
+            </div>
+
+            <div className="font-mono text-xs space-y-2 text-slate-400">
+              <AnimatePresence>
+                {lines.filter(Boolean).map((line, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className={line?.startsWith('> Ready') ? 'text-teal-400 font-bold' : ''}
+                  >
+                    {line}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+
+            {/* Progress bar */}
+            <div className="w-full h-[2px] bg-slate-800 rounded-full overflow-hidden mt-4">
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-teal-400 to-indigo-400"
+                style={{ width: `${barWidth}%` }}
+                transition={{ ease: 'linear' }}
+              />
+            </div>
+            <div className="text-right font-mono text-[10px] text-slate-600">{barWidth}%</div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+// ─── Scroll-progress bar ──────────────────────────────────────────────────────
+function ScrollBar() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+  return (
+    <motion.div
+      style={{ scaleX }}
+      className="fixed top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-teal-400 to-indigo-400 origin-left z-50"
+    />
+  );
+}
+
+// ─── Floating ambient orbs ─────────────────────────────────────────────────────
+function AmbientOrbs() {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
+      {/* Top-right teal orb */}
+      <div
+        className="absolute rounded-full opacity-[0.04] blur-[120px]"
+        style={{ width: 520, height: 520, top: -80, right: -60, background: '#64ffda' }}
+      />
+      {/* Bottom-left indigo orb */}
+      <div
+        className="absolute rounded-full opacity-[0.045] blur-[140px]"
+        style={{ width: 480, height: 480, bottom: -100, left: -80, background: '#818cf8' }}
+      />
+    </div>
+  );
+}
+
+// ─── Experience card ──────────────────────────────────────────────────────────
+function ExpCard({
+  period,
+  title,
+  company,
+  href,
+  desc,
+  tags,
+}: {
+  period: string;
+  title: string;
+  company: string;
+  href: string;
+  desc: string;
+  tags: string[];
+}) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <motion.a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      style={gradientBorder(hovered)}
+      className="group grid grid-cols-1 sm:grid-cols-4 gap-2 p-5 rounded-xl no-underline block cursor-pointer"
+      variants={itemVariants}
+    >
+      <div className="text-[11px] font-semibold tracking-wide text-slate-500 uppercase pt-1 font-mono">
+        {period}
+      </div>
+      <div className="sm:col-span-3 space-y-2.5">
+        <h3 className="font-bold text-[15px] text-heading group-hover:text-accent transition-colors flex items-center gap-1.5">
+          {title} · {company}
+          <motion.span
+            initial={{ opacity: 0, x: -4, y: 4 }}
+            animate={hovered ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: -4, y: 4 }}
+            transition={{ duration: 0.18 }}
+            className="text-accent text-base"
+          >
+            ↗
+          </motion.span>
+        </h3>
+        <p className="text-[13px] text-textDim leading-relaxed">{desc}</p>
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          {tags.map((t) => (
+            <span
+              key={t}
+              className="text-[10px] px-2.5 py-0.5 rounded-full bg-teal-400/5 text-accent font-medium tracking-wide border border-teal-500/10 transition-colors group-hover:bg-teal-400/10"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.a>
+  );
+}
+
+// ─── Project card ─────────────────────────────────────────────────────────────
+function ProjectCard({
+  icon,
+  title,
+  href,
+  desc,
+  tags,
+}: {
+  icon: string;
+  title: string;
+  href: string;
+  desc: string;
+  tags: string[];
+}) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <motion.a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      style={gradientBorder(hovered)}
+      className="group grid grid-cols-1 sm:grid-cols-4 gap-4 p-5 rounded-xl no-underline block cursor-pointer"
+      variants={itemVariants}
+    >
+      {/* Icon badge */}
+      <div className="hidden sm:flex items-center justify-center w-12 h-12 rounded-lg bg-slate-900/80 border border-slate-800 text-teal-400/60 font-mono text-[11px] font-bold tracking-wider transition-colors group-hover:border-teal-500/30 group-hover:text-teal-400">
+        {icon}
+      </div>
+      <div className="sm:col-span-3 space-y-2.5">
+        <h3 className="font-bold text-[15px] text-heading group-hover:text-accent transition-colors flex items-center gap-1.5">
+          {title}
+          <motion.span
+            initial={{ opacity: 0, x: -4, y: 4 }}
+            animate={hovered ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: -4, y: 4 }}
+            transition={{ duration: 0.18 }}
+            className="text-accent text-base"
+          >
+            ↗
+          </motion.span>
+        </h3>
+        <p className="text-[13px] text-textDim leading-relaxed">{desc}</p>
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          {tags.map((t) => (
+            <span
+              key={t}
+              className="text-[10px] px-2.5 py-0.5 rounded-full bg-teal-400/5 text-accent font-medium tracking-wide border border-teal-500/10 transition-colors group-hover:bg-teal-400/10"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.a>
+  );
+}
+
+// ─── Main page ────────────────────────────────────────────────────────────────
 export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const [activeSection, setActiveSection] = useState('about');
 
+  // Mouse spotlight
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    const onMove = (e: MouseEvent) => setMousePos({ x: e.clientX, y: e.clientY });
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
   }, []);
 
-  // Simulates a fast technical loading bar when the modal pops up
+  // Resume loader
   useEffect(() => {
-    if (isResumeOpen) {
-      setLoadingProgress(0);
-      const interval = setInterval(() => {
-        setLoadingProgress((prev) => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            return 100;
-          }
-          return prev + 8;
-        });
-      }, 30);
-      return () => clearInterval(interval);
-    }
+    if (!isResumeOpen) return;
+    setLoadingProgress(0);
+    const iv = setInterval(() => {
+      setLoadingProgress((p) => {
+        if (p >= 100) { clearInterval(iv); return 100; }
+        return p + 8;
+      });
+    }, 30);
+    return () => clearInterval(iv);
   }, [isResumeOpen]);
 
-  const cardVariants = {
-    hover: { y: -4, backgroundColor: "rgba(30, 41, 59, 0.7)", borderColor: "rgba(148, 163, 184, 0.15)" }
+  // Active nav section tracker
+  useEffect(() => {
+    const sections = ['about', 'experience', 'projects', 'awards'];
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) setActiveSection(e.target.id); });
+      },
+      { rootMargin: '-30% 0px -60% 0px' }
+    );
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+    return () => obs.disconnect();
+  }, [loaded]);
+
+  const navItems = ['about', 'experience', 'projects', 'awards'];
+
+  // Sidebar cascade variants
+  const sidebarVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+  };
+  const sidebarItem = {
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
   };
 
   return (
-    <div className="relative min-h-screen bg-bg selection:bg-teal-400/20 selection:text-teal-300">
-      {/* Interactive Background Spotlight Radial Layer */}
-      <div 
-        className="pointer-events-none fixed inset-0 z-0 transition-duration-100 hidden md:block"
-        style={{
-          background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(100,255,218,0.04) 0%, transparent 70%)`
-        }}
-      />
+    <>
+      {/* Preloader */}
+      <Preloader onDone={() => setLoaded(true)} />
 
-      <div className="container mx-auto max-w-6xl px-6 md:px-12 relative z-10">
-        <div className="flex flex-col lg:flex-row lg:justify-between gap-12">
-          
-          {/* ════════════ LEFT SIDEBAR ════════════ */}
-          <aside className="lg:w-5/12 lg:sticky lg:top-0 lg:h-screen flex flex-col justify-between py-12 lg:py-16 overflow-y-auto no-scrollbar">
-            
-            {/* Top Content Stack */}
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-heading">Jay Niketan Pathare</h1>
-                <h2 className="text-lg md:text-xl font-medium text-navActive mt-2">Software Engineer</h2>
-                <p className="text-sm text-textDim max-w-xs mt-4 leading-relaxed">
-                  I build scalable backend systems, intelligent data pipelines, and full-stack solutions.
-                </p>
-              </div>
+      {/* Page content */}
+      <AnimatePresence>
+        {loaded && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="relative min-h-screen bg-bg selection:bg-teal-400/20 selection:text-teal-300 antialiased"
+          >
+            {/* Scroll progress bar */}
+            <ScrollBar />
 
-              {/* Navigation Anchors */}
-              <nav className="hidden lg:block space-y-4 pt-4">
-                {['about', 'experience', 'projects', 'awards'].map((item) => (
-                  <a key={item} href={`#${item}`} className="group flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-textDim hover:text-heading transition-colors">
-                    <span className="h-[1px] w-8 bg-textDim group-hover:w-16 group-hover:bg-heading transition-all" />
-                    {item}
-                  </a>
-                ))}
-              </nav>
+            {/* Ambient orbs */}
+            <AmbientOrbs />
 
-              {/* Chatbot Module */}
-              <div className="pt-2 max-w-sm">
-                <AIChatWidget />
-              </div>
+            {/* Spotlight */}
+            <div
+              className="pointer-events-none fixed inset-0 z-0 hidden md:block"
+              style={{
+                background: `radial-gradient(700px circle at ${mousePos.x}px ${mousePos.y}px, rgba(100,255,218,0.035) 0%, transparent 70%)`,
+              }}
+            />
 
-              {/* ── INTERACTIVE TERMINAL CAT RESUME CARD ── */}
-              <div className="pt-2 max-w-sm">
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -2 }}
-                  className="w-full relative overflow-hidden rounded-xl bg-slate-900/50 border border-slate-800 p-5 text-left shadow-xl"
+            {/* Dot grid */}
+            <div
+              className="pointer-events-none fixed inset-0 z-0 opacity-[0.018]"
+              style={{
+                backgroundImage: 'radial-gradient(circle, #94a3b8 1px, transparent 1px)',
+                backgroundSize: '28px 28px',
+              }}
+            />
+
+            <div className="container mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-10 xl:px-12 relative z-10">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-14">
+
+                {/* ═══════════ SIDEBAR ═══════════ */}
+                <motion.aside
+                  variants={sidebarVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="lg:col-span-5 lg:sticky lg:top-0 lg:h-screen flex flex-col justify-between py-10 lg:py-14 overflow-hidden lg:pr-6"
                 >
-                  <div className="flex justify-between items-center gap-4">
-                    {/* Left Column: Terminal Content */}
-                    <div className="space-y-3 font-mono text-xs flex-1">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-teal-400 font-bold">$</span>
-                        <span className="text-slate-200">cat resume.txt</span>
-                      </div>
-                      
-                      <div className="text-slate-300 leading-relaxed">
-                        Warning: May cause sudden urge to hire.
-                      </div>
+                  <div className="space-y-5">
 
-                      <div className="space-y-1">
-                        <div className="text-slate-400 text-[11px]">Side effects include:</div>
-                        <ul className="space-y-1 text-slate-300 text-[11px] pl-1">
-                          <li className="flex items-center gap-2">
-                            <span className="w-1 h-1 rounded-full bg-teal-400 inline-block" />
-                            Impressed nodding
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-1 h-1 rounded-full bg-teal-400 inline-block" />
-                            Technical discussions
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-1 h-1 rounded-full bg-teal-400 inline-block" />
-                            Calendar invites
-                          </li>
-                        </ul>
+                    {/* Name + role */}
+                    <motion.div variants={sidebarItem}>
+                      <h1 className="text-3xl xl:text-[2.2rem] font-extrabold tracking-tight text-heading leading-[1.1] whitespace-nowrap">
+                        Jay Niketan Pathare
+                      </h1>
+                      {/* Teal glow role line */}
+                      <div className="mt-2.5 flex items-center gap-2">
+                        <span
+                          className="text-base xl:text-[17px] font-semibold tracking-wide"
+                          style={{
+                            color: '#64ffda',
+                            textShadow: '0 0 18px rgba(100,255,218,0.35)',
+                          }}
+                        >
+                          Software Engineer
+                        </span>
+                        {/* Live pulse */}
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-60" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-400" />
+                        </span>
                       </div>
-                    </div>
+                      {/* Contact info */}
+                      <div className="mt-3 flex flex-col gap-1.5">
+                        <a
+                          href="mailto:jaypathare@buffalo.edu"
+                          className="flex items-center gap-2 text-[12px] text-slate-500 hover:text-teal-400 transition-colors group w-fit"
+                        >
+                          <svg className="w-3.5 h-3.5 flex-shrink-0 text-slate-600 group-hover:text-teal-400 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                          </svg>
+                          jaypathare@buffalo.edu
+                        </a>
+                        <div className="flex items-center gap-2 text-[12px] text-slate-500">
+                          <svg className="w-3.5 h-3.5 flex-shrink-0 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+                          </svg>
+                          Buffalo, NY
+                        </div>
+                      </div>
+                    </motion.div>
 
-                    {/* Right Column: Clean, Polished ASCII Hacker Cat */}
-                    <div className="font-mono text-[10px] text-teal-400/70 leading-none select-none pt-1 pr-1 hidden sm:block tracking-wider">
-                      <pre>
+                    {/* Stats strip */}
+                    <motion.div
+                      variants={sidebarItem}
+                      className="flex gap-6 py-2.5 border-y border-slate-800/60"
+                    >
+                      {[
+                        { n: '1+', label: 'yr exp.' },
+                        { n: '3', label: 'projects' },
+                        { n: 'MS', label: 'CS @ UB' },
+                      ].map(({ n, label }) => (
+                        <div key={label} className="text-center">
+                          <div className="text-lg font-extrabold text-heading">{n}</div>
+                          <div className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mt-0.5">
+                            {label}
+                          </div>
+                        </div>
+                      ))}
+                    </motion.div>
+
+                    {/* Nav */}
+                    <motion.nav variants={sidebarItem} className="hidden lg:block space-y-0 pt-0">
+                      {navItems.map((item) => {
+                        const isActive = activeSection === item;
+                        return (
+                          <a
+                            key={item}
+                            href={`#${item}`}
+                            className="group flex items-center gap-4 py-1 text-xs font-bold uppercase tracking-widest transition-colors"
+                            style={{ color: isActive ? '#e2e8f0' : '#64748b' }}
+                          >
+                            <motion.span
+                              animate={{ width: isActive ? 52 : 28 }}
+                              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                              className="h-[1px] block flex-shrink-0"
+                              style={{ background: isActive ? '#64ffda' : '#64748b' }}
+                            />
+                            <span className={isActive ? 'text-heading' : 'group-hover:text-slate-300'}>
+                              {item}
+                            </span>
+                            {isActive && (
+                              <motion.span
+                                layoutId="nav-dot"
+                                className="ml-auto w-1.5 h-1.5 rounded-full bg-teal-400"
+                              />
+                            )}
+                          </a>
+                        );
+                      })}
+                    </motion.nav>
+
+                    {/* AI Chat widget */}
+                    <motion.div variants={sidebarItem} className="max-w-full">
+                      <AIChatWidget />
+                    </motion.div>
+
+                    {/* Resume terminal card */}
+                    <motion.div variants={sidebarItem} className="max-w-full">
+                      <div
+                        className="w-full relative overflow-hidden rounded-xl p-4 text-left shadow-xl"
+                        style={{
+                          background: 'linear-gradient(#0f1e35, #0f1e35) padding-box, linear-gradient(135deg, rgba(100,255,218,0.15), rgba(99,102,241,0.1)) border-box',
+                          border: '1px solid transparent',
+                        }}
+                      >
+                        <div className="flex justify-between items-start gap-4">
+                          <div className="space-y-2 font-mono text-xs flex-1">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-teal-400 font-bold">$</span>
+                              <span className="text-slate-200">cat resume.txt</span>
+                              <motion.span
+                                animate={{ opacity: [1, 0] }}
+                                transition={{ repeat: Infinity, duration: 0.8, repeatType: 'reverse' }}
+                                className="inline-block w-[6px] h-3.5 bg-teal-400 ml-0.5 rounded-sm"
+                              />
+                            </div>
+                            <div className="text-slate-300 leading-relaxed text-[11px]">
+                              Warning: May cause sudden urge to hire.
+                            </div>
+                            <ul className="space-y-1 text-slate-400 text-[10px] pl-0.5">
+                              {['Impressed nodding', 'Technical discussions', 'Calendar invites'].map((s) => (
+                                <li key={s} className="flex items-center gap-2">
+                                  <span className="w-1 h-1 rounded-full bg-teal-400 inline-block flex-shrink-0" />
+                                  {s}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <pre className="font-mono text-[9px] text-teal-400/40 leading-none select-none hidden sm:block">
 {`    /\\_____/\\
    /  o   o  \\
   ( ==  ^  == )
@@ -127,267 +522,320 @@ export default function Home() {
   /  _______  \\
  |  |  </>  |  |
  |__|_______|__|`}
-                      </pre>
-                    </div>
+                          </pre>
+                        </div>
+
+                        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-2.5 border-t border-slate-800/60">
+                          <motion.button
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                            onClick={() => setIsResumeOpen(true)}
+                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-teal-500/30 bg-teal-950/20 text-teal-400 font-mono text-[11px] font-bold tracking-wide transition-colors hover:bg-teal-950/40"
+                          >
+                            VIEW RESUME.PDF
+                          </motion.button>
+                          <span className="text-[9px] font-mono text-slate-600 italic">
+                            (Not a virus, promise)
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
                   </div>
 
-                  {/* Interactive Trigger Button Row */}
-                  <div className="mt-5 flex flex-wrap items-center gap-3 pt-3 border-t border-slate-800/60">
-                    <motion.button
-                      whileHover={{ scale: 1.03, backgroundColor: "rgba(20, 184, 166, 0.15)" }}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => setIsResumeOpen(true)}
-                      className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-teal-500/40 bg-teal-950/20 text-teal-400 font-mono text-[11px] font-bold tracking-wide transition-colors shadow-sm"
+                  {/* Socials */}
+                  <motion.div
+                    variants={sidebarItem}
+                    className="flex items-center gap-5 pt-4 lg:pt-3 border-t border-slate-900"
+                  >
+                    {[
+                      {
+                        label: 'GitHub',
+                        href: 'https://github.com',
+                        path: 'M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z',
+                      },
+                      {
+                        label: 'LinkedIn',
+                        href: 'https://linkedin.com',
+                        path: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z',
+                      },
+                    ].map(({ label, href, path }) => (
+                      <motion.a
+                        key={label}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={label}
+                        whileHover={{ y: -3, color: '#64ffda' }}
+                        className="text-slate-500 transition-colors"
+                      >
+                        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d={path} />
+                        </svg>
+                      </motion.a>
+                    ))}
+                  </motion.div>
+                </motion.aside>
+
+                {/* ═══════════ CONTENT ═══════════ */}
+                <main className="lg:col-span-7 py-12 lg:py-20 space-y-28 lg:border-l lg:border-slate-800/40 lg:pl-10 xl:pl-14">
+
+                  {/* About */}
+                  <section id="about" className="scroll-mt-24">
+                    <h2 className="text-xs font-bold uppercase tracking-widest text-heading lg:hidden mb-6">About</h2>
+                    <motion.div
+                      className="space-y-5 text-[15px] text-textDim leading-relaxed"
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true, margin: '-60px' }}
+                      variants={listVariants}
                     >
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      VIEW RESUME.PDF
-                    </motion.button>
-                    <span className="text-[10px] font-mono text-slate-500 italic">
-                      (It's not a virus, promise)
-                    </span>
-                  </div>
-                </motion.div>
+                      {[
+                        `I'm a software engineer driven by building efficient backend systems, machine learning pipelines, and robust full-stack architectures. I enjoy solving structural problems — whether parsing intelligence out of messy datasets or building clean application layers that handle logic flawlessly.`,
+                        `Currently pursuing my Master of Science in Computer Science at the University at Buffalo (expected December 2026). Alongside my studies, I contribute to campus as a Public Safety Aide and host specialized engineering workshops.`,
+                        `Before Buffalo, I earned my Bachelor's in Information Technology from Mumbai University (VESIT) and spent a year as a Software Engineer at Thesis Mumbai Tech. When I'm not building, I study chess strategy and follow developments in Graph Neural Networks and Large Language Models.`,
+                      ].map((p, i) => (
+                        <motion.p key={i} variants={itemVariants}>
+                          {i === 1 ? (
+                            <>
+                              Currently pursuing my{' '}
+                              <strong className="text-heading font-medium">
+                                Master of Science in Computer Science at the University at Buffalo
+                              </strong>{' '}
+                              (expected December 2026). Alongside my studies, I contribute to campus as a Public Safety Aide and host specialized engineering workshops.
+                            </>
+                          ) : i === 2 ? (
+                            <>
+                              Before Buffalo, I earned my Bachelor's in Information Technology from Mumbai University (VESIT) and spent a year as a{' '}
+                              <strong className="text-heading font-medium">
+                                Software Engineer at Thesis Mumbai Tech
+                              </strong>
+                              . When I'm not building, I study chess strategy and follow developments in Graph Neural Networks and Large Language Models.
+                            </>
+                          ) : (
+                            p
+                          )}
+                        </motion.p>
+                      ))}
+                    </motion.div>
+                  </section>
+
+                  {/* Experience */}
+                  <section id="experience" className="scroll-mt-24">
+                    <Reveal>
+                      <h2 className="text-xs font-bold uppercase tracking-widest text-heading mb-6">Experience</h2>
+                    </Reveal>
+                    <motion.div
+                      className="space-y-2"
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true, margin: '-60px' }}
+                      variants={listVariants}
+                    >
+                      <ExpCard
+                        period="2026 — Present"
+                        title="Public Safety Aide"
+                        company="University at Buffalo"
+                        href="#"
+                        desc="Assisting campus safety operations, managing student and facility logistics, and handling shift configurations efficiently across university infrastructure."
+                        tags={['Operations', 'Logistics', 'Event Coordination']}
+                      />
+                      <ExpCard
+                        period="2024 — 2025"
+                        title="Software Engineer"
+                        company="Thesis Mumbai Tech"
+                        href="#"
+                        desc="Engineered production-ready software using Python, Django, and ReactJS. Maintained backend architectures on PostgreSQL, containerized services with Docker, and managed cloud deployments on AWS."
+                        tags={['Python', 'Django', 'ReactJS', 'PostgreSQL', 'Docker', 'AWS']}
+                      />
+                    </motion.div>
+                  </section>
+
+                  {/* Projects */}
+                  <section id="projects" className="scroll-mt-24">
+                    <Reveal>
+                      <h2 className="text-xs font-bold uppercase tracking-widest text-heading mb-6">Projects</h2>
+                    </Reveal>
+                    <motion.div
+                      className="space-y-2"
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true, margin: '-60px' }}
+                      variants={listVariants}
+                    >
+                      <ProjectCard
+                        icon="ocr"
+                        title="AI-Powered Metadata Extraction Pipeline"
+                        href="#"
+                        desc="Intelligent documentation mining pipeline to process 1,000+ legal journals for HeinOnline. Used DeepSeek-OCR and text segmentation to parse layout metadata directly from print artifacts."
+                        tags={['Python', 'DeepSeek-OCR', 'LLMs', 'Computer Vision']}
+                      />
+                      <ProjectCard
+                        icon="gnn"
+                        title="GraphSAGE Financial Fraud Detector"
+                        href="#"
+                        desc="Deep learning graph classification pipeline on the IEEE-CIS dataset. Built with PyTorch Geometric — GraphSAGE and GAT models mapping relational anomalies across imbalanced transactional topologies."
+                        tags={['PyTorch', 'GraphSAGE', 'GAT', 'Deep Learning']}
+                      />
+                      <ProjectCard
+                        icon="iot"
+                        title="CampusSense IoT Monitoring Platform"
+                        href="#"
+                        desc="Physical hardware and web platform monitoring temperature across campus buildings. Arduino Uno telemetry layer feeding real-time data into a ReactJS dashboard."
+                        tags={['Arduino', 'ReactJS', 'IoT', 'Full-Stack']}
+                      />
+                    </motion.div>
+                  </section>
+
+                  {/* Awards */}
+                  <section id="awards" className="scroll-mt-24">
+                    <Reveal>
+                      <h2 className="text-xs font-bold uppercase tracking-widest text-heading mb-6">
+                        Extra Curriculum / Awards
+                      </h2>
+                    </Reveal>
+                    <motion.div
+                      className="space-y-2"
+                      initial="hidden"
+                      whileInView="visible"
+                      viewport={{ once: true, margin: '-60px' }}
+                      variants={listVariants}
+                    >
+                      <ExpCard
+                        period="2026"
+                        title="Event Manager & Technical Lead"
+                        company="University at Buffalo"
+                        href="#"
+                        desc="Organised and conducted a Git & GitHub workshop for the Dept. of CS&E. Mentored participants on repository workflows, branching logic, and collaborative development. Received a Certificate of Appreciation for outstanding leadership."
+                        tags={['Git', 'GitHub', 'Technical Training', 'Event Management']}
+                      />
+                    </motion.div>
+                  </section>
+
+                  {/* Footer */}
+                  <Reveal>
+                    <footer className="text-[11px] text-slate-600 pt-16 border-t border-slate-900/60 font-mono leading-relaxed">
+                      Coded in Visual Studio Code. Built with{' '}
+                      <span className="text-slate-500">Next.js</span>,{' '}
+                      <span className="text-slate-500">Tailwind CSS</span> &{' '}
+                      <span className="text-slate-500">Framer Motion</span>.
+                    </footer>
+                  </Reveal>
+                </main>
               </div>
             </div>
 
-            {/* Bottom Left Social Links */}
-            <div className="flex items-center gap-5 pt-6 mt-6 border-t border-slate-800/60 lg:border-t-0 lg:mt-0">
-              <a 
-                href="https://github.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-textDim hover:text-accent transform hover:-translate-y-0.5 transition-all duration-200"
-                aria-label="GitHub"
-              >
-                <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-                </svg>
-              </a>
-
-              <a 
-                href="https://linkedin.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-textDim hover:text-accent transform hover:-translate-y-0.5 transition-all duration-200"
-                aria-label="LinkedIn"
-              >
-                <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
-              </a>
-            </div>
-
-          </aside>
-
-          {/* ════════════ RIGHT MAIN CONTENT LAYER ════════════ */}
-          <main className="lg:w-6/12 py-12 lg:py-16 space-y-24">
-            
-            {/* About Section */}
-            <section id="about" className="scroll-mt-24">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-heading lg:hidden mb-4">About</h2>
-              <div className="space-y-4 text-sm text-textDim leading-relaxed">
-                <p>
-                  I am a software engineer driven by building efficient backend structures, machine learning pipelines, and robust full-stack software architectures[cite: 1]. I enjoy solving complex structural problems—whether that involves parsing structural intelligence out of messy data sets or building clean application layers that handle logic flawlessly[cite: 1].
-                </p>
-                <p>
-                  Currently, I am pursuing my <strong className="text-heading">Master of Science in Computer Science at the University at Buffalo</strong> (expected graduation in December 2026)[cite: 1]. Alongside my studies, I contribute to the campus ecosystem as a Public Safety Aide and host specialized engineering workshops[cite: 1].
-                </p>
-                <p>
-                  Before moving to Buffalo, I earned my Bachelor's degree in Information Technology from Mumbai University (VESIT) and spent a year working in industry as a <strong className="text-heading">Software Engineer at Thesis Mumbai Tech</strong>[cite: 1]. When I'm not configuring systems, I analyze chess matches or study advanced developments in Graph Neural Networks and Large Language Models[cite: 1].
-                </p>
-              </div>
-            </section>
-
-            {/* Experience Section */}
-            <section id="experience" className="scroll-mt-24 space-y-4">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-heading mb-6">Experience</h2>
-              
-              {/* UB */}
-              <motion.div variants={cardVariants} whileHover="hover" className="group grid grid-cols-1 sm:grid-cols-4 gap-2 p-4 border border-transparent rounded-lg transition-all">
-                <div className="text-xs font-semibold tracking-wide text-textDim uppercase pt-1">2026 — Present</div>
-                <div className="sm:col-span-3 space-y-2">
-                  <h3 className="font-semibold text-heading group-hover:text-accent transition-colors">Public Safety Aide · University at Buffalo</h3>
-                  <p className="text-xs text-textDim leading-relaxed">Assisting campus safety operations, managing student and facility logistics, and managing shifts and timesheet configurations efficiently across university infrastructures[cite: 1].</p>
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {['Operations', 'Logistics', 'Event Coordination'].map(t => (
-                      <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-teal-400/5 text-accent font-medium">{t}</span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Thesis Tech */}
-              <motion.div variants={cardVariants} whileHover="hover" className="group grid grid-cols-1 sm:grid-cols-4 gap-2 p-4 border border-transparent rounded-lg transition-all">
-                <div className="text-xs font-semibold tracking-wide text-textDim uppercase pt-1">2024 — 2025</div>
-                <div className="sm:col-span-3 space-y-2">
-                  <h3 className="font-semibold text-heading group-hover:text-accent transition-colors">Software Engineer · Thesis Mumbai Tech</h3>
-                  <p className="text-xs text-textDim leading-relaxed">Engineered reliable, production-ready software solutions using Python, Django, and ReactJS[cite: 1]. Maintained backend relational architectures on PostgreSQL, streamlined environment isolated services using Docker containerization strategies, and managed cloud deployments with AWS configurations[cite: 1].</p>
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {['Python', 'Django', 'ReactJS', 'PostgreSQL', 'Docker', 'AWS'].map(t => (
-                      <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-teal-400/5 text-accent font-medium">{t}</span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            </section>
-
-            {/* Projects Section */}
-            <section id="projects" className="scroll-mt-24 space-y-4">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-heading mb-6">Projects</h2>
-
-              {/* Project 1 */}
-              <motion.div variants={cardVariants} whileHover="hover" className="group grid grid-cols-1 sm:grid-cols-4 gap-4 p-4 border border-transparent rounded-lg transition-all">
-                <div className="hidden sm:flex items-center justify-center h-16 bg-slate-900 rounded border border-slate-800 text-teal-400/40">⚡</div>
-                <div className="sm:col-span-3 space-y-2">
-                  <h3 className="font-semibold text-heading group-hover:text-accent transition-colors">AI-Powered Metadata Extraction Pipeline</h3>
-                  <p className="text-xs text-textDim leading-relaxed">Architected and compiled an intelligent documentation mining pipeline designed to process over 1,000 legal journals for HeinOnline[cite: 1]. Leveraged DeepSeek-OCR and text segmentation strategies to systematically discover and parse layout metadata directly from print artifacts[cite: 1].</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {['Python', 'DeepSeek-OCR', 'LLMs', 'Computer Vision'].map(t => (
-                      <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-teal-400/5 text-accent font-medium">{t}</span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Project 2 */}
-              <motion.div variants={cardVariants} whileHover="hover" className="group grid grid-cols-1 sm:grid-cols-4 gap-4 p-4 border border-transparent rounded-lg transition-all">
-                <div className="hidden sm:flex items-center justify-center h-16 bg-slate-900 rounded border border-slate-800 text-teal-400/40">📊</div>
-                <div className="sm:col-span-3 space-y-2">
-                  <h3 className="font-semibold text-heading group-hover:text-accent transition-colors">GraphSAGE Financial Fraud Detector</h3>
-                  <p className="text-xs text-textDim leading-relaxed">Implemented a deep learning graph classification pipeline trained on the IEEE-CIS financial fraud dataset[cite: 1]. Developed using PyTorch Geometric to construct GraphSAGE and Graph Attention Networks (GAT), mapping non-linear relational anomalies across highly imbalanced transactional topologies[cite: 1].</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {['PyTorch', 'GraphSAGE', 'GAT Models', 'Deep Learning'].map(t => (
-                      <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-teal-400/5 text-accent font-medium">{t}</span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Project 3 */}
-              <motion.div variants={cardVariants} whileHover="hover" className="group grid grid-cols-1 sm:grid-cols-4 gap-4 p-4 border border-transparent rounded-lg transition-all">
-                <div className="hidden sm:flex items-center justify-center h-16 bg-slate-900 rounded border border-slate-800 text-teal-400/40">🌐</div>
-                <div className="sm:col-span-3 space-y-2">
-                  <h3 className="font-semibold text-heading group-hover:text-accent transition-colors">CampusSense IoT Monitoring Platform</h3>
-                  <p className="text-xs text-textDim leading-relaxed">Designed an interconnected physical hardware and web tracking platform monitoring temperature differentials across active campus buildings[cite: 1]. Integrated telemetry components with an Arduino Uno microcontroller layer and fed data real-time into a ReactJS dashboard application[cite: 1].</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {['Arduino Uno', 'ReactJS', 'IoT Architecture', 'Full-Stack'].map(t => (
-                      <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-teal-400/5 text-accent font-medium">{t}</span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            </section>
-
-            {/* Extra Curriculum / Awards Section */}
-            <section id="awards" className="scroll-mt-24 space-y-4">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-heading mb-6">Extra Curriculum / Awards</h2>
-
-              <motion.div variants={cardVariants} whileHover="hover" className="group grid grid-cols-1 sm:grid-cols-4 gap-2 p-4 border border-transparent rounded-lg transition-all">
-                <div className="text-xs font-semibold tracking-wide text-textDim uppercase pt-1">Feb — Apr 2026</div>
-                <div className="sm:col-span-3 space-y-2">
-                  <h3 className="font-semibold text-heading group-hover:text-accent transition-colors">Event Manager &amp; Technical Lead · University at Buffalo</h3>
-                  <p className="text-xs text-textDim leading-relaxed">
-                    Organized, coordinated, and conducted a specialized Git and GitHub interactive workshop for the Department of Computer Science &amp; Engineering[cite: 1]. Provided hands-on mentorship to participants covering repository workflows, branching logic, and collaborative development practices, and received a Certificate of Appreciation for outstanding leadership[cite: 1].
-                  </p>
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {['Git', 'GitHub', 'Technical Training', 'Event Management'].map(t => (
-                      <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-teal-400/5 text-accent font-medium">{t}</span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            </section>
-
-            <footer className="text-xs text-slate-600 pt-12">
-              Coded in Visual Studio Code. Built with Next.js, Tailwind CSS and Framer Motion. 
-            </footer>
-
-          </main>
-        </div>
-      </div>
-
-      {/* ════════════ HIGH-FIDELITY BYPASS MODAL ════════════ */}
-      <AnimatePresence>
-        {isResumeOpen && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
-            onClick={() => setIsResumeOpen(false)}
-          >
-            <motion.div 
-              initial={{ scale: 0.9, y: 15, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.9, y: 15, opacity: 0 }}
-              transition={{ type: "spring", duration: 0.4 }}
-              className="bg-slate-900 border border-teal-500/30 rounded-xl p-6 w-full max-w-md shadow-2xl space-y-4 relative overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Header bar decorative layout */}
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500/70 block" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/70 block" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/70 block" />
-                  <span className="text-xs font-mono text-slate-500 ml-2">resume_fetcher.sh</span>
-                </div>
-                <button 
+            {/* ─── Resume modal ────────────────────────────────────── */}
+            <AnimatePresence>
+              {isResumeOpen && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md"
                   onClick={() => setIsResumeOpen(false)}
-                  className="text-slate-500 hover:text-heading text-sm transition-colors font-mono"
                 >
-                  [ESC]
-                </button>
-              </div>
-
-              {/* Dynamic script simulation readout */}
-              <div className="font-mono text-xs space-y-2 p-3 bg-slate-950 rounded-lg border border-slate-800 text-slate-400">
-                <div><span className="text-teal-400">jay@ub-node:~$</span> sh fetch_credentials.sh</div>
-                {loadingProgress > 10 && <div className="text-slate-500">&gt; Connecting to encrypted static cloud asset...</div>}
-                {loadingProgress > 40 && <div className="text-slate-500">&gt; Parsing experience map (Thesis Tech / UB Psa)...</div>}
-                {loadingProgress > 70 && <div className="text-emerald-400">&gt; Verification successful. Handshake closed.</div>}
-                
-                {/* Visual loading track line */}
-                <div className="w-full bg-slate-900 h-1.5 rounded-full mt-3 overflow-hidden relative">
-                  <motion.div 
-                    className="bg-gradient-to-r from-teal-400 to-emerald-400 h-full rounded-full"
-                    style={{ width: `${loadingProgress}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Call-to-action choices fade in when compilation finishes */}
-              {loadingProgress === 100 ? (
-                <motion.div 
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="grid grid-cols-2 gap-3 pt-2"
-                >
-                  <a 
-                    href="/resume.pdf" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 bg-teal-400/10 hover:bg-teal-400/20 text-teal-300 border border-teal-500/30 font-semibold p-2.5 rounded-lg text-xs transition-all"
+                  <motion.div
+                    initial={{ scale: 0.92, y: 16, opacity: 0 }}
+                    animate={{ scale: 1, y: 0, opacity: 1 }}
+                    exit={{ scale: 0.92, y: 16, opacity: 0 }}
+                    transition={{ type: 'spring', duration: 0.4, bounce: 0.2 }}
+                    style={{
+                      background:
+                        'linear-gradient(#0f1e35, #0f1e35) padding-box, linear-gradient(135deg, rgba(100,255,218,0.3), rgba(99,102,241,0.2)) border-box',
+                      border: '1px solid transparent',
+                    }}
+                    className="rounded-xl p-6 w-full max-w-md shadow-2xl space-y-4 relative overflow-hidden"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    ↗️ Launch in Tab
-                  </a>
-                  <a 
-                    href="/resume.pdf" 
-                    download="Jay_Pathare_Resume.pdf"
-                    className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-heading border border-slate-700 font-semibold p-2.5 rounded-lg text-xs transition-all"
-                  >
-                    💾 Download PDF
-                  </a>
+                    {/* Subtle top glow line */}
+                    <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-teal-400/40 to-transparent" />
+
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-full bg-rose-500/70" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500/70" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/70" />
+                        <span className="text-xs font-mono text-slate-500 ml-2">resume_fetcher.sh</span>
+                      </div>
+                      <button
+                        onClick={() => setIsResumeOpen(false)}
+                        className="text-slate-500 hover:text-slate-300 text-xs transition-colors font-mono"
+                      >
+                        [ESC]
+                      </button>
+                    </div>
+
+                    <div className="font-mono text-xs space-y-2 p-3 bg-slate-950/80 rounded-lg border border-slate-800/80 text-slate-400">
+                      <div>
+                        <span className="text-teal-400">jay@ub-node:~$</span> sh fetch_credentials.sh
+                      </div>
+                      {loadingProgress > 10 && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="text-slate-500"
+                        >
+                          &gt; Connecting to encrypted static cloud asset...
+                        </motion.div>
+                      )}
+                      {loadingProgress > 40 && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="text-slate-500"
+                        >
+                          &gt; Parsing experience map (Thesis Tech / UB PSA)...
+                        </motion.div>
+                      )}
+                      {loadingProgress > 70 && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="text-emerald-400"
+                        >
+                          &gt; Verification successful. Handshake closed.
+                        </motion.div>
+                      )}
+                      <div className="w-full bg-slate-900 h-1.5 rounded-full mt-3 overflow-hidden">
+                        <motion.div
+                          className="h-full rounded-full bg-gradient-to-r from-teal-400 to-indigo-400"
+                          style={{ width: `${loadingProgress}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    {loadingProgress === 100 ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="grid grid-cols-2 gap-3 pt-1"
+                      >
+                        <a
+                          href="/resume.pdf"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center gap-1.5 bg-teal-400/10 hover:bg-teal-400/20 text-teal-300 border border-teal-500/30 font-semibold p-2.5 rounded-lg text-xs transition-all"
+                        >
+                          ↗ Launch in Tab
+                        </a>
+                        <a
+                          href="/resume.pdf"
+                          download="Jay_Pathare_Resume.pdf"
+                          className="flex items-center justify-center gap-1.5 bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700/80 font-semibold p-2.5 rounded-lg text-xs transition-all"
+                        >
+                          💾 Download PDF
+                        </a>
+                      </motion.div>
+                    ) : (
+                      <div className="h-10" />
+                    )}
+                  </motion.div>
                 </motion.div>
-              ) : (
-                <div className="h-10" /> // Preserves spatial balance while loading
               )}
-            </motion.div>
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 }
