@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
-
+import WorldMap from '../components/WorldMap';
+// ─── Reusable scroll-reveal wrapper ───────────────────────────────────────────
 function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   return (
     <motion.div className={className} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
@@ -17,6 +18,30 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
 };
 
+// ─── Centralized Box Model Rendering Engine Rule ─────────────────────────────
+const computeContainerStyle = (hovered: boolean, glowOpacity: string) => ({
+  position: 'relative' as const,
+  background: hovered
+    ? 'linear-gradient(#0e1b30, #0e1b30) padding-box, linear-gradient(135deg, rgba(100,255,218,0.25), rgba(129,140,248,0.15)) border-box'
+    : 'linear-gradient(#0a1326, #0a1326) padding-box, linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.03)) border-box',
+  border: '1px solid transparent',
+  boxShadow: hovered ? `0 12px 40px ${glowOpacity}` : 'none',
+  transition: 'background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease',
+});
+
+// ─── Split Two-Tone Headings Component ───────────────────────────────────────
+function SectionHeader({ whiteText, tealText, subtitle }: { whiteText: string; tealText: string; subtitle?: string }) {
+  return (
+    <Reveal className="mb-10 text-left font-sans">
+      <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-100">
+        {whiteText} <span className="bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">{tealText}</span>
+      </h2>
+      {subtitle && <p className="text-xs sm:text-sm mt-2.5 max-w-xl leading-relaxed text-slate-500 font-normal">{subtitle}</p>}
+    </Reveal>
+  );
+}
+
+// ─── Preloader Component ──────────────────────────────────────────────────────
 function Preloader({ onDone }: { onDone: () => void }) {
   const [lines, setLines] = useState<string[]>([]);
   const [barWidth, setBarWidth] = useState(0);
@@ -73,13 +98,14 @@ function Preloader({ onDone }: { onDone: () => void }) {
   );
 }
 
+// ─── Scroll-progress bar Component ────────────────────────────────────────────
 function ScrollBar() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
   return <motion.div style={{ scaleX, background: 'linear-gradient(90deg,#64ffda,#818cf8)' }} className="fixed top-0 left-0 right-0 h-[2px] origin-left z-50" />;
 }
 
-/* ═ Ambient Orbs Background Styling ═ */
+// ─── Floating ambient orbs Component ───────────────────────────────────────────
 function AmbientOrbs() {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
@@ -89,18 +115,7 @@ function AmbientOrbs() {
   );
 }
 
-/* ═ Centralized Box Model Rendering Engine Rule ═ */
-const computeContainerStyle = (hovered: boolean, glowGlowOpacity: string) => ({
-  position: 'relative' as const,
-  background: hovered
-    ? 'linear-gradient(#0e1b30, #0e1b30) padding-box, linear-gradient(135deg, rgba(100,255,218,0.35), rgba(129,140,248,0.2)) border-box'
-    : 'linear-gradient(#0a1326, #0a1326) padding-box, linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.03)) border-box',
-  border: '1px solid transparent',
-  boxShadow: hovered ? `0 12px 40px ${glowGlowOpacity}` : 'none',
-  transition: 'background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease',
-});
-
-// ─── AI Chat Widget ───────────────────────────────────────────────────────────
+// ─── Interactive AI Chat Widget Component ─────────────────────────────────────
 function AIChatOrb() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: 'user'|'assistant'; content: string }[]>([
@@ -150,9 +165,9 @@ function AIChatOrb() {
     setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
     setLoading(true);
     try {
-      const system = `You are Jay Pathare's friendly portfolio assistant. Jay is a software engineer and MS CS student at University at Buffalo (graduating Dec 2026). BS in IT from Mumbai University (VESIT). Worked as Software Engineer at Thesis Mumbai Tech (2024-2025) — Python, Django, ReactJS, PostgreSQL, Docker, AWS. Currently Public Safety Aide at UB (2026-present). Projects: AI Metadata Extraction Pipeline (DeepSeek-OCR, LLMs, Python), GraphSAGE Financial Fraud Detector (PyTorch Geometric, GAT), CampusSense IoT Platform (Arduino, ReactJS). Interests: GNNs, LLMs, chess. Organised a Git/GitHub workshop at UB CS dept in 2026. Email: jaypathare@buffalo.edu. Location: Buffalo, NY. Be concise, warm, and helpful.`;
       const res = await fetch('/api/chat', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: [...messages, { role: 'user', content: userMsg }].map(m => ({ role: m.role, content: m.content })) }),
       });
       const data = await res.json();
@@ -164,16 +179,16 @@ function AIChatOrb() {
   if (!mounted) return null;
 
   const panelLeft = Math.min(Math.max(pos.x - 320, 12), (typeof window !== 'undefined' ? window.innerWidth : 1200) - 360);
-  const panelTop = pos.y - 450 < 12 ? pos.y + 64 : pos.y - 450;
+  const panelTop = pos.y - 480 < 12 ? pos.y + 36 : pos.y - 480;
 
   return (
     <>
       <AnimatePresence>
         {!open && (
-          <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
             transition={{ delay: 1.5, duration: 0.4 }}
             className="fixed z-[59] pointer-events-none"
-            style={{ left: pos.x - 220, top: pos.y - 20 }}>
+            style={{ left: pos.x - 240, top: pos.y - 88 }}> 
             <motion.div animate={{ y: [0, -4, 0] }} transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
               className="flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-medium whitespace-nowrap"
               style={{ background: 'rgba(10,25,47,0.95)', border: '1px solid rgba(100,255,218,0.2)', color: '#94a3b8', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}>
@@ -181,7 +196,7 @@ function AIChatOrb() {
               Want to know more about Jay?
               <span className="text-[9px] px-1.5 py-0.5 rounded" style={{ background: 'rgba(100,255,218,0.1)', color: '#64ffda' }}>Ask me</span>
             </motion.div>
-            <div className="absolute right-3 top-full w-0 h-0" style={{ borderLeft: '5px solid transparent', borderRight: '5px solid transparent', borderTop: '5px solid rgba(100,255,218,0.2)' }} />
+            <div className="absolute right-6 top-full w-0 h-0" style={{ borderLeft: '5px solid transparent', borderRight: '5px solid transparent', borderTop: '5px solid rgba(100,255,218,0.2)' }} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -260,7 +275,14 @@ function AIChatOrb() {
   );
 }
 
-// ─── Experience card ──────────────────────────────────────────────────────────
+function HoverBorder({ hovered }: { hovered: boolean }) {
+  return (
+    <motion.div className="absolute inset-0 rounded-xl pointer-events-none" animate={{ opacity: hovered ? 1 : 0 }} transition={{ duration: 0.25 }}
+      style={{ background: 'linear-gradient(#0d1f35,#0d1f35) padding-box,linear-gradient(135deg,rgba(100,255,218,0.3),rgba(129,140,248,0.15)) border-box', border: '1px solid transparent' }} />
+  );
+}
+
+// ─── Experience card Component ───────────────────────────────────────────────
 function ExpCard({ period, title, company, href, desc, tags }: { period: string; title: string; company: string; href: string; desc: string; tags: string[] }) {
   const [hovered, setHovered] = useState(false);
   return (
@@ -270,8 +292,9 @@ function ExpCard({ period, title, company, href, desc, tags }: { period: string;
       variants={itemVariants}
       style={computeContainerStyle(hovered, 'rgba(100,255,218,0.04)')}
     >
-      <div className="text-[10px] font-bold tracking-widest uppercase pt-1 font-mono" style={{ color: '#475569' }}>{period}</div>
-      <div className="sm:col-span-3 space-y-2.5">
+      <HoverBorder hovered={hovered} />
+      <div className="text-[10px] font-bold tracking-widest uppercase pt-1 font-mono relative z-10" style={{ color: '#475569' }}>{period}</div>
+      <div className="sm:col-span-3 space-y-2.5 relative z-10">
         <h3 className="font-bold text-[14px] sm:text-[15px] flex items-center gap-1.5 flex-wrap" style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>
           {title} · {company}
           <motion.span animate={hovered ? { opacity:1,x:0,y:0 } : { opacity:0,x:-4,y:4 }} transition={{ duration: 0.18 }} style={{ color: '#64ffda' }}>↗</motion.span>
@@ -286,7 +309,7 @@ function ExpCard({ period, title, company, href, desc, tags }: { period: string;
   );
 }
 
-// ─── Project card ─────────────────────────────────────────────────────────────
+// ─── Project card Component ──────────────────────────────────────────────────
 function ProjectCard({ icon, title, href, desc, tags }: { icon: string; title: string; href: string; desc: string; tags: string[] }) {
   const [hovered, setHovered] = useState(false);
   return (
@@ -296,9 +319,10 @@ function ProjectCard({ icon, title, href, desc, tags }: { icon: string; title: s
       variants={itemVariants}
       style={computeContainerStyle(hovered, 'rgba(100,255,218,0.06)')}
     >
-      <div className="hidden sm:flex items-center justify-center w-11 h-11 rounded-lg font-mono text-[10px] font-bold tracking-wider flex-shrink-0"
+      <HoverBorder hovered={hovered} />
+      <div className="hidden sm:flex items-center justify-center w-11 h-11 rounded-lg font-mono text-[10px] font-bold tracking-wider flex-shrink-0 relative z-10"
         style={{ background: 'rgba(15,39,68,0.8)', border: hovered ? '1px solid rgba(100,255,218,0.3)' : '1px solid rgba(255,255,255,0.06)', color: hovered ? '#64ffda' : 'rgba(100,255,218,0.35)', transition: 'all 0.2s' }}>{icon}</div>
-      <div className="sm:col-span-3 space-y-2.5">
+      <div className="sm:col-span-3 space-y-2.5 relative z-10">
         <h3 className="font-bold text-[14px] sm:text-[15px] flex items-center gap-1.5 flex-wrap"
           style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>
           {title}
@@ -314,7 +338,7 @@ function ProjectCard({ icon, title, href, desc, tags }: { icon: string; title: s
   );
 }
 
-// ─── Education card ───────────────────────────────────────────────────────────
+// ─── Education card Component ─────────────────────────────────────────────────
 function EducationCard({ degree, school, period, gpa, highlights }: { degree: string; school: string; period: string; gpa?: string; highlights: string[] }) {
   const [hovered, setHovered] = useState(false);
   return (
@@ -359,32 +383,116 @@ function EducationCard({ degree, school, period, gpa, highlights }: { degree: st
   );
 }
 
-const techStack: { category: string; icon: string; items: string[] }[] = [
-  { category: 'Languages', icon: '{ }', items: ['Python', 'JavaScript', 'TypeScript', 'C++', 'SQL'] },
-  { category: 'Frontend', icon: '⬡', items: ['React', 'Next.js', 'Tailwind CSS', 'Framer Motion', 'HTML/CSS'] },
-  { category: 'Backend', icon: '⚙', items: ['Django', 'Node.js', 'REST APIs', 'GraphQL', 'FastAPI'] },
-  { category: 'ML / AI', icon: '◈', items: ['PyTorch', 'PyTorch Geometric', 'HuggingFace', 'LLMs', 'Computer Vision'] },
-  { category: 'DevOps', icon: '▲', items: ['Docker', 'AWS', 'Git', 'Linux', 'CI/CD'] },
-  { category: 'Databases', icon: '⬡', items: ['PostgreSQL', 'MongoDB', 'Redis', 'MySQL'] },
+// ─── FIX: Individual token localized highlight logic ──────────────────────
+function TechBadge({ name, featured, category, isCardHovered }: { name: string; featured?: boolean; category: string; isCardHovered: boolean }) {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  let hoverColor = '#64ffda'; 
+  let hoverBorder = 'rgba(100,255,218,0.45)';
+  let hoverBg = 'rgba(100,255,218,0.08)';
+
+  if (category === 'Programming Languages') {
+    hoverColor = '#ffd166'; 
+    hoverBorder = 'rgba(255,209,102,0.5)';
+    hoverBg = 'rgba(255,209,102,0.1)';
+  } else if (category === 'Backend & Systems') {
+    hoverColor = '#4ade80'; 
+    hoverBorder = 'rgba(74,222,128,0.5)';
+    hoverBg = 'rgba(74,222,128,0.1)';
+  } else if (category === 'Cloud & DevOps') {
+    hoverColor = '#38bdf8'; 
+    hoverBorder = 'rgba(56,189,248,0.5)';
+    hoverBg = 'rgba(56,189,248,0.1)';
+  } else if (category === 'Databases & Data Stores') {
+    hoverColor = '#a855f7'; 
+    hoverBorder = 'rgba(168,85,247,0.5)';
+    hoverBg = 'rgba(168,85,247,0.1)';
+  } else if (category === 'Frameworks & UI') {
+    hoverColor = '#f43f5e'; 
+    hoverBorder = 'rgba(244,63,94,0.5)';
+    hoverBg = 'rgba(244,63,94,0.1)';
+  }
+
+  // Toggles active state coloring strictly under explicit direct pointer hovers
+  const activeHighlight = isHovered;
+
+  return (
+    <motion.span
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      className="text-[11px] px-3 py-1 rounded-full font-medium tracking-wide border transition-all duration-200 font-sans cursor-default"
+      style={{
+        background: activeHighlight ? hoverBg : '#131e31',
+        color: activeHighlight ? hoverColor : '#94a3b8',
+        borderColor: activeHighlight ? hoverBorder : 'rgba(255,255,255,0.05)',
+        boxShadow: activeHighlight ? `0 0 14px ${hoverBorder}` : 'none',
+      }}
+    >
+      {name}
+    </motion.span>
+  );
+}
+
+// ─── Technical Stack Group Shell Component ────────────────────────────────────
+const techStack: { category: string; icon: string; items: { name: string; featured?: boolean }[] }[] = [
+  { 
+    category: 'ML & AI', icon: '🧠', 
+    items: [
+      { name: 'LLMs', featured: true }, { name: 'Agentic AI' }, { name: 'Machine Learning' },
+      { name: 'Deep Learning' }, { name: 'PyTorch', featured: true }, { name: 'PyTorch Geometric' },
+      { name: 'GAT Models' }, { name: 'DeepSeek-OCR' }, { name: 'Computer Vision' }
+    ] 
+  },
+  { 
+    category: 'Backend & Systems', icon: '👤', 
+    items: [
+      { name: 'Django', featured: true }, { name: 'Node.js' }, { name: 'RESTful APIs' },
+      { name: 'GraphQL' }, { name: 'FastAPI' }, { name: 'Microservices' }
+    ] 
+  },
+  { 
+    category: 'Cloud & DevOps', icon: '☁️', 
+    items: [
+      { name: 'Docker', featured: true }, { name: 'AWS', featured: true }, { name: 'Git' },
+      { name: 'Linux (Ubuntu)' }, { name: 'CI/CD' }
+    ] 
+  },
+  { 
+    category: 'Programming Languages', icon: ' </_> ', 
+    items: [
+      { name: 'Python', featured: true }, { name: 'TypeScript' }, { name: 'JavaScript' }, { name: 'SQL' }
+    ] 
+  },
+  { 
+    category: 'Databases & Data Stores', icon: '🗄️', 
+    items: [
+      { name: 'PostgreSQL', featured: true }, { name: 'MongoDB' }, { name: 'Redis' }, { name: 'MySQL' }
+    ] 
+  },
+  { 
+    category: 'Frameworks & UI', icon: '🛠️', 
+    items: [
+      { name: 'React', featured: true }, { name: 'Next.js', featured: true }, { name: 'Tailwind CSS' }, { name: 'Framer Motion' }
+    ] 
+  },
 ];
 
-function TechCard({ category, icon, items }: { category: string; icon: string; items: string[] }) {
+function TechCard({ category, icon, items }: { category: string; icon: string; items: { name: string; featured?: boolean }[] }) {
   const [hovered, setHovered] = useState(false);
   return (
     <motion.div onHoverStart={() => setHovered(true)} onHoverEnd={() => setHovered(false)}
-      variants={itemVariants} className="p-4 rounded-xl cursor-default"
-      style={computeContainerStyle(hovered, 'rgba(100,255,218,0.05)')}
+      variants={itemVariants} className="p-5 rounded-2xl cursor-default text-left"
+      style={computeContainerStyle(hovered, 'rgba(100,255,218,0.03)')}
     >
-      <div className="flex items-center gap-2 mb-3 relative z-10">
-        <span className="text-base font-mono" style={{ color: hovered ? '#64ffda' : 'rgba(100,255,218,0.4)', transition: 'color 0.2s' }}>{icon}</span>
-        <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: hovered ? '#e2e8f0' : '#475569', transition: 'color 0.2s' }}>{category}</span>
+      <div className="flex items-center gap-3 mb-4 relative z-10">
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm bg-slate-900/60 border border-slate-800 text-teal-400 font-mono">
+          {icon}
+        </div>
+        <span className="text-[13px] font-bold text-slate-200 tracking-wide font-sans">{category}</span>
       </div>
-      <div className="flex flex-wrap gap-1.5 relative z-10">
+      <div className="flex flex-wrap gap-2 relative z-10">
         {items.map(item => (
-          <span key={item} className="text-[10px] px-2 py-0.5 rounded-md font-medium"
-            style={{ background: hovered ? 'rgba(100,255,218,0.08)' : 'rgba(255,255,255,0.03)', color: hovered ? '#94a3b8' : '#334155', border: '1px solid rgba(255,255,255,0.05)', transition: 'all 0.2s' }}>
-            {item}
-          </span>
+          <TechBadge key={item.name} name={item.name} featured={item.featured} category={category} isCardHovered={hovered} />
         ))}
       </div>
     </motion.div>
@@ -463,6 +571,7 @@ export default function Home() {
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const [mouseMapHovered, setMouseMapHovered] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
 
   useEffect(() => {
@@ -480,7 +589,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!loaded) return;
-    const sections = ['about', 'experience', 'projects', 'education', 'stack', 'awards'];
+    const sections = ['about', 'experience', 'projects', 'education', 'stack', 'awards', 'contact'];
     const obs = new IntersectionObserver(
       (entries) => { entries.forEach((e) => { if (e.isIntersecting) setActiveSection(e.target.id); }); },
       { rootMargin: '-30% 0px -60% 0px' }
@@ -494,7 +603,7 @@ export default function Home() {
     return () => { obs.disconnect(); cancelAnimationFrame(raf); };
   }, [loaded]);
 
-  const navItems = ['about', 'experience', 'projects', 'education', 'stack', 'awards'];
+  const navItems = ['about', 'experience', 'projects', 'education', 'stack', 'awards', 'contact'];
 
   const sidebarVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } } };
   const sidebarItem = { hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
@@ -519,18 +628,45 @@ export default function Home() {
                 <motion.aside variants={sidebarVariants} initial="hidden" animate="visible"
                   className="lg:col-span-5 lg:sticky lg:top-0 lg:max-h-screen lg:overflow-y-auto flex flex-col py-8 sm:py-10 lg:py-14 lg:pr-6 gap-6"
                   style={{ scrollbarWidth: 'none' }}>
+{/* ── Profile Header (Combined Image & Title) ── */}
+<motion.div variants={sidebarItem} className="flex flex-col sm:flex-row sm:items-center gap-6 mb-2">
+  
+  {/* Image Section */}
+  <div className="relative flex-shrink-0 w-max">
+    {/* Outer glow ring */}
+    <div className="absolute -inset-[4px] rounded-full"
+      style={{ background: 'linear-gradient(135deg, rgba(100,255,218,0.5), rgba(129,140,248,0.3))', filter: 'blur(5px)' }} />
+{/* Photo container */}
+<div className="relative w-32 h-47 rounded-full overflow-hidden border-[3px] flex-shrink-0"
+  style={{ borderColor: 'rgba(100,255,218,0.3)' }}>
+  <img
+    src="/jay.png"
+    alt="Jay Niketan Pathare"
+    className="w-full h-full object-cover"
+    style={{ objectPosition: '50% 15%' }}
+  />
+</div>
+    {/* Online dot */}
+    <span className="absolute bottom-1.5 right-1.5 w-4 h-4 rounded-full border-2 flex-shrink-0"
+      style={{ background: '#64ffda', borderColor: '#050d1a', boxShadow: '0 0 10px rgba(100,255,218,0.8)' }} />
+  </div>
 
-                  {/* Name Header Layout */}
-                  <motion.div variants={sidebarItem}>
-                    <div className="font-mono text-[10px] tracking-widest mb-3" style={{ color: 'rgba(100,255,218,0.5)' }}>// software engineer</div>
-                    <h1 className="text-2xl sm:text-3xl xl:text-[2.4rem] font-extrabold tracking-tight leading-tight whitespace-nowrap" style={{ color: '#e2e8f0', letterSpacing: '-0.02em' }}>
-                      Jay Niketan <span style={{ color: '#64ffda', textShadow: '0 0 40px rgba(100,255,218,0.25)' }}>Pathare</span>
-                    </h1>
-                    <div className="mt-3 flex items-center gap-2.5">
-                      <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 2, repeat: Infinity }} className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: '#64ffda', boxShadow: '0 0 8px rgba(100,255,218,0.6)' }} />
-                      <span className="text-[12px] font-semibold tracking-wide" style={{ color: '#64748b' }}>Open to opportunities · MS CS @ UB</span>
-                    </div>
-                  </motion.div>
+  {/* Main Header Layout Moved to the Right */}
+  <div>
+    <div className="font-mono text-[10px] tracking-widest mb-2" style={{ color: 'rgba(100,255,218,0.5)' }}>// software engineer</div>
+    
+    {/* Removed whitespace-nowrap to allow wrapping on smaller screens if necessary */}
+    <h1 className="text-2xl sm:text-3xl xl:text-[2.2rem] font-extrabold tracking-tight leading-tight" style={{ color: '#e2e8f0', letterSpacing: '-0.02em' }}>
+      Jay Niketan <span style={{ color: '#64ffda', textShadow: '0 0 40px rgba(100,255,218,0.25)' }}>Pathare</span>
+    </h1>
+    
+    <div className="mt-3 flex items-center gap-2.5">
+      <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 2, repeat: Infinity }} className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: '#64ffda', boxShadow: '0 0 8px rgba(100,255,218,0.6)' }} />
+      <span className="text-[12px] font-semibold tracking-wide" style={{ color: '#64748b' }}>Open to opportunities · MS CS @ UB</span>
+    </div>
+  </div>
+</motion.div>
+
 
                   {/* Metrics Row */}
                   <motion.div variants={sidebarItem} className="grid grid-cols-3 gap-2.5">
@@ -551,7 +687,9 @@ export default function Home() {
                           style={{ color: isActive ? '#e2e8f0' : '#334155', transition: 'color 0.2s', textDecoration: 'none' }}>
                           <motion.span animate={{ width: isActive ? 48 : 24 }} transition={{ duration: 0.3 }} className="h-[1px] block flex-shrink-0"
                             style={{ background: isActive ? '#64ffda' : '#1e293b' }} />
-                          <span style={{ transition: 'color 0.2s' }} className={isActive ? '' : 'group-hover:text-slate-400'}>{item}</span>
+                          <span style={{ transition: 'color 0.2s' }} className={isActive ? '' : 'group-hover:text-slate-400'}>
+                            {item === 'about' ? 'About Me' : item === 'stack' ? 'Technical Stack' : item === 'awards' ? 'Extra Curriculum / Awards' : item === 'contact' ? 'Get In Touch' : item}
+                          </span>
                           {isActive && <motion.span layoutId="nav-dot" className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: '#64ffda' }} />}
                         </a>
                       );
@@ -576,7 +714,7 @@ export default function Home() {
                     <ContactStrip />
                   </motion.div>
 
-                  {/* Resume Interactive Card Trigger */}
+                  {/* FIX 2: Swap ASCII loop architecture with user provided static image avatar asset */}
                   <motion.div variants={sidebarItem}>
                     <div className="w-full relative overflow-hidden rounded-xl p-4" style={{ background: 'linear-gradient(135deg,rgba(15,39,68,0.9),rgba(7,20,36,0.95))', border: '1px solid rgba(100,255,218,0.1)' }}>
                       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: 'linear-gradient(90deg,transparent,rgba(100,255,218,0.3),transparent)' }} />
@@ -590,11 +728,14 @@ export default function Home() {
                           </div>
                           <div className="text-[11px]" style={{ color: '#94a3b8' }}>Warning: May cause sudden urge to hire.</div>
                         </div>
-                        <pre className="font-mono text-[8px] leading-none select-none hidden sm:block flex-shrink-0" style={{ color: 'rgba(100,255,218,0.2)' }}>{`  /\\_____/\\
- /  o   o  \\
-( ==  ^  == )
- )         (
-  |  </>  |`}</pre>
+                        {/* Rendered explicit image element matching client specifications directly inside layout container */}
+                        <div className="w-20 h-20 rounded-xl overflow-hidden border border-teal-500/20 shadow-lg relative z-10 bg-slate-950 flex-shrink-0" style={{ boxShadow: '0 0 12px rgba(100,255,218,0.1)' }}>
+                          <img 
+                            src="/cat-glasses.png"
+                            alt="Hacker Cat With Glasses" 
+                            className="w-full h-full object-top brightness-90 contrast-110"
+                          />
+                        </div>
                       </div>
                       <div className="mt-3.5 flex items-center justify-between gap-2 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
                         <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setIsResumeOpen(true)}
@@ -612,9 +753,9 @@ export default function Home() {
                 {/* ══ MAIN CONTENT FEED ══ */}
                 <main className="lg:col-span-7 py-8 sm:py-12 lg:py-20 space-y-24 sm:space-y-32 lg:border-l lg:pl-10 xl:pl-14" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
 
-                  {/* About Section */}
+                  {/* About Me Section */}
                   <section id="about" className="scroll-mt-24">
-                    <h2 className="text-[10px] font-bold uppercase tracking-widest lg:hidden mb-6" style={{ color: '#e2e8f0' }}>About</h2>
+                    <SectionHeader whiteText="About" tealText="Me" subtitle="A multi-disciplinary data explorer and systems builder" />
                     <motion.div className="space-y-5 text-[14px] sm:text-[15px] leading-relaxed" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants} style={{ color: '#64748b' }}>
                       <motion.p variants={itemVariants}>I'm a software engineer driven by building efficient backend systems, machine learning pipelines, and robust full-stack architectures. I enjoy solving structural problems — whether parsing intelligence out of messy datasets or building clean application layers that handle logic flawlessly.</motion.p>
                       <motion.p variants={itemVariants}>Currently pursuing my <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Master of Science in Computer Science at the University at Buffalo</strong> (expected December 2026). Alongside my studies, I contribute to campus as a Public Safety Aide and host specialized engineering workshops.</motion.p>
@@ -622,9 +763,9 @@ export default function Home() {
                     </motion.div>
                   </section>
 
-                  {/* Experience Timeline Grid Section */}
+                  {/* Experience Section */}
                   <section id="experience" className="scroll-mt-24">
-                    <Reveal><h2 className="text-[10px] font-bold uppercase tracking-widest mb-6" style={{ color: '#e2e8f0' }}>Experience</h2></Reveal>
+                    <SectionHeader whiteText="Professional" tealText="Experience" subtitle="Timeline of engineering and infrastructure assignments" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ExpCard period="2026 — Present" title="Public Safety Aide" company="University at Buffalo" href="#"
                         desc="Assisting campus safety operations, managing student and facility logistics, and handling shift configurations efficiently across university infrastructure."
@@ -637,10 +778,10 @@ export default function Home() {
 
                   {/* Projects Section */}
                   <section id="projects" className="scroll-mt-24">
-                    <Reveal><h2 className="text-[10px] font-bold uppercase tracking-widest mb-6" style={{ color: '#e2e8f0' }}>Projects</h2></Reveal>
+                    <SectionHeader whiteText="Featured" tealText="Projects" subtitle="A selection of software platforms showcasing technical competence" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ProjectCard icon="ocr" title="AI-Powered Metadata Extraction Pipeline" href="#"
-                        desc="Intelligent documentation mining pipeline to process 1,000+ legal journals for HeinOnline. Used DeepSeek-OCR and text segmentation to parse layout metadata directly from print artifacts."
+                        desc="Intelligent documentation documentation mining pipeline to process 1,000+ legal journals for HeinOnline. Used DeepSeek-OCR and text segmentation to parse layout metadata directly from print artifacts."
                         tags={['Python', 'DeepSeek-OCR', 'LLMs', 'Computer Vision']} />
                       <ProjectCard icon="gnn" title="GraphSAGE Financial Fraud Detector" href="#"
                         desc="Deep learning graph classification pipeline on the IEEE-CIS dataset. Built with PyTorch Geometric — GraphSAGE and GAT models mapping relational anomalies across imbalanced transactional topologies."
@@ -653,49 +794,88 @@ export default function Home() {
 
                   {/* Education Section */}
                   <section id="education" className="scroll-mt-24">
-                    <Reveal><h2 className="text-[10px] font-bold uppercase tracking-widest mb-6" style={{ color: '#e2e8f0' }}>Education</h2></Reveal>
+                    <SectionHeader whiteText="Academic" tealText="Background" subtitle="Formal parameters of university training and specialization fields" />
                     <motion.div className="space-y-3" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <EducationCard
                         degree="M.S. Computer Science"
                         school="University at Buffalo, SUNY"
                         period="2025 — Dec 2026"
                         highlights={[
-                          'Focus areas: Machine Learning, Distributed Systems, Algorithms',
+                          'Focus areas: Machine Learning, Distributed Systems, Graph Neural Networks',
                           'Public Safety Aide — contributing to campus operations',
                           'Organized Git & GitHub workshop for CS&E department',
-                          'Active member of the CS graduate community',
+                          'Active participant across specialized computer engineering labs',
                         ]}
                       />
                       <EducationCard
                         degree="B.E. Information Technology"
                         school="Mumbai University · VESIT"
-                        period="2020 — 2024"
+                        period="2019 — 2023"
                         highlights={[
-                          'Graduated with distinction in core CS and IT coursework',
-                          'Built CampusSense IoT platform as capstone project',
-                          'Coursework: Data Structures, DBMS, Computer Networks, OS',
-                          'Active participant in technical fests and hackathons',
+                          'Graduated with distinction in information systems and mathematics',
+                          'Architected CampusSense IoT temperature arrays as capstone assembly',
+                          'Coursework: Advanced Data Structures, Relational DBMS, Networking Protocols',
+                          'Active software developer across campus software testing events',
                         ]}
                       />
                     </motion.div>
                   </section>
 
-                  {/* Tech Stack Section */}
+                  {/* Technical Stack Section */}
                   <section id="stack" className="scroll-mt-24">
-                    <Reveal><h2 className="text-[10px] font-bold uppercase tracking-widest mb-6" style={{ color: '#e2e8f0' }}>Technical Stack</h2></Reveal>
-                    <motion.div className="grid grid-cols-1 sm:grid-cols-2 gap-3" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
+                    <SectionHeader whiteText="Technical" tealText="Competencies" subtitle="Languages, framework technologies, and protocols I bring to the table" />
+                    <motion.div className="grid grid-cols-1 sm:grid-cols-2 gap-4" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       {techStack.map(t => <TechCard key={t.category} {...t} />)}
                     </motion.div>
                   </section>
 
-                  {/* Awards Section */}
+                  {/* Extra Curriculum / Awards Section */}
                   <section id="awards" className="scroll-mt-24">
-                    <Reveal><h2 className="text-[10px] font-bold uppercase tracking-widest mb-6" style={{ color: '#e2e8f0' }}>Extra Curriculum / Awards</h2></Reveal>
+                    <SectionHeader whiteText="Honors &" tealText="Activities" subtitle="Extracurricular leadership and technical workshop training roles" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ExpCard period="2026" title="Event Manager & Technical Lead" company="University at Buffalo" href="#"
-                        desc="Organised and conducted a Git & GitHub workshop for the Dept. of CS&E. Mentored participants on repository workflows, branching logic, and collaborative development. Received a Certificate of Appreciation for outstanding leadership."
+                        desc="Organised and conducted a Git & GitHub workshop for the Dept. of CS&E. Mentored participants on repository workflows, branching logic, and collaborative development, receiving a Certificate of Appreciation for outstanding leadership."
                         tags={['Git', 'GitHub', 'Technical Training', 'Event Management']} />
                     </motion.div>
+                  </section>
+
+                  {/* FIX 2: High-Visibility Single Transatlantic Line and Scaled Map Assets */}
+                  <section id="contact" className="scroll-mt-24 space-y-6">
+                    <SectionHeader whiteText="Get In" tealText="Touch" subtitle="Gateway communication nodes to initiate technical inquiries" />
+                    <div className="w-full rounded-2xl p-6 relative overflow-hidden bg-slate-950/40 border border-slate-900 shadow-2xl">
+                      
+                      {/* High-Contrast SVG Layout Panel rendering accurate country boundaries mapping */}
+                      <div className="mb-6">
+  <WorldMap />
+</div>
+
+                      <div className="text-center max-w-md mx-auto space-y-4 relative z-10 pt-2 font-sans">
+                        <p className="text-xs text-textDim leading-relaxed font-normal">
+                          I am actively exploring backend systems architecture and machine learning engineering roles. If you have an interesting tracking parameter to discuss or simply wish to connect, feel free to drop a message.
+                        </p>
+                        
+                        <div className="grid grid-cols-1 gap-2.5 text-left text-xs font-mono max-w-xs mx-auto pt-2">
+                          <div className="p-3 rounded-xl bg-[#0a1326] border border-slate-800/80 flex items-center gap-3 shadow-lg">
+                            <span className="text-teal-400 text-sm">✉</span>
+                            <a href="mailto:jaypathare@buffalo.edu" className="text-slate-200 hover:text-[#64ffda] transition-colors">jaypathare@buffalo.edu</a>
+                          </div>
+                          <div className="p-3 rounded-xl bg-[#0a1326] border border-slate-800/80 flex items-center gap-3 shadow-lg">
+                            <span className="text-indigo-400 text-sm">📍</span>
+                            <span className="text-slate-400">Buffalo, NY, USA</span>
+                          </div>
+                        </div>
+
+                        <motion.a 
+                          whileHover={{ scale: 1.02, boxShadow: '0 0 24px rgba(100,255,218,0.3)' }} 
+                          whileTap={{ scale: 0.98 }}
+                          href="mailto:jaypathare@buffalo.edu"
+                          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold font-mono tracking-wider transition-colors mt-3"
+                          style={{ background: '#64ffda', color: '#050d1a' }}
+                        >
+                          ⚡ SEND MESSAGE
+                        </motion.a>
+                      </div>
+                    </div>
                   </section>
 
                   {/* Footer Block */}
@@ -708,7 +888,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* AI Chat Orb Widget Layer */}
+            {/* AI Chat Orb Widget */}
             <AIChatOrb />
 
             {/* Resume Interactive Modal Overlay */}
