@@ -265,19 +265,18 @@ function HoverBorder({ hovered }: { hovered: boolean }) {
 }
 
 // ─── Experience card ──────────────────────────────────────────────────────────
-function ExpCard({ period, title, company, href, desc, tags }: { period: string; title: string; company: string; href: string; desc: string; tags: string[] }) {
+function ExpCard({ period, title, company, desc, tags }: { period: string; title: string; company: string; desc: string; tags: string[] }) {
   const [hovered, setHovered] = useState(false);
   return (
-    <motion.a href={href} target="_blank" rel="noopener noreferrer"
+    <motion.div
       onHoverStart={() => setHovered(true)} onHoverEnd={() => setHovered(false)}
-      className="group grid grid-cols-1 sm:grid-cols-4 gap-2 p-4 sm:p-5 rounded-xl no-underline cursor-pointer"
+      className="group grid grid-cols-1 sm:grid-cols-4 gap-2 p-4 sm:p-5 rounded-xl cursor-default"
       variants={itemVariants} style={computeContainerStyle(hovered, 'rgba(100,255,218,0.04)')}>
       <HoverBorder hovered={hovered} />
       <div className="text-[10px] font-bold tracking-widest uppercase pt-1 font-mono relative z-10" style={{ color: '#475569' }}>{period}</div>
       <div className="sm:col-span-3 space-y-2.5 relative z-10">
         <h3 className="font-bold text-[14px] sm:text-[15px] flex items-center gap-1.5 flex-wrap" style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>
           {title} · {company}
-          <motion.span animate={hovered ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: -4, y: 4 }} transition={{ duration: 0.18 }} style={{ color: '#64ffda' }}>↗</motion.span>
         </h3>
         <p className="text-[12px] sm:text-[13px] leading-relaxed" style={{ color: hovered ? '#94a3b8' : '#64748b', transition: 'color 0.2s' }}>{desc}</p>
         <div className="flex flex-wrap gap-1.5 pt-1">
@@ -285,7 +284,7 @@ function ExpCard({ period, title, company, href, desc, tags }: { period: string;
             style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', color: '#64ffda', border: '1px solid rgba(100,255,218,0.15)', transition: 'background 0.2s' }}>{t}</span>)}
         </div>
       </div>
-    </motion.a>
+    </motion.div>
   );
 }
 
@@ -512,8 +511,6 @@ function ContactStrip() {
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function Home() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isResumeOpen, setIsResumeOpen] = useState(false);
-  const [loadingProgress, setLoadingProgress] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
 
@@ -522,13 +519,6 @@ export default function Home() {
     window.addEventListener('mousemove', onMove);
     return () => window.removeEventListener('mousemove', onMove);
   }, []);
-
-  useEffect(() => {
-    if (!isResumeOpen) return;
-    setLoadingProgress(0);
-    const iv = setInterval(() => setLoadingProgress(p => { if (p >= 100) { clearInterval(iv); return 100; } return p + 8; }), 30);
-    return () => clearInterval(iv);
-  }, [isResumeOpen]);
 
   useEffect(() => {
     if (!loaded) return;
@@ -644,7 +634,7 @@ export default function Home() {
                         <div className="space-y-1.5 font-mono text-xs flex-1 min-w-0">
                           <div className="flex items-center gap-1.5">
                             <span style={{ color: '#64ffda', fontWeight: 700 }}>$</span>
-                            <span style={{ color: '#e2e8f0' }}>cat resume.txt</span>
+                            <span style={{ color: '#e2e8f0' }}>resume.txt</span>
                             <motion.span animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8, repeatType: 'reverse' }}
                               className="inline-block w-[5px] h-3.5 ml-0.5 rounded-sm" style={{ background: '#64ffda' }} />
                           </div>
@@ -657,12 +647,21 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="mt-3.5 flex items-center justify-between gap-2 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                        <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setIsResumeOpen(true)}
-                          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg font-mono text-[11px] font-bold tracking-wide"
-                          style={{ border: '1px solid rgba(100,255,218,0.25)', background: 'rgba(100,255,218,0.07)', color: '#64ffda' }}>
-                          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
-                          VIEW RESUME
-                        </motion.button>
+                      <motion.a 
+                        whileHover={{ scale: 1.03 }} 
+                        whileTap={{ scale: 0.97 }} 
+                        href="/resume.pdf" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg font-mono text-[11px] font-bold tracking-wide no-underline cursor-pointer"
+                        style={{ border: '1px solid rgba(100,255,218,0.25)', background: 'rgba(100,255,218,0.07)', color: '#64ffda' }}
+                      >
+                        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                          <polyline points="14 2 14 8 20 8" />
+                        </svg>
+                        VIEW RESUME
+                      </motion.a>
                         <span className="text-[9px] font-mono italic" style={{ color: '#1e293b' }}>(not a virus, promise)</span>
                       </div>
                     </div>
@@ -687,42 +686,39 @@ export default function Home() {
                     </motion.div>
                   </section>
 
-                  {/* Experience — all 4 roles from CV */}
+                  {/* Experience */}
                   <section id="experience" className="scroll-mt-24">
                     <SectionHeader whiteText="Professional" tealText="Experience" subtitle="Engineering and infrastructure roles across startups and research" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
 
                       <ExpCard period="Aug 2024 — Aug 2025" title="Software Engineer" company="Thesis Mumbai Tech"
-                        href="#"
                         desc="Built and scaled healthcare modules (Patient Management, Consent) supporting 10k+ records. Developed an IoT baby-warmer system with real-time PostgreSQL pipelines and 2s live monitoring. Built a color-blindness diagnostic module achieving 97% clinical reliability. Containerized 3+ projects with Docker (90% setup time reduction), integrated secure PDF generation and WebRTC video conferencing. Conducted 20+ technical interviews and mentored new hires."
                         tags={['Python', 'Django', 'PostgreSQL', 'Docker', 'ReactJS', 'WebRTC', 'IoT']} />
                       <ExpCard period="Nov 2023 — May 2024" title="Cloud Engineer Intern" company="Data Maven"
-                        href="#"
                         desc="Designed and deployed scalable cloud infrastructure on AWS using EC2 and RDS. Optimized VPC networking for secure, low-latency backend communication. Streamlined resource provisioning and supported deployment of data-intensive applications."
                         tags={['AWS', 'EC2', 'RDS', 'VPC', 'Cloud Infrastructure']} />
                       <ExpCard period="Jun 2023 — Aug 2023" title="Data Engineer Intern" company="Go Digital Technology Consulting"
-                        href="#"
                         desc="Analyzed real-world datasets using Python (Pandas, NumPy) and MySQL to extract trends and deliver actionable business insights."
                         tags={['Python', 'Pandas', 'NumPy', 'MySQL', 'Data Analysis']} />
                     </motion.div>
                   </section>
 
                   {/* Projects — all 3 from CV with accurate descriptions */}
-                  <section id="projects" className="scroll-mt-24">
+<section id="projects" className="scroll-mt-24">
                     <SectionHeader whiteText="Featured" tealText="Projects" subtitle="Academic and personal builds showcasing applied engineering" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ProjectCard icon="OCR" title="AI Metadata Extraction Pipeline · HeinOnline"
-                        href="#"
+                        href="https://github.com/jaypathare/temp-ocr-repo"
                         desc="Engineered a hybrid OCR-LLM metadata extraction pipeline using Tesseract-OCR and Qwen-35B across 1,000+ legacy law journals. Automated end-to-end author metadata entry, reducing manual workload by 90% while maintaining 95%+ accuracy. Containerized the full pipeline with Docker."
-                        note="Industry collaboration — private repo"
+                        note="Industry collaboration — pending sanitization"
                         tags={['Python', 'Tesseract-OCR', 'Qwen-35B', 'LLMs', 'Docker', 'ETL']} />
                       <ProjectCard icon="GNN" title="Fraud Detection with Graph Neural Networks"
-                        href="#"
+                        href="https://github.com/jaypathare/fraud-detection-gnn"
                         desc="GraphSAGE-based fraud detection on the IEEE-CIS dataset. Converted tabular transactions into a graph using shared card, device, and email features to capture relational patterns. Handled severe class imbalance for robust training and evaluation."
-                        note="Academic project · private repo"
+                        note="Academic project"
                         tags={['PyTorch', 'GraphSAGE', 'Graph Neural Networks', 'Python', 'IEEE-CIS']} />
                       <ProjectCard icon="IoT" title="Temperature Monitoring System · CampusSense"
-                        href="#"
+                        href="https://github.com/jaypathare/campussense-iot"
                         desc="End-to-end IoT pipeline: Arduino Uno streams continuous temperature readings over WiFi to a ReactJS live dashboard. Django backend processes sensor data with Auth0 authentication for secure transmission."
                         note="Team of 3 · academic project"
                         tags={['Arduino', 'Django', 'ReactJS', 'Auth0', 'IoT', 'PostgreSQL']} />
@@ -776,6 +772,7 @@ export default function Home() {
                     <SectionHeader whiteText="Certs, Awards &" tealText="Publications" subtitle="Credentials, recognitions, and published research" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <AwardCard year="Jul 2024" title="AWS Cloud Practitioner" org="Amazon Web Services"
+                        href="https://www.credly.com/badges/6a3649a7-3e17-487b-bff4-b27c6b69ff62/public_url"
                         desc="Certified in core AWS cloud concepts, infrastructure services, security, and pricing models — covering EC2, RDS, VPC, S3, and IAM."
                         tags={['AWS', 'Cloud', 'Certification']} />
                       <AwardCard year="Feb 2026" title="Certificate of Appreciation" org="University at Buffalo"
@@ -837,51 +834,7 @@ export default function Home() {
               </div>
             </div>
 
-            <AIChatOrb />
-
-            {/* Resume Modal */}
-            <AnimatePresence>
-              {isResumeOpen && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                  className="fixed inset-0 z-50 flex items-center justify-center p-4"
-                  style={{ background: 'rgba(5,13,26,0.9)', backdropFilter: 'blur(16px)' }}
-                  onClick={() => setIsResumeOpen(false)}>
-                  <motion.div initial={{ scale: 0.92, y: 16, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }} exit={{ scale: 0.92, y: 16, opacity: 0 }}
-                    transition={{ type: 'spring', duration: 0.4, bounce: 0.2 }}
-                    className="rounded-xl p-5 sm:p-6 w-full max-w-md shadow-2xl space-y-4 relative overflow-hidden mx-4"
-                    style={{ background: 'linear-gradient(#071424,#050d1a)', border: '1px solid rgba(100,255,218,0.15)' }}
-                    onClick={e => e.stopPropagation()}>
-                    <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: 'linear-gradient(90deg,transparent,rgba(100,255,218,0.4),transparent)' }} />
-                    <div className="flex items-center justify-between pb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                      <div className="flex items-center gap-1.5">
-                        {['#ff5f57', '#ffbd2e', '#28ca41'].map(c => <span key={c} className="w-2.5 h-2.5 rounded-full" style={{ background: c }} />)}
-                        <span className="text-xs font-mono ml-2" style={{ color: '#334155' }}>resume_fetcher.sh</span>
-                      </div>
-                      <button onClick={() => setIsResumeOpen(false)} className="text-xs font-mono" style={{ color: '#334155' }}>[ESC]</button>
-                    </div>
-                    <div className="font-mono text-xs space-y-2 p-3 rounded-lg" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.04)', color: '#475569' }}>
-                      <div><span style={{ color: '#64ffda' }}>jay@ub-node:~$</span> sh fetch_credentials.sh</div>
-                      {loadingProgress > 10 && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>&gt; Connecting to encrypted static cloud asset...</motion.div>}
-                      {loadingProgress > 40 && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>&gt; Parsing experience map (HeinOnline / Thesis Tech / AWS)...</motion.div>}
-                      {loadingProgress > 70 && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ color: '#4ade80' }}>&gt; Verification successful. GPA 3.85 confirmed.</motion.div>}
-                      <div className="w-full h-1.5 rounded-full mt-3 overflow-hidden" style={{ background: '#0d1f35' }}>
-                        <motion.div className="h-full rounded-full" style={{ width: `${loadingProgress}%`, background: 'linear-gradient(90deg,#64ffda,#818cf8)' }} />
-                      </div>
-                    </div>
-                    {loadingProgress === 100 ? (
-                      <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-2 gap-3 pt-1">
-                        <a href="/resume.pdf" target="_blank" rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-1.5 font-semibold p-2.5 rounded-lg text-xs"
-                          style={{ background: 'rgba(100,255,218,0.08)', color: '#64ffda', border: '1px solid rgba(100,255,218,0.25)' }}>↗ Launch in Tab</a>
-                        <a href="/resume.pdf" download="Jay_Pathare_Resume.pdf"
-                          className="flex items-center justify-center gap-1.5 font-semibold p-2.5 rounded-lg text-xs"
-                          style={{ background: 'rgba(255,255,255,0.04)', color: '#94a3b8', border: '1px solid rgba(255,255,255,0.08)' }}>💾 Download PDF</a>
-                      </motion.div>
-                    ) : <div className="h-10" />}
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+          <AIChatOrb />
           </motion.div>
         )}
       </AnimatePresence>
