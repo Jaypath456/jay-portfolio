@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import WorldMap from '../components/WorldMap';
+
 // ─── Reusable scroll-reveal wrapper ───────────────────────────────────────────
 function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   return (
@@ -47,7 +48,7 @@ function Preloader({ onDone }: { onDone: () => void }) {
   const [barWidth, setBarWidth] = useState(0);
   const [done, setDone] = useState(false);
   const sequence = ['> Initializing portfolio.config.ts...', '> Loading experience.json...', '> Compiling components...', '> Ready.'];
-  
+
   useEffect(() => {
     let i = 0;
     const addLine = () => {
@@ -70,19 +71,12 @@ function Preloader({ onDone }: { onDone: () => void }) {
           className="fixed inset-0 z-[100] flex items-center justify-center" style={{ background: '#050d1a' }}>
           <div className="w-full max-w-sm px-6 space-y-4">
             <div className="flex gap-1.5 mb-4">
-              {['#ff5f57','#ffbd2e','#28ca41'].map(c => <span key={c} className="w-2.5 h-2.5 rounded-full" style={{ background: c }} />)}
+              {['#ff5f57', '#ffbd2e', '#28ca41'].map(c => <span key={c} className="w-2.5 h-2.5 rounded-full" style={{ background: c }} />)}
             </div>
             <div className="font-mono text-xs space-y-2" style={{ color: '#4a5568' }}>
               {lines.map((line, i) => (
-                <motion.div 
-                  key={i} 
-                  initial={{ opacity: 0, x: -8 }} 
-                  animate={{ opacity: 1, x: 0 }}
-                  style={{ 
-                    color: line?.startsWith('> Ready') ? '#64ffda' : undefined, 
-                    fontWeight: line?.startsWith('> Ready') ? 700 : undefined 
-                  }}
-                >
+                <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
+                  style={{ color: line?.startsWith('> Ready') ? '#64ffda' : undefined, fontWeight: line?.startsWith('> Ready') ? 700 : undefined }}>
                   {line}
                 </motion.div>
               ))}
@@ -98,27 +92,27 @@ function Preloader({ onDone }: { onDone: () => void }) {
   );
 }
 
-// ─── Scroll-progress bar Component ────────────────────────────────────────────
+// ─── Scroll-progress bar ──────────────────────────────────────────────────────
 function ScrollBar() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
   return <motion.div style={{ scaleX, background: 'linear-gradient(90deg,#64ffda,#818cf8)' }} className="fixed top-0 left-0 right-0 h-[2px] origin-left z-50" />;
 }
 
-// ─── Floating ambient orbs Component ───────────────────────────────────────────
+// ─── Ambient orbs ─────────────────────────────────────────────────────────────
 function AmbientOrbs() {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
-      <div className="absolute rounded-full" style={{ width:600,height:600,top:-120,right:-100,background:'radial-gradient(circle,rgba(100,255,218,0.06) 0%,transparent 70%)' }} />
-      <div className="absolute rounded-full" style={{ width:500,height:500,bottom:-100,left:-80,background:'radial-gradient(circle,rgba(129,140,248,0.07) 0%,transparent 70%)' }} />
+      <div className="absolute rounded-full" style={{ width: 600, height: 600, top: -120, right: -100, background: 'radial-gradient(circle,rgba(100,255,218,0.06) 0%,transparent 70%)' }} />
+      <div className="absolute rounded-full" style={{ width: 500, height: 500, bottom: -100, left: -80, background: 'radial-gradient(circle,rgba(129,140,248,0.07) 0%,transparent 70%)' }} />
     </div>
   );
 }
 
-// ─── Interactive AI Chat Widget Component ─────────────────────────────────────
+// ─── AI Chat Orb ──────────────────────────────────────────────────────────────
 function AIChatOrb() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<{ role: 'user'|'assistant'; content: string }[]>([
+  const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([
     { role: 'assistant', content: "Hi! I'm Jay's AI assistant. Ask me about his experience, skills, or projects — I know everything about him! 🚀" }
   ]);
   const [input, setInput] = useState('');
@@ -131,14 +125,8 @@ function AIChatOrb() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setPos({ x: window.innerWidth - 80, y: window.innerHeight - 80 });
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (open) setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
-  }, [messages, open]);
+  useEffect(() => { setPos({ x: window.innerWidth - 80, y: window.innerHeight - 80 }); setMounted(true); }, []);
+  useEffect(() => { if (open) setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100); }, [messages, open]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('.chat-inner')) return;
@@ -166,8 +154,7 @@ function AIChatOrb() {
     setLoading(true);
     try {
       const res = await fetch('/api/chat', {
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: [...messages, { role: 'user', content: userMsg }].map(m => ({ role: m.role, content: m.content })) }),
       });
       const data = await res.json();
@@ -177,7 +164,6 @@ function AIChatOrb() {
   };
 
   if (!mounted) return null;
-
   const panelLeft = Math.min(Math.max(pos.x - 320, 12), (typeof window !== 'undefined' ? window.innerWidth : 1200) - 360);
   const panelTop = pos.y - 480 < 12 ? pos.y + 36 : pos.y - 480;
 
@@ -186,9 +172,8 @@ function AIChatOrb() {
       <AnimatePresence>
         {!open && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
-            transition={{ delay: 1.5, duration: 0.4 }}
-            className="fixed z-[59] pointer-events-none"
-            style={{ left: pos.x - 240, top: pos.y - 88 }}> 
+            transition={{ delay: 1.5, duration: 0.4 }} className="fixed z-[59] pointer-events-none"
+            style={{ left: pos.x - 240, top: pos.y - 88 }}>
             <motion.div animate={{ y: [0, -4, 0] }} transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
               className="flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-medium whitespace-nowrap"
               style={{ background: 'rgba(10,25,47,0.95)', border: '1px solid rgba(100,255,218,0.2)', color: '#94a3b8', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}>
@@ -206,10 +191,7 @@ function AIChatOrb() {
         <motion.div animate={open ? { scale: 1.1 } : { scale: 1 }} whileHover={{ scale: 1.08 }}
           className="relative w-14 h-14 rounded-full flex items-center justify-center"
           style={{ background: 'linear-gradient(135deg,#0f2744,#1a3a5c)', boxShadow: open ? '0 0 0 2px #64ffda,0 0 32px rgba(100,255,218,0.3),0 8px 32px rgba(0,0,0,0.5)' : '0 0 0 1px rgba(100,255,218,0.25),0 0 20px rgba(100,255,218,0.1),0 8px 24px rgba(0,0,0,0.4)' }}>
-          {!open && (
-            <motion.div animate={{ scale: [1, 1.7], opacity: [0.5, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
-              className="absolute inset-0 rounded-full" style={{ border: '1px solid rgba(100,255,218,0.5)' }} />
-          )}
+          {!open && <motion.div animate={{ scale: [1, 1.7], opacity: [0.5, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }} className="absolute inset-0 rounded-full" style={{ border: '1px solid rgba(100,255,218,0.5)' }} />}
           <AnimatePresence mode="wait">
             {open
               ? <motion.svg key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }} className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#64ffda" strokeWidth="2" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></motion.svg>
@@ -227,13 +209,13 @@ function AIChatOrb() {
             style={{ left: panelLeft, top: panelTop, width: 340, height: 430, background: 'linear-gradient(180deg,#071424,#050d1a)', border: '1px solid rgba(100,255,218,0.15)', boxShadow: '0 24px 64px rgba(0,0,0,0.7)' }}>
             <div className="flex items-center gap-3 px-4 py-3 flex-shrink-0" style={{ borderBottom: '1px solid rgba(100,255,218,0.08)' }}>
               <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(100,255,218,0.1)', border: '1px solid rgba(100,255,218,0.2)' }}>
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="#64ffda" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="#64ffda" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-[11px] font-bold tracking-wide" style={{ color: '#e2e8f0' }}>Jay's AI Assistant</div>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 2, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full" style={{ background: '#64ffda' }} />
-                  <span className="text-[9px] font-mono" style={{ color: '#475569' }}>gemini-agent · online</span>
+                  <span className="text-[9px] font-mono" style={{ color: '#475569' }}>claude-agent · online</span>
                 </div>
               </div>
             </div>
@@ -251,7 +233,7 @@ function AIChatOrb() {
               {loading && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
                   <div className="px-3 py-2.5 rounded-xl flex gap-1.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    {[0,1,2].map(i => <motion.span key={i} animate={{ y: [0,-4,0] }} transition={{ duration: 0.6, repeat: Infinity, delay: i*0.15 }} className="w-1.5 h-1.5 rounded-full block" style={{ background: '#64ffda' }} />)}
+                    {[0, 1, 2].map(i => <motion.span key={i} animate={{ y: [0, -4, 0] }} transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }} className="w-1.5 h-1.5 rounded-full block" style={{ background: '#64ffda' }} />)}
                   </div>
                 </motion.div>
               )}
@@ -282,22 +264,20 @@ function HoverBorder({ hovered }: { hovered: boolean }) {
   );
 }
 
-// ─── Experience card Component ───────────────────────────────────────────────
+// ─── Experience card ──────────────────────────────────────────────────────────
 function ExpCard({ period, title, company, href, desc, tags }: { period: string; title: string; company: string; href: string; desc: string; tags: string[] }) {
   const [hovered, setHovered] = useState(false);
   return (
     <motion.a href={href} target="_blank" rel="noopener noreferrer"
       onHoverStart={() => setHovered(true)} onHoverEnd={() => setHovered(false)}
       className="group grid grid-cols-1 sm:grid-cols-4 gap-2 p-4 sm:p-5 rounded-xl no-underline cursor-pointer"
-      variants={itemVariants}
-      style={computeContainerStyle(hovered, 'rgba(100,255,218,0.04)')}
-    >
+      variants={itemVariants} style={computeContainerStyle(hovered, 'rgba(100,255,218,0.04)')}>
       <HoverBorder hovered={hovered} />
       <div className="text-[10px] font-bold tracking-widest uppercase pt-1 font-mono relative z-10" style={{ color: '#475569' }}>{period}</div>
       <div className="sm:col-span-3 space-y-2.5 relative z-10">
         <h3 className="font-bold text-[14px] sm:text-[15px] flex items-center gap-1.5 flex-wrap" style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>
           {title} · {company}
-          <motion.span animate={hovered ? { opacity:1,x:0,y:0 } : { opacity:0,x:-4,y:4 }} transition={{ duration: 0.18 }} style={{ color: '#64ffda' }}>↗</motion.span>
+          <motion.span animate={hovered ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: -4, y: 4 }} transition={{ duration: 0.18 }} style={{ color: '#64ffda' }}>↗</motion.span>
         </h3>
         <p className="text-[12px] sm:text-[13px] leading-relaxed" style={{ color: hovered ? '#94a3b8' : '#64748b', transition: 'color 0.2s' }}>{desc}</p>
         <div className="flex flex-wrap gap-1.5 pt-1">
@@ -309,26 +289,24 @@ function ExpCard({ period, title, company, href, desc, tags }: { period: string;
   );
 }
 
-// ─── Project card Component ──────────────────────────────────────────────────
-function ProjectCard({ icon, title, href, desc, tags }: { icon: string; title: string; href: string; desc: string; tags: string[] }) {
+// ─── Project card ─────────────────────────────────────────────────────────────
+function ProjectCard({ icon, title, href, desc, tags, note }: { icon: string; title: string; href: string; desc: string; tags: string[]; note?: string }) {
   const [hovered, setHovered] = useState(false);
   return (
-    <motion.a href={href} target="_blank" rel="noopener noreferrer"
+    <motion.a href={href} target={href === '#' ? undefined : '_blank'} rel="noopener noreferrer"
       onHoverStart={() => setHovered(true)} onHoverEnd={() => setHovered(false)}
       className="group grid grid-cols-1 sm:grid-cols-4 gap-4 p-4 sm:p-5 rounded-xl no-underline cursor-pointer"
-      variants={itemVariants}
-      style={computeContainerStyle(hovered, 'rgba(100,255,218,0.06)')}
-    >
+      variants={itemVariants} style={computeContainerStyle(hovered, 'rgba(100,255,218,0.06)')}>
       <HoverBorder hovered={hovered} />
       <div className="hidden sm:flex items-center justify-center w-11 h-11 rounded-lg font-mono text-[10px] font-bold tracking-wider flex-shrink-0 relative z-10"
         style={{ background: 'rgba(15,39,68,0.8)', border: hovered ? '1px solid rgba(100,255,218,0.3)' : '1px solid rgba(255,255,255,0.06)', color: hovered ? '#64ffda' : 'rgba(100,255,218,0.35)', transition: 'all 0.2s' }}>{icon}</div>
       <div className="sm:col-span-3 space-y-2.5 relative z-10">
-        <h3 className="font-bold text-[14px] sm:text-[15px] flex items-center gap-1.5 flex-wrap"
-          style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>
+        <h3 className="font-bold text-[14px] sm:text-[15px] flex items-center gap-1.5 flex-wrap" style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>
           {title}
-          <motion.span animate={hovered ? { opacity:1,x:0,y:0 } : { opacity:0,x:-4,y:4 }} transition={{ duration: 0.18 }} style={{ color: '#64ffda' }}>↗</motion.span>
+          {href !== '#' && <motion.span animate={hovered ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: -4, y: 4 }} transition={{ duration: 0.18 }} style={{ color: '#64ffda' }}>↗</motion.span>}
         </h3>
         <p className="text-[12px] sm:text-[13px] leading-relaxed" style={{ color: hovered ? '#94a3b8' : '#64748b', transition: 'color 0.2s' }}>{desc}</p>
+        {note && <p className="text-[11px] italic" style={{ color: '#334155' }}>{note}</p>}
         <div className="flex flex-wrap gap-1.5 pt-1">
           {tags.map(t => <span key={t} className="text-[10px] px-2.5 py-0.5 rounded-full font-medium tracking-wide"
             style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', color: '#64ffda', border: '1px solid rgba(100,255,218,0.15)', transition: 'background 0.2s' }}>{t}</span>)}
@@ -338,21 +316,19 @@ function ProjectCard({ icon, title, href, desc, tags }: { icon: string; title: s
   );
 }
 
-// ─── Education card Component ─────────────────────────────────────────────────
+// ─── Education card ───────────────────────────────────────────────────────────
 function EducationCard({ degree, school, period, gpa, highlights }: { degree: string; school: string; period: string; gpa?: string; highlights: string[] }) {
   const [hovered, setHovered] = useState(false);
   return (
     <motion.div onHoverStart={() => setHovered(true)} onHoverEnd={() => setHovered(false)}
-      className="p-5 rounded-xl cursor-default"
-      variants={itemVariants}
-      style={computeContainerStyle(hovered, 'rgba(100,255,218,0.05)')}
-    >
+      className="p-5 rounded-xl cursor-default" variants={itemVariants}
+      style={computeContainerStyle(hovered, 'rgba(100,255,218,0.05)')}>
       <div className="flex items-start justify-between gap-4 flex-wrap relative z-10">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
             style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', border: '1px solid rgba(100,255,218,0.15)', transition: 'all 0.3s' }}>
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#64ffda" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" />
             </svg>
           </div>
           <div>
@@ -383,181 +359,149 @@ function EducationCard({ degree, school, period, gpa, highlights }: { degree: st
   );
 }
 
-// ─── FIX: Individual token localized highlight logic ──────────────────────
-function TechBadge({ name, featured, category, isCardHovered }: { name: string; featured?: boolean; category: string; isCardHovered: boolean }) {
+// ─── Tech Badge ───────────────────────────────────────────────────────────────
+function TechBadge({ name, category }: { name: string; category: string }) {
   const [isHovered, setIsHovered] = useState(false);
-  
-  let hoverColor = '#64ffda'; 
+
+  let hoverColor = '#64ffda';
   let hoverBorder = 'rgba(100,255,218,0.45)';
   let hoverBg = 'rgba(100,255,218,0.08)';
 
-  if (category === 'Programming Languages') {
-    hoverColor = '#ffd166'; 
-    hoverBorder = 'rgba(255,209,102,0.5)';
-    hoverBg = 'rgba(255,209,102,0.1)';
-  } else if (category === 'Backend & Systems') {
-    hoverColor = '#4ade80'; 
-    hoverBorder = 'rgba(74,222,128,0.5)';
-    hoverBg = 'rgba(74,222,128,0.1)';
-  } else if (category === 'Cloud & DevOps') {
-    hoverColor = '#38bdf8'; 
-    hoverBorder = 'rgba(56,189,248,0.5)';
-    hoverBg = 'rgba(56,189,248,0.1)';
-  } else if (category === 'Databases & Data Stores') {
-    hoverColor = '#a855f7'; 
-    hoverBorder = 'rgba(168,85,247,0.5)';
-    hoverBg = 'rgba(168,85,247,0.1)';
-  } else if (category === 'Frameworks & UI') {
-    hoverColor = '#f43f5e'; 
-    hoverBorder = 'rgba(244,63,94,0.5)';
-    hoverBg = 'rgba(244,63,94,0.1)';
-  }
-
-  // Toggles active state coloring strictly under explicit direct pointer hovers
-  const activeHighlight = isHovered;
+  if (category === 'Programming Languages') { hoverColor = '#ffd166'; hoverBorder = 'rgba(255,209,102,0.5)'; hoverBg = 'rgba(255,209,102,0.1)'; }
+  else if (category === 'Backend & Systems') { hoverColor = '#4ade80'; hoverBorder = 'rgba(74,222,128,0.5)'; hoverBg = 'rgba(74,222,128,0.1)'; }
+  else if (category === 'Cloud & DevOps') { hoverColor = '#38bdf8'; hoverBorder = 'rgba(56,189,248,0.5)'; hoverBg = 'rgba(56,189,248,0.1)'; }
+  else if (category === 'Databases & Data Stores') { hoverColor = '#a855f7'; hoverBorder = 'rgba(168,85,247,0.5)'; hoverBg = 'rgba(168,85,247,0.1)'; }
+  else if (category === 'Frameworks & UI') { hoverColor = '#f43f5e'; hoverBorder = 'rgba(244,63,94,0.5)'; hoverBg = 'rgba(244,63,94,0.1)'; }
 
   return (
-    <motion.span
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
+    <motion.span onHoverStart={() => setIsHovered(true)} onHoverEnd={() => setIsHovered(false)}
       className="text-[11px] px-3 py-1 rounded-full font-medium tracking-wide border transition-all duration-200 font-sans cursor-default"
-      style={{
-        background: activeHighlight ? hoverBg : '#131e31',
-        color: activeHighlight ? hoverColor : '#94a3b8',
-        borderColor: activeHighlight ? hoverBorder : 'rgba(255,255,255,0.05)',
-        boxShadow: activeHighlight ? `0 0 14px ${hoverBorder}` : 'none',
-      }}
-    >
+      style={{ background: isHovered ? hoverBg : '#131e31', color: isHovered ? hoverColor : '#94a3b8', borderColor: isHovered ? hoverBorder : 'rgba(255,255,255,0.05)', boxShadow: isHovered ? `0 0 14px ${hoverBorder}` : 'none' }}>
       {name}
     </motion.span>
   );
 }
 
-// ─── Technical Stack Group Shell Component ────────────────────────────────────
-const techStack: { category: string; icon: string; items: { name: string; featured?: boolean }[] }[] = [
-  { 
-    category: 'ML & AI', icon: '🧠', 
+// ─── Tech Stack data (updated from CV) ───────────────────────────────────────
+const techStack: { category: string; icon: string; items: { name: string }[] }[] = [
+  {
+    category: 'ML & AI', icon: '🧠',
     items: [
-      { name: 'LLMs', featured: true }, { name: 'Agentic AI' }, { name: 'Machine Learning' },
-      { name: 'Deep Learning' }, { name: 'PyTorch', featured: true }, { name: 'PyTorch Geometric' },
-      { name: 'GAT Models' }, { name: 'DeepSeek-OCR' }, { name: 'Computer Vision' }
-    ] 
+      { name: 'PyTorch' }, { name: 'TensorFlow' }, { name: 'scikit-learn' },
+      { name: 'LLMs' }, { name: 'Graph Neural Networks' }, { name: 'CNNs' },
+      { name: 'RNNs' }, { name: 'Prompt Engineering' }, { name: 'OCR Pipelines' },
+    ]
   },
-  { 
-    category: 'Backend & Systems', icon: '👤', 
+  {
+    category: 'Backend & Systems', icon: '⚙️',
     items: [
-      { name: 'Django', featured: true }, { name: 'Node.js' }, { name: 'RESTful APIs' },
-      { name: 'GraphQL' }, { name: 'FastAPI' }, { name: 'Microservices' }
-    ] 
+      { name: 'Django' }, { name: 'REST API' }, { name: 'FastAPI' },
+      { name: 'Node.js' }, { name: 'WebRTC' }, { name: 'OAuth / Auth0' },
+      { name: 'ETL Pipelines' }, { name: 'Microservices' },
+    ]
   },
-  { 
-    category: 'Cloud & DevOps', icon: '☁️', 
+  {
+    category: 'Cloud & DevOps', icon: '☁️',
     items: [
-      { name: 'Docker', featured: true }, { name: 'AWS', featured: true }, { name: 'Git' },
-      { name: 'Linux (Ubuntu)' }, { name: 'CI/CD' }
-    ] 
+      { name: 'AWS (EC2, RDS, VPC)' }, { name: 'Docker' }, { name: 'Git' },
+      { name: 'CI/CD' }, { name: 'Linux (Ubuntu)' },
+    ]
   },
-  { 
-    category: 'Programming Languages', icon: ' </_> ', 
+  {
+    category: 'Programming Languages', icon: '</>',
     items: [
-      { name: 'Python', featured: true }, { name: 'TypeScript' }, { name: 'JavaScript' }, { name: 'SQL' }
-    ] 
+      { name: 'Python' }, { name: 'TypeScript' }, { name: 'JavaScript' },
+      { name: 'SQL' }, { name: 'HTML / CSS' },
+    ]
   },
-  { 
-    category: 'Databases & Data Stores', icon: '🗄️', 
+  {
+    category: 'Databases & Data Stores', icon: '🗄️',
     items: [
-      { name: 'PostgreSQL', featured: true }, { name: 'MongoDB' }, { name: 'Redis' }, { name: 'MySQL' }
-    ] 
+      { name: 'PostgreSQL' }, { name: 'MySQL' }, { name: 'MongoDB' }, { name: 'Redis' },
+    ]
   },
-  { 
-    category: 'Frameworks & UI', icon: '🛠️', 
+  {
+    category: 'Frameworks & UI', icon: '🛠️',
     items: [
-      { name: 'React', featured: true }, { name: 'Next.js', featured: true }, { name: 'Tailwind CSS' }, { name: 'Framer Motion' }
-    ] 
+      { name: 'React' }, { name: 'Next.js' }, { name: 'Tailwind CSS' },
+      { name: 'Pandas' }, { name: 'NumPy' }, { name: 'Matplotlib' }, { name: 'Tableau' },
+    ]
   },
 ];
 
-function TechCard({ category, icon, items }: { category: string; icon: string; items: { name: string; featured?: boolean }[] }) {
+function TechCard({ category, icon, items }: { category: string; icon: string; items: { name: string }[] }) {
   const [hovered, setHovered] = useState(false);
   return (
     <motion.div onHoverStart={() => setHovered(true)} onHoverEnd={() => setHovered(false)}
       variants={itemVariants} className="p-5 rounded-2xl cursor-default text-left"
-      style={computeContainerStyle(hovered, 'rgba(100,255,218,0.03)')}
-    >
+      style={computeContainerStyle(hovered, 'rgba(100,255,218,0.03)')}>
       <div className="flex items-center gap-3 mb-4 relative z-10">
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm bg-slate-900/60 border border-slate-800 text-teal-400 font-mono">
-          {icon}
-        </div>
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm bg-slate-900/60 border border-slate-800 text-teal-400 font-mono">{icon}</div>
         <span className="text-[13px] font-bold text-slate-200 tracking-wide font-sans">{category}</span>
       </div>
       <div className="flex flex-wrap gap-2 relative z-10">
-        {items.map(item => (
-          <TechBadge key={item.name} name={item.name} featured={item.featured} category={category} isCardHovered={hovered} />
-        ))}
+        {items.map(item => <TechBadge key={item.name} name={item.name} category={category} />)}
       </div>
     </motion.div>
   );
 }
 
-// ─── Contact social definitions ──────────────────────────────────────────────
+// ─── Award / Cert card ────────────────────────────────────────────────────────
+function AwardCard({ year, title, org, href, desc, tags }: { year: string; title: string; org: string; href?: string; desc: string; tags: string[] }) {
+  const [hovered, setHovered] = useState(false);
+  const Wrapper = href ? motion.a : motion.div;
+  return (
+    <Wrapper {...(href ? { href, target: '_blank', rel: 'noopener noreferrer' } : {})}
+      onHoverStart={() => setHovered(true)} onHoverEnd={() => setHovered(false)}
+      className="group grid grid-cols-1 sm:grid-cols-4 gap-2 p-4 sm:p-5 rounded-xl no-underline cursor-pointer"
+      variants={itemVariants} style={computeContainerStyle(hovered, 'rgba(100,255,218,0.04)')}>
+      <HoverBorder hovered={hovered} />
+      <div className="text-[10px] font-bold tracking-widest uppercase pt-1 font-mono relative z-10" style={{ color: '#475569' }}>{year}</div>
+      <div className="sm:col-span-3 space-y-2.5 relative z-10">
+        <h3 className="font-bold text-[14px] sm:text-[15px] flex items-center gap-1.5 flex-wrap" style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>
+          {title} · {org}
+          {href && <motion.span animate={hovered ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: -4, y: 4 }} transition={{ duration: 0.18 }} style={{ color: '#64ffda' }}>↗</motion.span>}
+        </h3>
+        <p className="text-[12px] sm:text-[13px] leading-relaxed" style={{ color: hovered ? '#94a3b8' : '#64748b', transition: 'color 0.2s' }}>{desc}</p>
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          {tags.map(t => <span key={t} className="text-[10px] px-2.5 py-0.5 rounded-full font-medium tracking-wide"
+            style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', color: '#64ffda', border: '1px solid rgba(100,255,218,0.15)', transition: 'background 0.2s' }}>{t}</span>)}
+        </div>
+      </div>
+    </Wrapper>
+  );
+}
+
+// ─── Social links ─────────────────────────────────────────────────────────────
 const socialLinks = [
   {
-    label: 'GitHub',
-    href: 'https://github.com/jaypathare',
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-      </svg>
-    ),
+    label: 'GitHub', href: 'https://github.com/jaypathare',
+    icon: <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" /></svg>,
   },
   {
-    label: 'LinkedIn',
-    href: 'https://linkedin.com/in/jaypathare',
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-      </svg>
-    ),
+    label: 'LinkedIn', href: 'https://linkedin.com/in/jaypathare',
+    icon: <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>,
   },
   {
-    label: 'Email',
-    href: 'mailto:jaypathare@buffalo.edu',
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-      </svg>
-    ),
+    label: 'Email', href: 'mailto:jaypathare@buffalo.edu',
+    icon: <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>,
   },
 ];
 
 function ContactStrip() {
   return (
     <div className="pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-      <div className="text-[10px] font-bold uppercase tracking-widest mb-3 text-slate-500">
-        Get in touch
-      </div>
+      <div className="text-[10px] font-bold uppercase tracking-widest mb-3 text-slate-500">Get in touch</div>
       <div className="flex items-center gap-5 flex-wrap">
         {socialLinks.map(({ label, href, icon }) => (
-          <motion.a
-            key={label}
-            href={href}
-            target={href.startsWith('mailto') ? undefined : '_blank'}
-            rel="noopener noreferrer"
-            aria-label={label}
-            whileHover={{ y: -3, color: '#64ffda' }}
-            transition={{ duration: 0.2 }}
-            style={{ color: '#334155', display: 'flex', alignItems: 'center' }}
-          >
+          <motion.a key={label} href={href} target={href.startsWith('mailto') ? undefined : '_blank'} rel="noopener noreferrer"
+            aria-label={label} whileHover={{ y: -3, color: '#64ffda' }} transition={{ duration: 0.2 }}
+            style={{ color: '#334155', display: 'flex', alignItems: 'center' }}>
             {icon}
           </motion.a>
         ))}
-        <a
-          href="mailto:jaypathare@buffalo.edu"
-          className="text-[11px] font-mono transition-colors"
-          style={{ color: '#334155' }}
-          onMouseEnter={e => (e.currentTarget.style.color = '#64ffda')}
-          onMouseLeave={e => (e.currentTarget.style.color = '#334155')}
-        >
+        <a href="mailto:jaypathare@buffalo.edu" className="text-[11px] font-mono transition-colors" style={{ color: '#334155' }}
+          onMouseEnter={e => (e.currentTarget.style.color = '#64ffda')} onMouseLeave={e => (e.currentTarget.style.color = '#334155')}>
           jaypathare@buffalo.edu
         </a>
       </div>
@@ -571,7 +515,6 @@ export default function Home() {
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loaded, setLoaded] = useState(false);
-  const [mouseMapHovered, setMouseMapHovered] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
 
   useEffect(() => {
@@ -594,17 +537,11 @@ export default function Home() {
       (entries) => { entries.forEach((e) => { if (e.isIntersecting) setActiveSection(e.target.id); }); },
       { rootMargin: '-30% 0px -60% 0px' }
     );
-    const raf = requestAnimationFrame(() => {
-      sections.forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) obs.observe(el);
-      });
-    });
+    const raf = requestAnimationFrame(() => { sections.forEach((id) => { const el = document.getElementById(id); if (el) obs.observe(el); }); });
     return () => { obs.disconnect(); cancelAnimationFrame(raf); };
   }, [loaded]);
 
   const navItems = ['about', 'experience', 'projects', 'education', 'stack', 'awards', 'contact'];
-
   const sidebarVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } } };
   const sidebarItem = { hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } } };
 
@@ -628,49 +565,37 @@ export default function Home() {
                 <motion.aside variants={sidebarVariants} initial="hidden" animate="visible"
                   className="lg:col-span-5 lg:sticky lg:top-0 lg:max-h-screen lg:overflow-y-auto flex flex-col py-8 sm:py-10 lg:py-14 lg:pr-6 gap-6"
                   style={{ scrollbarWidth: 'none' }}>
-{/* ── Profile Header (Combined Image & Title) ── */}
-<motion.div variants={sidebarItem} className="flex flex-col sm:flex-row sm:items-center gap-6 mb-2">
-  
-  {/* Image Section */}
-  <div className="relative flex-shrink-0 w-max">
-    {/* Outer glow ring */}
-    <div className="absolute -inset-[4px] rounded-full"
-      style={{ background: 'linear-gradient(135deg, rgba(100,255,218,0.5), rgba(129,140,248,0.3))', filter: 'blur(5px)' }} />
-{/* Photo container */}
-<div className="relative w-32 h-47 rounded-full overflow-hidden border-[3px] flex-shrink-0"
-  style={{ borderColor: 'rgba(100,255,218,0.3)' }}>
-  <img
-    src="/jay.png"
-    alt="Jay Niketan Pathare"
-    className="w-full h-full object-cover"
-    style={{ objectPosition: '50% 15%' }}
-  />
-</div>
-    {/* Online dot */}
-    <span className="absolute bottom-1.5 right-1.5 w-4 h-4 rounded-full border-2 flex-shrink-0"
-      style={{ background: '#64ffda', borderColor: '#050d1a', boxShadow: '0 0 10px rgba(100,255,218,0.8)' }} />
-  </div>
 
-  {/* Main Header Layout Moved to the Right */}
-  <div>
-    <div className="font-mono text-[10px] tracking-widest mb-2" style={{ color: 'rgba(100,255,218,0.5)' }}>// software engineer</div>
-    
-    {/* Removed whitespace-nowrap to allow wrapping on smaller screens if necessary */}
-    <h1 className="text-2xl sm:text-3xl xl:text-[2.2rem] font-extrabold tracking-tight leading-tight" style={{ color: '#e2e8f0', letterSpacing: '-0.02em' }}>
-      Jay Niketan <span style={{ color: '#64ffda', textShadow: '0 0 40px rgba(100,255,218,0.25)' }}>Pathare</span>
-    </h1>
-    
-    <div className="mt-3 flex items-center gap-2.5">
-      <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 2, repeat: Infinity }} className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: '#64ffda', boxShadow: '0 0 8px rgba(100,255,218,0.6)' }} />
-      <span className="text-[12px] font-semibold tracking-wide" style={{ color: '#64748b' }}>Open to opportunities · MS CS @ UB</span>
-    </div>
-  </div>
-</motion.div>
+                  {/* Profile Header */}
+                  <motion.div variants={sidebarItem} className="flex flex-col sm:flex-row sm:items-center gap-6 mb-2">
+                    <div className="relative flex-shrink-0 w-max">
+                      <div className="absolute -inset-[4px] rounded-full"
+                        style={{ background: 'linear-gradient(135deg, rgba(100,255,218,0.5), rgba(129,140,248,0.3))', filter: 'blur(5px)' }} />
+                      {/* FIX: w-28 h-28 = perfect circle for rounded-full */}
+                      <div className="relative w-32 h-47 rounded-full overflow-hidden border-[3px] flex-shrink-0"
+                        style={{ borderColor: 'rgba(100,255,218,0.3)' }}>
+                        <img src="/jay.png" alt="Jay Niketan Pathare" className="w-full h-full object-cover"
+                          style={{ objectPosition: '50% 15%' }} />
+                      </div>
+                      <span className="absolute bottom-1.5 right-1.5 w-4 h-4 rounded-full border-2 flex-shrink-0"
+                        style={{ background: '#64ffda', borderColor: '#050d1a', boxShadow: '0 0 10px rgba(100,255,218,0.8)' }} />
+                    </div>
+                    <div>
+                      <div className="font-mono text-[10px] tracking-widest mb-2" style={{ color: 'rgba(100,255,218,0.5)' }}>// software engineer</div>
+                      <h1 className="text-2xl sm:text-3xl xl:text-[2.2rem] font-extrabold tracking-tight leading-tight" style={{ color: '#e2e8f0', letterSpacing: '-0.02em' }}>
+                        Jay Niketan <span style={{ color: '#64ffda', textShadow: '0 0 40px rgba(100,255,218,0.25)' }}>Pathare</span>
+                      </h1>
+                      <div className="mt-3 flex items-center gap-2.5">
+                        <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 2, repeat: Infinity }} className="w-2 h-2 rounded-full flex-shrink-0"
+                          style={{ background: '#64ffda', boxShadow: '0 0 8px rgba(100,255,218,0.6)' }} />
+                        <span className="text-[12px] font-semibold tracking-wide" style={{ color: '#64748b' }}>Open to opportunities · MS CS @ UB</span>
+                      </div>
+                    </div>
+                  </motion.div>
 
-
-                  {/* Metrics Row */}
+                  {/* Metrics Row — updated from CV */}
                   <motion.div variants={sidebarItem} className="grid grid-cols-3 gap-2.5">
-                    {[{ n: '1+', label: 'yr exp.' }, { n: '3', label: 'projects' }, { n: "Dec '26", label: 'MS CS' }].map(({ n, label }) => (
+                    {[{ n: '3.85', label: 'GPA / 4.0' }, { n: '3+', label: 'yrs exp.' }, { n: "Dec '26", label: 'MS CS' }].map(({ n, label }) => (
                       <div key={label} className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                         <div className="text-[17px] font-extrabold" style={{ color: '#e2e8f0' }}>{n}</div>
                         <div className="text-[9px] uppercase tracking-widest font-bold mt-0.5" style={{ color: '#475569' }}>{label}</div>
@@ -678,7 +603,7 @@ export default function Home() {
                     ))}
                   </motion.div>
 
-                  {/* Desktop Navigation Links */}
+                  {/* Desktop Nav */}
                   <motion.nav variants={sidebarItem} className="hidden lg:block space-y-0.5">
                     {navItems.map(item => {
                       const isActive = activeSection === item;
@@ -688,7 +613,7 @@ export default function Home() {
                           <motion.span animate={{ width: isActive ? 48 : 24 }} transition={{ duration: 0.3 }} className="h-[1px] block flex-shrink-0"
                             style={{ background: isActive ? '#64ffda' : '#1e293b' }} />
                           <span style={{ transition: 'color 0.2s' }} className={isActive ? '' : 'group-hover:text-slate-400'}>
-                            {item === 'about' ? 'About Me' : item === 'stack' ? 'Technical Stack' : item === 'awards' ? 'Extra Curriculum / Awards' : item === 'contact' ? 'Get In Touch' : item}
+                            {item === 'about' ? 'About Me' : item === 'stack' ? 'Technical Stack' : item === 'awards' ? 'Certs & Awards' : item === 'contact' ? 'Get In Touch' : item}
                           </span>
                           {isActive && <motion.span layoutId="nav-dot" className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: '#64ffda' }} />}
                         </a>
@@ -696,7 +621,7 @@ export default function Home() {
                     })}
                   </motion.nav>
 
-                  {/* Mobile Navigation Interface Pills */}
+                  {/* Mobile Nav */}
                   <motion.nav variants={sidebarItem} className="flex lg:hidden gap-2 flex-wrap">
                     {navItems.map(item => {
                       const isActive = activeSection === item;
@@ -709,12 +634,9 @@ export default function Home() {
                     })}
                   </motion.nav>
 
-                  {/* Contact Links Block */}
-                  <motion.div variants={sidebarItem}>
-                    <ContactStrip />
-                  </motion.div>
+                  <motion.div variants={sidebarItem}><ContactStrip /></motion.div>
 
-                  {/* FIX 2: Swap ASCII loop architecture with user provided static image avatar asset */}
+                  {/* Resume widget */}
                   <motion.div variants={sidebarItem}>
                     <div className="w-full relative overflow-hidden rounded-xl p-4" style={{ background: 'linear-gradient(135deg,rgba(15,39,68,0.9),rgba(7,20,36,0.95))', border: '1px solid rgba(100,255,218,0.1)' }}>
                       <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: 'linear-gradient(90deg,transparent,rgba(100,255,218,0.3),transparent)' }} />
@@ -728,20 +650,17 @@ export default function Home() {
                           </div>
                           <div className="text-[11px]" style={{ color: '#94a3b8' }}>Warning: May cause sudden urge to hire.</div>
                         </div>
-                        {/* Rendered explicit image element matching client specifications directly inside layout container */}
-                        <div className="w-20 h-20 rounded-xl overflow-hidden border border-teal-500/20 shadow-lg relative z-10 bg-slate-950 flex-shrink-0" style={{ boxShadow: '0 0 12px rgba(100,255,218,0.1)' }}>
-                          <img 
-                            src="/cat-glasses.png"
-                            alt="Hacker Cat With Glasses" 
-                            className="w-full h-full object-top brightness-90 contrast-110"
-                          />
+                        <div className="w-20 h-20 rounded-xl overflow-hidden border border-teal-500/20 shadow-lg relative z-10 bg-slate-900 flex-shrink-0 flex items-center justify-center"
+                          style={{ boxShadow: '0 0 12px rgba(100,255,218,0.1)' }}>
+                          <img src="/cat-glasses.png" alt="Hacker Cat" className="w-full h-full object-cover brightness-90 contrast-110"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                         </div>
                       </div>
                       <div className="mt-3.5 flex items-center justify-between gap-2 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
                         <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setIsResumeOpen(true)}
                           className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg font-mono text-[11px] font-bold tracking-wide"
                           style={{ border: '1px solid rgba(100,255,218,0.25)', background: 'rgba(100,255,218,0.07)', color: '#64ffda' }}>
-                          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
                           VIEW RESUME
                         </motion.button>
                         <span className="text-[9px] font-mono italic" style={{ color: '#1e293b' }}>(not a virus, promise)</span>
@@ -750,148 +669,177 @@ export default function Home() {
                   </motion.div>
                 </motion.aside>
 
-                {/* ══ MAIN CONTENT FEED ══ */}
+                {/* ══ MAIN CONTENT ══ */}
                 <main className="lg:col-span-7 py-8 sm:py-12 lg:py-20 space-y-24 sm:space-y-32 lg:border-l lg:pl-10 xl:pl-14" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
 
-                  {/* About Me Section */}
+                  {/* About */}
                   <section id="about" className="scroll-mt-24">
-                    <SectionHeader whiteText="About" tealText="Me" subtitle="A multi-disciplinary data explorer and systems builder" />
+                    <SectionHeader whiteText="About" tealText="Me" subtitle="A multi-disciplinary systems builder and ML engineer" />
                     <motion.div className="space-y-5 text-[14px] sm:text-[15px] leading-relaxed" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants} style={{ color: '#64748b' }}>
-                      <motion.p variants={itemVariants}>I'm a software engineer driven by building efficient backend systems, machine learning pipelines, and robust full-stack architectures. I enjoy solving structural problems — whether parsing intelligence out of messy datasets or building clean application layers that handle logic flawlessly.</motion.p>
-                      <motion.p variants={itemVariants}>Currently pursuing my <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Master of Science in Computer Science at the University at Buffalo</strong> (expected December 2026). Alongside my studies, I contribute to campus as a Public Safety Aide and host specialized engineering workshops.</motion.p>
-                      <motion.p variants={itemVariants}>Before Buffalo, I earned my Bachelor's in Information Technology from Mumbai University (VESIT) and spent a year as a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Software Engineer at Thesis Mumbai Tech</strong>. When I'm not building, I study chess strategy and follow developments in Graph Neural Networks and Large Language Models.</motion.p>
+                      <motion.p variants={itemVariants}>I'm a software engineer driven by building efficient backend systems, machine learning pipelines, and robust full-stack architectures. I enjoy solving structural problems — whether parsing intelligence out of messy datasets or engineering clean application layers that handle real-world complexity flawlessly.</motion.p>
+                      <motion.p variants={itemVariants}>Currently pursuing my <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Master of Science in Computer Science at the University at Buffalo</strong> (GPA 3.85 · expected December 2026). My graduate work spans machine learning, distributed systems, and graph neural networks, with applied research through a real-world industry collaboration with HeinOnline.</motion.p>
+                      <motion.p variants={itemVariants}>Before Buffalo, I earned my B.E. in Information Technology from VESIT, Mumbai University, and worked as a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Software Engineer at Thesis Mumbai Tech</strong> where I built and scaled healthcare systems supporting 10k+ records, and as a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Cloud Engineer Intern at Data Maven</strong> designing scalable AWS infrastructure. I also hold an <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>AWS Cloud Practitioner certification</strong> and have a published research paper on music genre classification. When I'm not building, I study chess strategy and follow developments in LLMs and GNNs.</motion.p>
+                      <motion.div variants={itemVariants}>
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-mono" style={{ background: 'rgba(100,255,218,0.06)', border: '1px solid rgba(100,255,218,0.15)', color: '#64ffda' }}>
+                          📍 Buffalo, NY · Open to relocation · F-1 OPT eligible Dec 2026
+                        </div>
+                      </motion.div>
                     </motion.div>
                   </section>
 
-                  {/* Experience Section */}
+                  {/* Experience — all 4 roles from CV */}
                   <section id="experience" className="scroll-mt-24">
-                    <SectionHeader whiteText="Professional" tealText="Experience" subtitle="Timeline of engineering and infrastructure assignments" />
+                    <SectionHeader whiteText="Professional" tealText="Experience" subtitle="Engineering and infrastructure roles across startups and research" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
-                      <ExpCard period="2026 — Present" title="Public Safety Aide" company="University at Buffalo" href="#"
-                        desc="Assisting campus safety operations, managing student and facility logistics, and handling shift configurations efficiently across university infrastructure."
-                        tags={['Operations', 'Logistics', 'Event Coordination']} />
-                      <ExpCard period="2024 — 2025" title="Software Engineer" company="Thesis Mumbai Tech" href="#"
-                        desc="Engineered production-ready software using Python, Django, and ReactJS. Maintained backend architectures on PostgreSQL, containerized services with Docker, and managed cloud deployments on AWS."
-                        tags={['Python', 'Django', 'ReactJS', 'PostgreSQL', 'Docker', 'AWS']} />
+
+                      <ExpCard period="Aug 2024 — Aug 2025" title="Software Engineer" company="Thesis Mumbai Tech"
+                        href="#"
+                        desc="Built and scaled healthcare modules (Patient Management, Consent) supporting 10k+ records. Developed an IoT baby-warmer system with real-time PostgreSQL pipelines and 2s live monitoring. Built a color-blindness diagnostic module achieving 97% clinical reliability. Containerized 3+ projects with Docker (90% setup time reduction), integrated secure PDF generation and WebRTC video conferencing. Conducted 20+ technical interviews and mentored new hires."
+                        tags={['Python', 'Django', 'PostgreSQL', 'Docker', 'ReactJS', 'WebRTC', 'IoT']} />
+                      <ExpCard period="Nov 2023 — May 2024" title="Cloud Engineer Intern" company="Data Maven"
+                        href="#"
+                        desc="Designed and deployed scalable cloud infrastructure on AWS using EC2 and RDS. Optimized VPC networking for secure, low-latency backend communication. Streamlined resource provisioning and supported deployment of data-intensive applications."
+                        tags={['AWS', 'EC2', 'RDS', 'VPC', 'Cloud Infrastructure']} />
+                      <ExpCard period="Jun 2023 — Aug 2023" title="Data Engineer Intern" company="Go Digital Technology Consulting"
+                        href="#"
+                        desc="Analyzed real-world datasets using Python (Pandas, NumPy) and MySQL to extract trends and deliver actionable business insights."
+                        tags={['Python', 'Pandas', 'NumPy', 'MySQL', 'Data Analysis']} />
                     </motion.div>
                   </section>
 
-                  {/* Projects Section */}
+                  {/* Projects — all 3 from CV with accurate descriptions */}
                   <section id="projects" className="scroll-mt-24">
-                    <SectionHeader whiteText="Featured" tealText="Projects" subtitle="A selection of software platforms showcasing technical competence" />
+                    <SectionHeader whiteText="Featured" tealText="Projects" subtitle="Academic and personal builds showcasing applied engineering" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
-                      <ProjectCard icon="ocr" title="AI-Powered Metadata Extraction Pipeline" href="#"
-                        desc="Intelligent documentation documentation mining pipeline to process 1,000+ legal journals for HeinOnline. Used DeepSeek-OCR and text segmentation to parse layout metadata directly from print artifacts."
-                        tags={['Python', 'DeepSeek-OCR', 'LLMs', 'Computer Vision']} />
-                      <ProjectCard icon="gnn" title="GraphSAGE Financial Fraud Detector" href="#"
-                        desc="Deep learning graph classification pipeline on the IEEE-CIS dataset. Built with PyTorch Geometric — GraphSAGE and GAT models mapping relational anomalies across imbalanced transactional topologies."
-                        tags={['PyTorch', 'GraphSAGE', 'GAT', 'Deep Learning']} />
-                      <ProjectCard icon="iot" title="CampusSense IoT Monitoring Platform" href="#"
-                        desc="Physical hardware and web platform monitoring temperature across campus buildings. Arduino Uno telemetry layer feeding real-time data into a ReactJS dashboard."
-                        tags={['Arduino', 'ReactJS', 'IoT', 'Full-Stack']} />
+                      <ProjectCard icon="OCR" title="AI Metadata Extraction Pipeline · HeinOnline"
+                        href="#"
+                        desc="Engineered a hybrid OCR-LLM metadata extraction pipeline using Tesseract-OCR and Qwen-35B across 1,000+ legacy law journals. Automated end-to-end author metadata entry, reducing manual workload by 90% while maintaining 95%+ accuracy. Containerized the full pipeline with Docker."
+                        note="Industry collaboration — private repo"
+                        tags={['Python', 'Tesseract-OCR', 'Qwen-35B', 'LLMs', 'Docker', 'ETL']} />
+                      <ProjectCard icon="GNN" title="Fraud Detection with Graph Neural Networks"
+                        href="#"
+                        desc="GraphSAGE-based fraud detection on the IEEE-CIS dataset. Converted tabular transactions into a graph using shared card, device, and email features to capture relational patterns. Handled severe class imbalance for robust training and evaluation."
+                        note="Academic project · private repo"
+                        tags={['PyTorch', 'GraphSAGE', 'Graph Neural Networks', 'Python', 'IEEE-CIS']} />
+                      <ProjectCard icon="IoT" title="Temperature Monitoring System · CampusSense"
+                        href="#"
+                        desc="End-to-end IoT pipeline: Arduino Uno streams continuous temperature readings over WiFi to a ReactJS live dashboard. Django backend processes sensor data with Auth0 authentication for secure transmission."
+                        note="Team of 3 · academic project"
+                        tags={['Arduino', 'Django', 'ReactJS', 'Auth0', 'IoT', 'PostgreSQL']} />
+                      <ProjectCard icon="🎵" title="Music Genre Classification"
+                        href="https://ijrar.org/papers/IJRAR23B2524.pdf"
+                        desc="Classified audio files into genres using feature extraction techniques, achieving 97.68% accuracy. Published in IJRAR Volume 10, Issue 2. Algorithms: CatBoost, KNN."
+                        tags={['Python', 'CatBoost', 'KNN', 'Feature Extraction', 'Published Research']} />
                     </motion.div>
                   </section>
 
-                  {/* Education Section */}
+                  {/* Education */}
                   <section id="education" className="scroll-mt-24">
-                    <SectionHeader whiteText="Academic" tealText="Background" subtitle="Formal parameters of university training and specialization fields" />
+                    <SectionHeader whiteText="Academic" tealText="Background" subtitle="University training and research specializations" />
                     <motion.div className="space-y-3" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <EducationCard
                         degree="M.S. Computer Science"
                         school="University at Buffalo, SUNY"
-                        period="2025 — Dec 2026"
+                        period="Aug 2025 — Dec 2026"
+                        gpa="3.85 / 4.0"
                         highlights={[
-                          'Focus areas: Machine Learning, Distributed Systems, Graph Neural Networks',
-                          'Public Safety Aide — contributing to campus operations',
-                          'Organized Git & GitHub workshop for CS&E department',
-                          'Active participant across specialized computer engineering labs',
+                          'Focus: Machine Learning, Distributed Systems, Graph Neural Networks',
+                          'Industry project: OCR-LLM metadata pipeline for HeinOnline (CSE 611)',
+                          'Organized Git & GitHub workshop for CS&E dept — Certificate of Appreciation',
+                          'Public Safety Aide, University at Buffalo campus',
                         ]}
                       />
                       <EducationCard
                         degree="B.E. Information Technology"
-                        school="Mumbai University · VESIT"
-                        period="2019 — 2023"
+                        school="VESIT · Mumbai University, India"
+                        period="Aug 2019 — May 2023"
                         highlights={[
-                          'Graduated with distinction in information systems and mathematics',
-                          'Architected CampusSense IoT temperature arrays as capstone assembly',
-                          'Coursework: Advanced Data Structures, Relational DBMS, Networking Protocols',
-                          'Active software developer across campus software testing events',
+                          'Capstone: IoT temperature monitoring system (CampusSense)',
+                          'Published research: Music Genre Classification — IJRAR Vol. 10, Issue 2',
+                          'Coursework: Data Structures, DBMS, Networking, OOP',
+                          'Active participant in campus software testing events',
                         ]}
                       />
                     </motion.div>
                   </section>
 
-                  {/* Technical Stack Section */}
+                  {/* Technical Stack */}
                   <section id="stack" className="scroll-mt-24">
-                    <SectionHeader whiteText="Technical" tealText="Competencies" subtitle="Languages, framework technologies, and protocols I bring to the table" />
+                    <SectionHeader whiteText="Technical" tealText="Competencies" subtitle="Languages, frameworks, and tools I bring to the table" />
                     <motion.div className="grid grid-cols-1 sm:grid-cols-2 gap-4" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       {techStack.map(t => <TechCard key={t.category} {...t} />)}
                     </motion.div>
                   </section>
 
-                  {/* Extra Curriculum / Awards Section */}
+                  {/* Certs, Awards & Publications */}
                   <section id="awards" className="scroll-mt-24">
-                    <SectionHeader whiteText="Honors &" tealText="Activities" subtitle="Extracurricular leadership and technical workshop training roles" />
+                    <SectionHeader whiteText="Certs, Awards &" tealText="Publications" subtitle="Credentials, recognitions, and published research" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
-                      <ExpCard period="2026" title="Event Manager & Technical Lead" company="University at Buffalo" href="#"
-                        desc="Organised and conducted a Git & GitHub workshop for the Dept. of CS&E. Mentored participants on repository workflows, branching logic, and collaborative development, receiving a Certificate of Appreciation for outstanding leadership."
+                      <AwardCard year="Jul 2024" title="AWS Cloud Practitioner" org="Amazon Web Services"
+                        desc="Certified in core AWS cloud concepts, infrastructure services, security, and pricing models — covering EC2, RDS, VPC, S3, and IAM."
+                        tags={['AWS', 'Cloud', 'Certification']} />
+                      <AwardCard year="Feb 2026" title="Certificate of Appreciation" org="University at Buffalo"
+                        desc='Recognized as Event Manager for organizing "GitHub: Hands-On from Basics to Advanced" workshop for the Dept. of Computer Science & Engineering. Mentored participants on repository workflows, branching, and collaborative development.'
                         tags={['Git', 'GitHub', 'Technical Training', 'Event Management']} />
+                      <AwardCard year="Apr 2023" title="Research Publication" org="IJRAR"
+                        href="https://ijrar.org/papers/IJRAR23B2524.pdf"
+                        desc='J. Pathare, D. Ahuja, R. Singh, M. Sabnis — "Music Genre Classification" — International Journal of Research and Analytical Reviews, Volume 10, Issue 2. ISSN: 2348-1269. Achieved 97.68% classification accuracy using CatBoost and KNN.'
+                        tags={['Research', 'ML', 'Published', 'IJRAR']} />
                     </motion.div>
                   </section>
 
-                  {/* FIX 2: High-Visibility Single Transatlantic Line and Scaled Map Assets */}
+                  {/* Contact */}
                   <section id="contact" className="scroll-mt-24 space-y-6">
-                    <SectionHeader whiteText="Get In" tealText="Touch" subtitle="Gateway communication nodes to initiate technical inquiries" />
+                    <SectionHeader whiteText="Get In" tealText="Touch" subtitle="Open to full-time roles in backend engineering and ML" />
                     <div className="w-full rounded-2xl p-6 relative overflow-hidden bg-slate-950/40 border border-slate-900 shadow-2xl">
-                      
-                      {/* High-Contrast SVG Layout Panel rendering accurate country boundaries mapping */}
                       <div className="mb-6">
-  <WorldMap />
-</div>
-
+                        <WorldMap />
+                      </div>
                       <div className="text-center max-w-md mx-auto space-y-4 relative z-10 pt-2 font-sans">
-                        <p className="text-xs text-textDim leading-relaxed font-normal">
-                          I am actively exploring backend systems architecture and machine learning engineering roles. If you have an interesting tracking parameter to discuss or simply wish to connect, feel free to drop a message.
+                        <p className="text-xs leading-relaxed font-normal" style={{ color: '#64748b' }}>
+                          I'm actively exploring full-time opportunities in backend systems engineering and machine learning. Available for F-1 OPT from December 2026. If you have an interesting problem to solve or simply want to connect, drop me a message.
                         </p>
-                        
                         <div className="grid grid-cols-1 gap-2.5 text-left text-xs font-mono max-w-xs mx-auto pt-2">
                           <div className="p-3 rounded-xl bg-[#0a1326] border border-slate-800/80 flex items-center gap-3 shadow-lg">
                             <span className="text-teal-400 text-sm">✉</span>
                             <a href="mailto:jaypathare@buffalo.edu" className="text-slate-200 hover:text-[#64ffda] transition-colors">jaypathare@buffalo.edu</a>
                           </div>
                           <div className="p-3 rounded-xl bg-[#0a1326] border border-slate-800/80 flex items-center gap-3 shadow-lg">
+                            <span className="text-teal-400 text-sm">✉</span>
+                            <a href="mailto:jaypathare123@gmail.com" className="text-slate-200 hover:text-[#64ffda] transition-colors">jaypathare123@gmail.com</a>
+                          </div>
+                          <div className="p-3 rounded-xl bg-[#0a1326] border border-slate-800/80 flex items-center gap-3 shadow-lg">
                             <span className="text-indigo-400 text-sm">📍</span>
-                            <span className="text-slate-400">Buffalo, NY, USA</span>
+                            <span className="text-slate-400">Buffalo, NY, USA · Open to relocation</span>
+                          </div>
+                          <div className="p-3 rounded-xl bg-[#0a1326] border border-slate-800/80 flex items-center gap-3 shadow-lg">
+                            <span className="text-yellow-400 text-sm">📞</span>
+                            <span className="text-slate-400">+1 (716) 303-9924</span>
                           </div>
                         </div>
-
-                        <motion.a 
-                          whileHover={{ scale: 1.02, boxShadow: '0 0 24px rgba(100,255,218,0.3)' }} 
-                          whileTap={{ scale: 0.98 }}
+                        <motion.a whileHover={{ scale: 1.02, boxShadow: '0 0 24px rgba(100,255,218,0.3)' }} whileTap={{ scale: 0.98 }}
                           href="mailto:jaypathare@buffalo.edu"
                           className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold font-mono tracking-wider transition-colors mt-3"
-                          style={{ background: '#64ffda', color: '#050d1a' }}
-                        >
+                          style={{ background: '#64ffda', color: '#050d1a' }}>
                           ⚡ SEND MESSAGE
                         </motion.a>
                       </div>
                     </div>
                   </section>
 
-                  {/* Footer Block */}
+                  {/* Footer */}
                   <Reveal>
                     <footer className="text-[11px] pt-12 sm:pt-16 font-mono leading-relaxed" style={{ borderTop: '1px solid rgba(255,255,255,0.04)', color: '#1e293b' }}>
-                      Coded in Visual Studio Code. Built with <span style={{ color:'#334155' }}>Next.js</span>, <span style={{ color:'#334155' }}>Tailwind CSS</span> &amp; <span style={{ color:'#334155' }}>Framer Motion</span>.
+                      Coded in Visual Studio Code. Built with <span style={{ color: '#334155' }}>Next.js</span>, <span style={{ color: '#334155' }}>Tailwind CSS</span> &amp; <span style={{ color: '#334155' }}>Framer Motion</span>.
                     </footer>
                   </Reveal>
                 </main>
               </div>
             </div>
 
-            {/* AI Chat Orb Widget */}
             <AIChatOrb />
 
-            {/* Resume Interactive Modal Overlay */}
+            {/* Resume Modal */}
             <AnimatePresence>
               {isResumeOpen && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -906,7 +854,7 @@ export default function Home() {
                     <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: 'linear-gradient(90deg,transparent,rgba(100,255,218,0.4),transparent)' }} />
                     <div className="flex items-center justify-between pb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                       <div className="flex items-center gap-1.5">
-                        {['#ff5f57','#ffbd2e','#28ca41'].map(c => <span key={c} className="w-2.5 h-2.5 rounded-full" style={{ background: c }} />)}
+                        {['#ff5f57', '#ffbd2e', '#28ca41'].map(c => <span key={c} className="w-2.5 h-2.5 rounded-full" style={{ background: c }} />)}
                         <span className="text-xs font-mono ml-2" style={{ color: '#334155' }}>resume_fetcher.sh</span>
                       </div>
                       <button onClick={() => setIsResumeOpen(false)} className="text-xs font-mono" style={{ color: '#334155' }}>[ESC]</button>
@@ -914,8 +862,8 @@ export default function Home() {
                     <div className="font-mono text-xs space-y-2 p-3 rounded-lg" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.04)', color: '#475569' }}>
                       <div><span style={{ color: '#64ffda' }}>jay@ub-node:~$</span> sh fetch_credentials.sh</div>
                       {loadingProgress > 10 && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>&gt; Connecting to encrypted static cloud asset...</motion.div>}
-                      {loadingProgress > 40 && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>&gt; Parsing experience map (Thesis Tech / UB PSA)...</motion.div>}
-                      {loadingProgress > 70 && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ color: '#4ade80' }}>&gt; Verification successful. Handshake closed.</motion.div>}
+                      {loadingProgress > 40 && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>&gt; Parsing experience map (HeinOnline / Thesis Tech / AWS)...</motion.div>}
+                      {loadingProgress > 70 && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ color: '#4ade80' }}>&gt; Verification successful. GPA 3.85 confirmed.</motion.div>}
                       <div className="w-full h-1.5 rounded-full mt-3 overflow-hidden" style={{ background: '#0d1f35' }}>
                         <motion.div className="h-full rounded-full" style={{ width: `${loadingProgress}%`, background: 'linear-gradient(90deg,#64ffda,#818cf8)' }} />
                       </div>
