@@ -93,11 +93,11 @@ function Preloader({ onDone }: { onDone: () => void }) {
 }
 
 // ─── Scroll-progress bar ──────────────────────────────────────────────────────
-function ScrollBar() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
-  return <motion.div style={{ scaleX, background: 'linear-gradient(90deg,#64ffda,#818cf8)' }} className="fixed top-0 left-0 right-0 h-[2px] origin-left z-50" />;
-}
+// function ScrollBar() {
+//   const { scrollYProgress } = useScroll();
+//   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+//   return <motion.div style={{ scaleX, background: 'linear-gradient(90deg,#64ffda,#818cf8)' }} className="fixed top-0 left-0 right-0 h-[2px] origin-left z-50" />;
+// }
 
 // ─── Ambient orbs ─────────────────────────────────────────────────────────────
 function AmbientOrbs() {
@@ -289,27 +289,98 @@ function ExpCard({ period, title, company, desc, tags }: { period: string; title
 }
 
 // ─── Project card ─────────────────────────────────────────────────────────────
+// ─── Project card ─────────────────────────────────────────────────────────────
 function ProjectCard({ icon, title, href, desc, tags, note }: { icon: string; title: string; href: string; desc: string; tags: string[]; note?: string }) {
   const [hovered, setHovered] = useState(false);
+  
+  // Split the description into an array of sentences
+  const sentences = desc.split('. ').filter(Boolean);
+  // Check if there is hidden content to show
+  const hasMoreContent = sentences.length > 1 || !!note;
+
   return (
     <motion.a href={href} target={href === '#' ? undefined : '_blank'} rel="noopener noreferrer"
       onHoverStart={() => setHovered(true)} onHoverEnd={() => setHovered(false)}
-      className="group grid grid-cols-1 sm:grid-cols-4 gap-4 p-4 sm:p-5 rounded-xl no-underline cursor-pointer"
+      className="group p-4 sm:p-5 rounded-xl no-underline cursor-pointer flex flex-col h-full"
       variants={itemVariants} style={computeContainerStyle(hovered, 'rgba(100,255,218,0.06)')}>
       <HoverBorder hovered={hovered} />
-      <div className="hidden sm:flex items-center justify-center w-11 h-11 rounded-lg font-mono text-[10px] font-bold tracking-wider flex-shrink-0 relative z-10"
-        style={{ background: 'rgba(15,39,68,0.8)', border: hovered ? '1px solid rgba(100,255,218,0.3)' : '1px solid rgba(255,255,255,0.06)', color: hovered ? '#64ffda' : 'rgba(100,255,218,0.35)', transition: 'all 0.2s' }}>{icon}</div>
-      <div className="sm:col-span-3 space-y-2.5 relative z-10">
-        <h3 className="font-bold text-[14px] sm:text-[15px] flex items-center gap-1.5 flex-wrap" style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>
-          {title}
-          {href !== '#' && <motion.span animate={hovered ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: -4, y: 4 }} transition={{ duration: 0.18 }} style={{ color: '#64ffda' }}>↗</motion.span>}
-        </h3>
-        <p className="text-[12px] sm:text-[13px] leading-relaxed" style={{ color: hovered ? '#94a3b8' : '#64748b', transition: 'color 0.2s' }}>{desc}</p>
-        {note && <p className="text-[11px] italic" style={{ color: '#334155' }}>{note}</p>}
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {tags.map(t => <span key={t} className="text-[10px] px-2.5 py-0.5 rounded-full font-medium tracking-wide"
-            style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', color: '#64ffda', border: '1px solid rgba(100,255,218,0.15)', transition: 'background 0.2s' }}>{t}</span>)}
+
+      {/* Header row — always visible */}
+      <div className="flex items-center gap-3 relative z-10">
+        <div className="w-10 h-10 rounded-lg flex items-center justify-center font-mono text-[10px] font-bold flex-shrink-0"
+          style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', border: '1px solid rgba(100,255,218,0.15)', color: hovered ? '#64ffda' : 'rgba(100,255,218,0.35)', transition: 'all 0.3s' }}>
+          {icon}
         </div>
+        <h3 className="font-bold text-[14px] sm:text-[15px] flex items-center gap-1.5 flex-wrap"
+          style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>
+          {title}
+          {href !== '#' && (
+            <motion.span animate={hovered ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: -4, y: 4 }}
+              transition={{ duration: 0.18 }} style={{ color: '#64ffda' }}>↗</motion.span>
+          )}
+        </h3>
+      </div>
+
+      {/* Description Block */}
+      <div className="mt-4 space-y-1.5 relative z-10 flex-1">
+        
+        {/* 1st Sentence — ALWAYS VISIBLE */}
+        {sentences.length > 0 && (
+          <div className="flex items-start gap-2 text-[12px] sm:text-[13px] leading-relaxed" style={{ color: hovered ? '#94a3b8' : '#64748b', transition: 'color 0.2s' }}>
+            <span className="mt-2 w-1 h-1 rounded-full flex-shrink-0" style={{ background: '#64ffda' }} />
+            <span>{sentences[0].endsWith('.') ? sentences[0] : `${sentences[0]}.`}</span>
+          </div>
+        )}
+
+        {/* Floating '...' Indicator on its own line */}
+        {hasMoreContent && !hovered && (
+          <div className="flex items-start gap-2 text-[12px] sm:text-[13px]">
+            {/* Invisible spacer to perfectly align the dots with the text above */}
+            <span className="mt-2 w-1 h-1 flex-shrink-0" />
+            <span className="tracking-widest animate-pulse text-lg leading-none" style={{ color: 'rgba(100,255,218,0.5)' }}>...</span>
+          </div>
+        )}
+
+        {/* Remaining Sentences + Note — SLIDES IN ON HOVER */}
+        <AnimatePresence>
+          {hovered && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className="overflow-hidden space-y-1.5">
+              
+              {/* .slice(1) skips the first sentence since we already rendered it above */}
+              {sentences.slice(1).map((sentence, i) => (
+                <motion.div key={i}
+                  initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}
+                  className="flex items-start gap-2 text-[12px] sm:text-[13px] leading-relaxed" style={{ color: '#94a3b8' }}>
+                  <span className="mt-2 w-1 h-1 rounded-full flex-shrink-0" style={{ background: '#64ffda' }} />
+                  {sentence.endsWith('.') ? sentence : `${sentence}.`}
+                </motion.div>
+              ))}
+              
+              {note && (
+                <motion.div initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: sentences.length * 0.05 }}
+                  className="flex items-start gap-2 text-[11px] italic pt-1" style={{ color: '#475569' }}>
+                  <span className="mt-1.5 w-1 h-1 rounded-full flex-shrink-0" style={{ background: '#334155' }} />
+                  {note}
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Tags — ALWAYS VISIBLE at the bottom */}
+      <div className="flex flex-wrap gap-1.5 mt-auto pt-4 relative z-10">
+        {tags.map(t => (
+          <span key={t} className="text-[10px] px-2.5 py-0.5 rounded-full font-medium tracking-wide"
+            style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', color: '#64ffda', border: '1px solid rgba(100,255,218,0.15)', transition: 'background 0.2s' }}>
+            {t}
+          </span>
+        ))}
       </div>
     </motion.a>
   );
@@ -482,7 +553,7 @@ const socialLinks = [
     icon: <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>,
   },
   {
-    label: 'Email', href: 'mailto:jaypathare@buffalo.edu',
+    label: 'Email', href: 'mailto:jaypathare123@gmail.com',
     icon: <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>,
   },
 ];
@@ -490,19 +561,25 @@ const socialLinks = [
 function ContactStrip() {
   return (
     <div className="pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-      <div className="text-[10px] font-bold uppercase tracking-widest mb-3 text-slate-500">Get in touch</div>
+      <div className="text-[10px] font-bold uppercase tracking-widest mb-3 text-slate-500">Connect</div>
       <div className="flex items-center gap-5 flex-wrap">
         {socialLinks.map(({ label, href, icon }) => (
           <motion.a key={label} href={href} target={href.startsWith('mailto') ? undefined : '_blank'} rel="noopener noreferrer"
             aria-label={label} whileHover={{ y: -3, color: '#64ffda' }} transition={{ duration: 0.2 }}
+            className="group relative"
             style={{ color: '#334155', display: 'flex', alignItems: 'center' }}>
             {icon}
+            {/* ─── Hover Tooltip ─── */}
+            <span className="absolute -top-8 left-0 px-2.5 py-1 rounded-md text-[9px] font-mono opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50"
+              style={{ background: '#0a1326', border: '1px solid rgba(100,255,218,0.2)', color: '#64ffda', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
+              {href.replace('mailto:', '').replace('https://', '')}
+            </span>
           </motion.a>
         ))}
-        <a href="mailto:jaypathare@buffalo.edu" className="text-[11px] font-mono transition-colors" style={{ color: '#334155' }}
+        {/* <a href="mailto:jaypathare123@gmail.com" className="text-[11px] font-mono transition-colors" style={{ color: '#334155' }}
           onMouseEnter={e => (e.currentTarget.style.color = '#64ffda')} onMouseLeave={e => (e.currentTarget.style.color = '#334155')}>
-          jaypathare@buffalo.edu
-        </a>
+          jaypathare123@gmail.com
+        </a> */}
       </div>
     </div>
   );
@@ -543,7 +620,7 @@ export default function Home() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}
             className="relative min-h-screen antialiased" style={{ background: '#050d1a', color: '#94a3b8' }}>
             <style>{`*{-webkit-font-smoothing:antialiased}::-webkit-scrollbar{display:none}html{scroll-behavior:smooth}.no-underline{text-decoration:none}`}</style>
-            <ScrollBar />
+            {/* <ScrollBar /> */}
             <AmbientOrbs />
             <div className="pointer-events-none fixed inset-0 z-0 hidden md:block" style={{ background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px,rgba(100,255,218,0.03) 0%,transparent 70%)` }} />
             <div className="pointer-events-none fixed inset-0 z-0" style={{ backgroundImage: 'radial-gradient(circle,rgba(148,163,184,0.05) 1px,transparent 1px)', backgroundSize: '32px 32px' }} />
@@ -567,8 +644,6 @@ export default function Home() {
                         <img src="/jay.png" alt="Jay Niketan Pathare" className="w-full h-full object-cover"
                           style={{ objectPosition: '50% 15%' }} />
                       </div>
-                      <span className="absolute bottom-1.5 right-1.5 w-4 h-4 rounded-full border-2 flex-shrink-0"
-                        style={{ background: '#64ffda', borderColor: '#050d1a', boxShadow: '0 0 10px rgba(100,255,218,0.8)' }} />
                     </div>
                     <div>
                       <div className="font-mono text-[10px] tracking-widest mb-2" style={{ color: 'rgba(100,255,218,0.5)' }}>// software engineer</div>
@@ -585,7 +660,7 @@ export default function Home() {
 
                   {/* Metrics Row — updated from CV */}
                   <motion.div variants={sidebarItem} className="grid grid-cols-3 gap-2.5">
-                    {[{ n: '3.85', label: 'GPA / 4.0' }, { n: '3+', label: 'yrs exp.' }, { n: "Dec '26", label: 'MS CS' }].map(({ n, label }) => (
+                    {[{ n: '3.85', label: 'GPA / 4.0' }, { n: '1+', label: 'yrs exp.' }, { n: "Dec '26", label: 'MS CS' }].map(({ n, label }) => (
                       <div key={label} className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                         <div className="text-[17px] font-extrabold" style={{ color: '#e2e8f0' }}>{n}</div>
                         <div className="text-[9px] uppercase tracking-widest font-bold mt-0.5" style={{ color: '#475569' }}>{label}</div>
@@ -706,7 +781,13 @@ export default function Home() {
                   {/* Projects — all 3 from CV with accurate descriptions */}
 <section id="projects" className="scroll-mt-24">
                     <SectionHeader whiteText="Featured" tealText="Projects" subtitle="Academic and personal builds showcasing applied engineering" />
-                    <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
+                    {/* <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}> */}
+                    <motion.div className="grid grid-cols-1 xl:grid-cols-2 gap-4" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
+                    <ProjectCard icon="LMS" title="Classavo-Inspired LMS"
+                      href="https://github.com/Jaypath456/classavo"
+                      desc="Full-stack Learning Management System with role-based access for instructors and students. Instructors author chapter content with a Slate.js rich-text editor (Plate.js-compatible JSON), control per-chapter visibility, and publish courses — students browse, enroll, and read public chapters. JWT auth via SimpleJWT with Axios interceptors for clean, DRY API calls."
+                      note="Built as a coding assessment — intentionally kept readable over clever"
+                      tags={['Django', 'DRF', 'React', 'JWT', 'Slate.js', 'REST API', 'SQLite']} />
                       <ProjectCard icon="OCR" title="AI Metadata Extraction Pipeline · HeinOnline"
                         href="https://github.com/jaypathare/temp-ocr-repo"
                         desc="Engineered a hybrid OCR-LLM metadata extraction pipeline using Tesseract-OCR and Qwen-35B across 1,000+ legacy law journals. Automated end-to-end author metadata entry, reducing manual workload by 90% while maintaining 95%+ accuracy. Containerized the full pipeline with Docker."
@@ -718,12 +799,12 @@ export default function Home() {
                         note="Academic project"
                         tags={['PyTorch', 'GraphSAGE', 'Graph Neural Networks', 'Python', 'IEEE-CIS']} />
                       <ProjectCard icon="IoT" title="Temperature Monitoring System · CampusSense"
-                        href="https://github.com/jaypathare/campussense-iot"
+                        href="https://github.com/Jaypath456/UB_hackathon"
                         desc="End-to-end IoT pipeline: Arduino Uno streams continuous temperature readings over WiFi to a ReactJS live dashboard. Django backend processes sensor data with Auth0 authentication for secure transmission."
                         note="Team of 3 · academic project"
                         tags={['Arduino', 'Django', 'ReactJS', 'Auth0', 'IoT', 'PostgreSQL']} />
                       <ProjectCard icon="🎵" title="Music Genre Classification"
-                        href="https://ijrar.org/papers/IJRAR23B2524.pdf"
+                        href="https://github.com/Jaypath456/Music-Genre-Classification"
                         desc="Classified audio files into genres using feature extraction techniques, achieving 97.68% accuracy. Published in IJRAR Volume 10, Issue 2. Algorithms: CatBoost, KNN."
                         tags={['Python', 'CatBoost', 'KNN', 'Feature Extraction', 'Published Research']} />
                     </motion.div>
@@ -777,6 +858,7 @@ export default function Home() {
                         tags={['AWS', 'Cloud', 'Certification']} />
                       <AwardCard year="Feb 2026" title="Certificate of Appreciation" org="University at Buffalo"
                         desc='Recognized as Event Manager for organizing "GitHub: Hands-On from Basics to Advanced" workshop for the Dept. of Computer Science & Engineering. Mentored participants on repository workflows, branching, and collaborative development.'
+                        href="https://drive.google.com/file/d/15yVN_8Dbgkt-B_pCi7V1fGcuibhWLiNA/view?usp=sharing"
                         tags={['Git', 'GitHub', 'Technical Training', 'Event Management']} />
                       <AwardCard year="Apr 2023" title="Research Publication" org="IJRAR"
                         href="https://ijrar.org/papers/IJRAR23B2524.pdf"
@@ -797,10 +879,10 @@ export default function Home() {
                           I'm actively exploring full-time opportunities in backend systems engineering and machine learning. Available for F-1 OPT from December 2026. If you have an interesting problem to solve or simply want to connect, drop me a message.
                         </p>
                         <div className="grid grid-cols-1 gap-2.5 text-left text-xs font-mono max-w-xs mx-auto pt-2">
-                          <div className="p-3 rounded-xl bg-[#0a1326] border border-slate-800/80 flex items-center gap-3 shadow-lg">
+                          {/* <div className="p-3 rounded-xl bg-[#0a1326] border border-slate-800/80 flex items-center gap-3 shadow-lg">
                             <span className="text-teal-400 text-sm">✉</span>
-                            <a href="mailto:jaypathare@buffalo.edu" className="text-slate-200 hover:text-[#64ffda] transition-colors">jaypathare@buffalo.edu</a>
-                          </div>
+                            <a href="mailto:jaypathare123@gmail.com" className="text-slate-200 hover:text-[#64ffda] transition-colors">jaypathare123@gmail.com</a>
+                          </div> */}
                           <div className="p-3 rounded-xl bg-[#0a1326] border border-slate-800/80 flex items-center gap-3 shadow-lg">
                             <span className="text-teal-400 text-sm">✉</span>
                             <a href="mailto:jaypathare123@gmail.com" className="text-slate-200 hover:text-[#64ffda] transition-colors">jaypathare123@gmail.com</a>
@@ -815,7 +897,7 @@ export default function Home() {
                           </div>
                         </div>
                         <motion.a whileHover={{ scale: 1.02, boxShadow: '0 0 24px rgba(100,255,218,0.3)' }} whileTap={{ scale: 0.98 }}
-                          href="mailto:jaypathare@buffalo.edu"
+                          href="mailto:jaypathare123@gmail.com"
                           className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold font-mono tracking-wider transition-colors mt-3"
                           style={{ background: '#64ffda', color: '#050d1a' }}>
                           ⚡ SEND MESSAGE
