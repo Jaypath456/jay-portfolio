@@ -270,24 +270,51 @@ function ExpCard({ period, title, company, desc, tags }: { period: string; title
   return (
     <motion.div
       onHoverStart={() => setHovered(true)} onHoverEnd={() => setHovered(false)}
-      className="group grid grid-cols-1 sm:grid-cols-4 gap-2 p-4 sm:p-5 rounded-xl cursor-default"
+      className="group relative flex flex-col gap-3 p-4 sm:p-5 rounded-xl cursor-default"
       variants={itemVariants} style={computeContainerStyle(hovered, 'rgba(100,255,218,0.04)')}>
       <HoverBorder hovered={hovered} />
-      <div className="text-[10px] font-bold tracking-widest uppercase pt-1 font-mono relative z-10" style={{ color: '#475569' }}>{period}</div>
-      <div className="sm:col-span-3 space-y-2.5 relative z-10">
-        <h3 className="font-bold text-[14px] sm:text-[15px] flex items-center gap-1.5 flex-wrap" style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>
-          {title} · {company}
-        </h3>
-        <p className="text-[12px] sm:text-[13px] leading-relaxed" style={{ color: hovered ? '#94a3b8' : '#64748b', transition: 'color 0.2s' }}>{desc}</p>
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {tags.map(t => <span key={t} className="text-[10px] px-2.5 py-0.5 rounded-full font-medium tracking-wide"
-            style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', color: '#64ffda', border: '1px solid rgba(100,255,218,0.15)', transition: 'background 0.2s' }}>{t}</span>)}
+      
+      {/* Header Row: Icon, Title & Date */}
+      <div className="relative z-10 flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
+        <div className="flex items-start gap-3.5">
+          {/* Briefcase Icon Box */}
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', border: '1px solid rgba(100,255,218,0.15)', transition: 'all 0.3s' }}>
+            <svg className="w-5 h-5" style={{ color: hovered ? '#64ffda' : 'rgba(100,255,218,0.8)', transition: 'color 0.2s' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+          </div>
+          {/* Title & Company */}
+          <div className="pt-0.5">
+            <h3 className="font-bold text-[15px]" style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>
+              {title}
+            </h3>
+            <div className="text-[13px] mt-0.5" style={{ color: '#64748b' }}>
+              {company}
+            </div>
+          </div>
         </div>
+        
+        {/* Date */}
+        <div className="text-[10px] font-bold tracking-widest uppercase font-mono sm:text-right mt-1 sm:mt-0 pt-1" style={{ color: '#475569' }}>
+          {period}
+        </div>
+      </div>
+
+      {/* Description */}
+      <div className="relative z-10 mt-1">
+        <p className="text-[13px] leading-relaxed" style={{ color: hovered ? '#94a3b8' : '#64748b', transition: 'color 0.2s' }}>{desc}</p>
+      </div>
+
+      {/* Tags */}
+      <div className="relative z-10 flex flex-wrap gap-1.5 mt-2">
+        {tags.map(t => <span key={t} className="text-[10px] px-2.5 py-0.5 rounded-full font-medium tracking-wide"
+          style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', color: '#64ffda', border: '1px solid rgba(100,255,218,0.15)', transition: 'background 0.2s' }}>{t}</span>)}
       </div>
     </motion.div>
   );
 }
-
 // ─── Project card ─────────────────────────────────────────────────────────────
 // ─── Project card ─────────────────────────────────────────────────────────────
 function ProjectCard({ icon, title, href, desc, tags, note }: { icon: string; title: string; href: string; desc: string; tags: string[]; note?: string }) {
@@ -389,12 +416,18 @@ function ProjectCard({ icon, title, href, desc, tags, note }: { icon: string; ti
 // ─── Education card ───────────────────────────────────────────────────────────
 function EducationCard({ degree, school, period, gpa, highlights }: { degree: string; school: string; period: string; gpa?: string; highlights: string[] }) {
   const [hovered, setHovered] = useState(false);
+  
   return (
     <motion.div onHoverStart={() => setHovered(true)} onHoverEnd={() => setHovered(false)}
-      className="p-5 rounded-xl cursor-default" variants={itemVariants}
+      className="relative p-5 rounded-xl cursor-default" variants={itemVariants}
       style={computeContainerStyle(hovered, 'rgba(100,255,218,0.05)')}>
+      
+      {/* Added the hover border to match other cards */}
+      <HoverBorder hovered={hovered} />
+      
+      {/* Header Section */}
       <div className="flex items-start justify-between gap-4 flex-wrap relative z-10">
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-3.5">
           <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
             style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', border: '1px solid rgba(100,255,218,0.15)', transition: 'all 0.3s' }}>
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#64ffda" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -402,29 +435,26 @@ function EducationCard({ degree, school, period, gpa, highlights }: { degree: st
             </svg>
           </div>
           <div>
-            <h3 className="font-bold text-[14px]" style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>{degree}</h3>
-            <div className="text-[12px] mt-0.5" style={{ color: '#64748b' }}>{school}</div>
+            <h3 className="font-bold text-[14px] sm:text-[15px]" style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>{degree}</h3>
+            <div className="text-[13px] mt-0.5" style={{ color: '#64748b' }}>{school}</div>
           </div>
         </div>
-        <div className="text-right">
-          <div className="text-[10px] font-mono font-bold tracking-wide" style={{ color: '#475569' }}>{period}</div>
-          {gpa && <div className="text-[10px] mt-1 px-2 py-0.5 rounded-full inline-block" style={{ background: 'rgba(100,255,218,0.08)', color: '#64ffda', border: '1px solid rgba(100,255,218,0.15)' }}>GPA {gpa}</div>}
+        <div className="sm:text-right mt-1 sm:mt-0">
+          <div className="text-[10px] font-mono font-bold tracking-widest uppercase" style={{ color: '#475569' }}>{period}</div>
+          {gpa && <div className="text-[10px] mt-1.5 px-2 py-0.5 rounded-full inline-block font-mono" style={{ background: 'rgba(100,255,218,0.08)', color: '#64ffda', border: '1px solid rgba(100,255,218,0.15)' }}>GPA {gpa}</div>}
         </div>
       </div>
-      <AnimatePresence>
-        {hovered && (
-          <motion.ul initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }} className="mt-3 space-y-1.5 overflow-hidden relative z-10">
-            {highlights.map((h, i) => (
-              <motion.li key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.06 }}
-                className="flex items-start gap-2 text-[11px]" style={{ color: '#94a3b8' }}>
-                <span className="mt-1.5 w-1 h-1 rounded-full flex-shrink-0" style={{ background: '#64ffda' }} />
-                {h}
-              </motion.li>
-            ))}
-          </motion.ul>
-        )}
-      </AnimatePresence>
+
+      {/* Static Highlights Section */}
+      <ul className="mt-4 space-y-2 relative z-10">
+        {highlights.map((h, i) => (
+          <li key={i} className="flex items-start gap-2.5 text-[12px] sm:text-[13px] leading-relaxed" style={{ color: '#94a3b8' }}>
+            <span className="mt-2 w-1 h-1 rounded-full flex-shrink-0" style={{ background: '#64ffda' }} />
+            {h}
+          </li>
+        ))}
+      </ul>
+      
     </motion.div>
   );
 }
@@ -460,14 +490,16 @@ const techStack: { category: string; icon: string; items: { name: string }[] }[]
       { name: 'PyTorch' }, { name: 'TensorFlow' }, { name: 'scikit-learn' },
       { name: 'LLMs' }, { name: 'Graph Neural Networks' }, { name: 'CNNs' },
       { name: 'RNNs' }, { name: 'Prompt Engineering' }, { name: 'OCR Pipelines' },
+      { name: 'GraphSAGE' }, { name: 'LLMs' },
     ]
   },
   {
     category: 'Backend & Systems', icon: '⚙️',
     items: [
-      { name: 'Django' }, { name: 'REST API' }, { name: 'FastAPI' },
+      { name: 'Django' }, { name: 'REST API' },
       { name: 'Node.js' }, { name: 'WebRTC' }, { name: 'OAuth / Auth0' },
-      { name: 'ETL Pipelines' }, { name: 'Microservices' },
+      { name: 'ETL Pipelines' },
+      { name: 'JSON Web Tokens' },  { name: 'WebSockets' },
     ]
   },
   {
@@ -480,20 +512,20 @@ const techStack: { category: string; icon: string; items: { name: string }[] }[]
   {
     category: 'Programming Languages', icon: '</>',
     items: [
-      { name: 'Python' }, { name: 'TypeScript' }, { name: 'JavaScript' },
+      { name: 'Python' }, { name: 'JavaScript' },
       { name: 'SQL' }, { name: 'HTML / CSS' },
     ]
   },
   {
     category: 'Databases & Data Stores', icon: '🗄️',
     items: [
-      { name: 'PostgreSQL' }, { name: 'MySQL' }, { name: 'MongoDB' }, { name: 'Redis' },
+      { name: 'PostgreSQL' }, { name: 'MySQL' }, { name: 'SQLite' }, { name: 'Redis' },
     ]
   },
   {
     category: 'Frameworks & UI', icon: '🛠️',
     items: [
-      { name: 'React' }, { name: 'Next.js' }, { name: 'Tailwind CSS' },
+      { name: 'React' }, { name: 'Slate.js / Plate.js' }, 
       { name: 'Pandas' }, { name: 'NumPy' }, { name: 'Matplotlib' }, { name: 'Tableau' },
     ]
   },
@@ -523,20 +555,47 @@ function AwardCard({ year, title, org, href, desc, tags }: { year: string; title
   return (
     <Wrapper {...(href ? { href, target: '_blank', rel: 'noopener noreferrer' } : {})}
       onHoverStart={() => setHovered(true)} onHoverEnd={() => setHovered(false)}
-      className="group grid grid-cols-1 sm:grid-cols-4 gap-2 p-4 sm:p-5 rounded-xl no-underline cursor-pointer"
+      className="group relative flex flex-col gap-3 p-4 sm:p-5 rounded-xl no-underline cursor-pointer"
       variants={itemVariants} style={computeContainerStyle(hovered, 'rgba(100,255,218,0.04)')}>
       <HoverBorder hovered={hovered} />
-      <div className="text-[10px] font-bold tracking-widest uppercase pt-1 font-mono relative z-10" style={{ color: '#475569' }}>{year}</div>
-      <div className="sm:col-span-3 space-y-2.5 relative z-10">
-        <h3 className="font-bold text-[14px] sm:text-[15px] flex items-center gap-1.5 flex-wrap" style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>
-          {title} · {org}
-          {href && <motion.span animate={hovered ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: -4, y: 4 }} transition={{ duration: 0.18 }} style={{ color: '#64ffda' }}>↗</motion.span>}
-        </h3>
-        <p className="text-[12px] sm:text-[13px] leading-relaxed" style={{ color: hovered ? '#94a3b8' : '#64748b', transition: 'color 0.2s' }}>{desc}</p>
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {tags.map(t => <span key={t} className="text-[10px] px-2.5 py-0.5 rounded-full font-medium tracking-wide"
-            style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', color: '#64ffda', border: '1px solid rgba(100,255,218,0.15)', transition: 'background 0.2s' }}>{t}</span>)}
+      
+      {/* Header Row: Icon, Title & Date */}
+      <div className="relative z-10 flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
+        <div className="flex items-start gap-3.5">
+          {/* Star Icon Box */}
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', border: '1px solid rgba(100,255,218,0.15)', transition: 'all 0.3s' }}>
+            <svg className="w-5 h-5" style={{ color: hovered ? '#64ffda' : 'rgba(100,255,218,0.8)', transition: 'color 0.2s' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          {/* Title & Organization */}
+          <div className="pt-0.5">
+            <h3 className="font-bold text-[15px] flex items-center gap-1.5 flex-wrap" style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>
+              {title}
+              {href && <motion.span animate={hovered ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: -4, y: 4 }} transition={{ duration: 0.18 }} style={{ color: '#64ffda' }}>↗</motion.span>}
+            </h3>
+            <div className="text-[13px] mt-0.5" style={{ color: '#64748b' }}>
+              {org}
+            </div>
+          </div>
         </div>
+
+        {/* Date */}
+        <div className="text-[10px] font-bold tracking-widest uppercase font-mono sm:text-right mt-1 sm:mt-0 pt-1" style={{ color: '#475569' }}>
+          {year}
+        </div>
+      </div>
+
+      {/* Description */}
+      <div className="relative z-10 mt-1">
+        <p className="text-[13px] leading-relaxed" style={{ color: hovered ? '#94a3b8' : '#64748b', transition: 'color 0.2s' }}>{desc}</p>
+      </div>
+
+      {/* Tags */}
+      <div className="relative z-10 flex flex-wrap gap-1.5 mt-2">
+        {tags.map(t => <span key={t} className="text-[10px] px-2.5 py-0.5 rounded-full font-medium tracking-wide"
+          style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', color: '#64ffda', border: '1px solid rgba(100,255,218,0.15)', transition: 'background 0.2s' }}>{t}</span>)}
       </div>
     </Wrapper>
   );
@@ -737,7 +796,7 @@ export default function Home() {
                         </svg>
                         VIEW RESUME
                       </motion.a>
-                        <span className="text-[9px] font-mono italic" style={{ color: '#1e293b' }}>(not a virus, promise)</span>
+                        <span className="text-[10px] font-mono italic" style={{ color: '#64748b' }}>(not a virus, promise)</span>
                       </div>
                     </div>
                   </motion.div>
@@ -748,11 +807,19 @@ export default function Home() {
 
                   {/* About */}
                   <section id="about" className="scroll-mt-24">
-                    <SectionHeader whiteText="About" tealText="Me" subtitle="A multi-disciplinary systems builder and ML engineer" />
+                    <SectionHeader whiteText="About" tealText="Me" subtitle="Software Engineer specializing in scalable backends and applied ML" />
                     <motion.div className="space-y-5 text-[14px] sm:text-[15px] leading-relaxed" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants} style={{ color: '#64748b' }}>
-                      <motion.p variants={itemVariants}>I'm a software engineer driven by building efficient backend systems, machine learning pipelines, and robust full-stack architectures. I enjoy solving structural problems — whether parsing intelligence out of messy datasets or engineering clean application layers that handle real-world complexity flawlessly.</motion.p>
-                      <motion.p variants={itemVariants}>Currently pursuing my <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Master of Science in Computer Science at the University at Buffalo</strong> (GPA 3.85 · expected December 2026). My graduate work spans machine learning, distributed systems, and graph neural networks, with applied research through a real-world industry collaboration with HeinOnline.</motion.p>
-                      <motion.p variants={itemVariants}>Before Buffalo, I earned my B.E. in Information Technology from VESIT, Mumbai University, and worked as a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Software Engineer at Thesis Mumbai Tech</strong> where I built and scaled healthcare systems supporting 10k+ records, and as a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Cloud Engineer Intern at Data Maven</strong> designing scalable AWS infrastructure. I also hold an <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>AWS Cloud Practitioner certification</strong> and have a published research paper on music genre classification. When I'm not building, I study chess strategy and follow developments in LLMs and GNNs.</motion.p>
+<motion.p variants={itemVariants}>
+  I'm a software engineer specializing in backend systems and machine learning. Currently pursuing my <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>MS in Computer Science at the University at Buffalo</strong>, my work focuses on turning complex data into scalable architectures, whether that means training GraphSAGE models for fraud detection or engineering hybrid OCR-LLM pipelines for industry clients.
+</motion.p>
+
+<motion.p variants={itemVariants}>
+  Before coming to New York, I was a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Software Engineer at Thesis Mumbai Tech</strong>, where I built healthcare platforms managing 10,000+ patient records, and architected cloud infrastructure as an AWS Intern. I hold an AWS Cloud Practitioner certification, have published research in ML classification, and specialize in turning complex data models into resilient, scalable backend architectures.
+</motion.p>
+
+<motion.p variants={itemVariants}>
+  When I'm not writing Python or optimizing PostgreSQL queries, you can usually find me analyzing chess strategies, tinkering with my Linux setup, or keeping up with the latest advancements in Large Language Models!
+</motion.p>
                       <motion.div variants={itemVariants}>
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-mono" style={{ background: 'rgba(100,255,218,0.06)', border: '1px solid rgba(100,255,218,0.15)', color: '#64ffda' }}>
                           📍 Buffalo, NY · Open to relocation · F-1 OPT eligible Dec 2026
@@ -783,19 +850,19 @@ export default function Home() {
                     <SectionHeader whiteText="Featured" tealText="Projects" subtitle="Academic and personal builds showcasing applied engineering" />
                     {/* <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}> */}
                     <motion.div className="grid grid-cols-1 xl:grid-cols-2 gap-4" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
-                    <ProjectCard icon="LMS" title="Classavo-Inspired LMS"
+                    <ProjectCard icon="LMS" title="Learning Management System"
                       href="https://github.com/Jaypath456/classavo"
-                      desc="Full-stack Learning Management System with role-based access for instructors and students. Instructors author chapter content with a Slate.js rich-text editor (Plate.js-compatible JSON), control per-chapter visibility, and publish courses — students browse, enroll, and read public chapters. JWT auth via SimpleJWT with Axios interceptors for clean, DRY API calls."
-                      note="Built as a coding assessment — intentionally kept readable over clever"
+                      desc="Full-stack Learning Management System with role-based access for instructors and students. Instructors author chapter content with a Slate.js rich-text editor (Plate.js-compatible JSON), control per-chapter visibility, and publish courses — students browse a unified catalog, enroll, and track progress. Built an automated quiz engine with instant grading, a Django Channels-powered real-time messaging system for office hours and announcements, and an interactive scheduling tool for deadlines and lectures. JWT auth via SimpleJWT with Axios interceptors for clean, DRY API calls."
+                      note="Built as a personal project to explore full-stack development and rich-text editing"
                       tags={['Django', 'DRF', 'React', 'JWT', 'Slate.js', 'REST API', 'SQLite']} />
                       <ProjectCard icon="OCR" title="AI Metadata Extraction Pipeline · HeinOnline"
                         href="https://github.com/jaypathare/temp-ocr-repo"
-                        desc="Engineered a hybrid OCR-LLM metadata extraction pipeline using Tesseract-OCR and Qwen-35B across 1,000+ legacy law journals. Automated end-to-end author metadata entry, reducing manual workload by 90% while maintaining 95%+ accuracy. Containerized the full pipeline with Docker."
-                        note="Industry collaboration — pending sanitization"
+                        desc="Engineered a hybrid OCR-LLM metadata extraction pipeline using Tesseract-OCR and Qwen-35B across 1,000+ legacy law journals. Automated end-to-end author metadata entry, reducing manual workload by 90% while maintaining 92%+ accuracy. Designed a confidence-scoring layer (aiscore: 100/85/50 by source) to flag low-confidence extractions for targeted human review, reducing audit scope without sacrificing accuracy. Containerized the full pipeline with Docker. "
+                        note="Industry collaboration"
                         tags={['Python', 'Tesseract-OCR', 'Qwen-35B', 'LLMs', 'Docker', 'ETL']} />
                       <ProjectCard icon="GNN" title="Fraud Detection with Graph Neural Networks"
                         href="https://github.com/jaypathare/fraud-detection-gnn"
-                        desc="GraphSAGE-based fraud detection on the IEEE-CIS dataset. Converted tabular transactions into a graph using shared card, device, and email features to capture relational patterns. Handled severe class imbalance for robust training and evaluation."
+                        desc="GraphSAGE-based fraud detection on the IEEE-CIS dataset. Converted tabular transactions into a graph using shared card, device, and email features to capture relational patterns. Compared GraphSAGE against an MLP baseline and a GAT model, achieving 0.93 AUC-ROC and 0.57 F1 on the fraud class. Handled severe class imbalance using Focal Loss for robust training and evaluation. Validated the architecture on the Elliptic Bitcoin dataset (0.99 AUC)."
                         note="Academic project"
                         tags={['PyTorch', 'GraphSAGE', 'Graph Neural Networks', 'Python', 'IEEE-CIS']} />
                       <ProjectCard icon="IoT" title="Temperature Monitoring System · CampusSense"
@@ -820,7 +887,7 @@ export default function Home() {
                         period="Aug 2025 — Dec 2026"
                         gpa="3.85 / 4.0"
                         highlights={[
-                          'Focus: Machine Learning, Distributed Systems, Graph Neural Networks',
+                          'Focus: Machine Learning, Graph Neural Networks, Agentic AI',
                           'Industry project: OCR-LLM metadata pipeline for HeinOnline (CSE 611)',
                           'Organized Git & GitHub workshop for CS&E dept — Certificate of Appreciation',
                           'Public Safety Aide, University at Buffalo campus',
@@ -830,9 +897,10 @@ export default function Home() {
                         degree="B.E. Information Technology"
                         school="VESIT · Mumbai University, India"
                         period="Aug 2019 — May 2023"
+                        gpa="7.83 / 10"
                         highlights={[
-                          'Capstone: IoT temperature monitoring system (CampusSense)',
-                          'Published research: Music Genre Classification — IJRAR Vol. 10, Issue 2',
+                          'Capstone: Music Genre Classification — published in IJRAR, Vol. 10, Issue 2',
+                          'Achieved 97.68% classification accuracy using CatBoost and KNN',
                           'Coursework: Data Structures, DBMS, Networking, OOP',
                           'Active participant in campus software testing events',
                         ]}
@@ -854,7 +922,7 @@ export default function Home() {
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <AwardCard year="Jul 2024" title="AWS Cloud Practitioner" org="Amazon Web Services"
                         href="https://www.credly.com/badges/6a3649a7-3e17-487b-bff4-b27c6b69ff62/public_url"
-                        desc="Certified in core AWS cloud concepts, infrastructure services, security, and pricing models — covering EC2, RDS, VPC, S3, and IAM."
+                        desc="Certified in core AWS cloud concepts, infrastructure services, security, and pricing models - covering EC2, RDS, VPC, S3, and IAM."
                         tags={['AWS', 'Cloud', 'Certification']} />
                       <AwardCard year="Feb 2026" title="Certificate of Appreciation" org="University at Buffalo"
                         desc='Recognized as Event Manager for organizing "GitHub: Hands-On from Basics to Advanced" workshop for the Dept. of Computer Science & Engineering. Mentored participants on repository workflows, branching, and collaborative development.'
@@ -862,7 +930,7 @@ export default function Home() {
                         tags={['Git', 'GitHub', 'Technical Training', 'Event Management']} />
                       <AwardCard year="Apr 2023" title="Research Publication" org="IJRAR"
                         href="https://ijrar.org/papers/IJRAR23B2524.pdf"
-                        desc='J. Pathare, D. Ahuja, R. Singh, M. Sabnis — "Music Genre Classification" — International Journal of Research and Analytical Reviews, Volume 10, Issue 2. ISSN: 2348-1269. Achieved 97.68% classification accuracy using CatBoost and KNN.'
+                        desc='J. Pathare, D. Ahuja, R. Singh, M. Sabnis - "Music Genre Classification" - International Journal of Research and Analytical Reviews, Volume 10, Issue 2. ISSN: 2348-1269. Achieved 97.68% classification accuracy using CatBoost and KNN.'
                         tags={['Research', 'ML', 'Published', 'IJRAR']} />
                     </motion.div>
                   </section>
@@ -876,7 +944,7 @@ export default function Home() {
                       </div>
                       <div className="text-center max-w-md mx-auto space-y-4 relative z-10 pt-2 font-sans">
                         <p className="text-xs leading-relaxed font-normal" style={{ color: '#64748b' }}>
-                          I'm actively exploring full-time opportunities in backend systems engineering and machine learning. Available for F-1 OPT from December 2026. If you have an interesting problem to solve or simply want to connect, drop me a message.
+                          I'm actively exploring full-time opportunities in backend systems engineering and machine learning. Available for F-1 OPT from December 2026. If you have an interesting problem to solve or simply want to connect, drop me a message!
                         </p>
                         <div className="grid grid-cols-1 gap-2.5 text-left text-xs font-mono max-w-xs mx-auto pt-2">
                           {/* <div className="p-3 rounded-xl bg-[#0a1326] border border-slate-800/80 flex items-center gap-3 shadow-lg">
@@ -909,7 +977,7 @@ export default function Home() {
                   {/* Footer */}
                   <Reveal>
                     <footer className="text-[11px] pt-12 sm:pt-16 font-mono leading-relaxed" style={{ borderTop: '1px solid rgba(255,255,255,0.04)', color: '#1e293b' }}>
-                      Coded in Visual Studio Code. Built with <span style={{ color: '#334155' }}>Next.js</span>, <span style={{ color: '#334155' }}>Tailwind CSS</span> &amp; <span style={{ color: '#334155' }}>Framer Motion</span>.
+                      Jay Niketan Pathare. Built with <span style={{ color: '#334155' }}>Next.js</span>, <span style={{ color: '#334155' }}>Tailwind CSS</span> &amp; <span style={{ color: '#334155' }}>Framer Motion</span>.
                     </footer>
                   </Reveal>
                 </main>
