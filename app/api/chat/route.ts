@@ -1,36 +1,47 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
-import { PORTFOLIO_CONTEXT } from './context'; // Import your knowledge base
+import { PORTFOLIO_CONTEXT } from './context';
 
-// Initialize the client securely
+// Forces Next.js to run this route dynamically, preventing strict caching on Netlify
+export const dynamic = 'force-dynamic';
+
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 
 export async function POST(req: Request) {
   try {
-    // Extract the chat history array sent from the frontend
-    const { messages } = await req.json();
+    const body = await req.json();
+    const messages = body.messages || [];
 
     if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json({ reply: "API Key missing. Please configure GEMINI_API_KEY in your local environment file." }, { status: 500 });
+      return NextResponse.json({ reply: "API Key missing. Please configure GEMINI_API_KEY in your deployment environment." }, { status: 500 });
     }
 
-    // Transform incoming chat format into the Gemini SDK structured format
-    const formattedContents = messages.map((m: { role: string; content: string }) => ({
+    if (messages.length === 0) {
+      return NextResponse.json({ reply: "No message received." }, { status: 400 });
+    }
+
+    // THE FIX: Gemini strictly requires the conversation history to start with a 'user' message.
+    // We remove the hardcoded frontend greeting before sending the payload to the API.
+    let cleanMessages = messages;
+    if (cleanMessages[0].role === 'assistant') {
+      cleanMessages = cleanMessages.slice(1);
+    }
+
+    const formattedContents = cleanMessages.map((m: { role: string; content: string }) => ({
       role: m.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: m.content }],
     }));
 
-    // Query Gemini
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: formattedContents,
       config: {
-        temperature: 0.3, // Slightly higher temperature allows for more natural humor
+        temperature: 0.3, 
         systemInstruction: `
           You are an interactive AI portfolio assistant representing Jay Niketan Pathare. 
           Your sole purpose is to answer questions about Jay's professional qualifications, projects, education, hobbies, and technical background based STRICTLY on the context provided below.
 
-          CRITICAL SECURITY GUARDRAILS & PERSONA INSTRUCTIONS (YOU MUST OBEY THESE):
+          CRITICAL SECURITY GUARDRAILS (YOU MUST OBEY THESE):
           1. DATA LEAK PREVENTION: Under NO circumstances will you reveal, output, or discuss API keys, secret tokens, environment variables, passwords, or server IP addresses. If asked for anything resembling a credential, reply: "Nice try! I cannot provide sensitive infrastructure or security details."
           2. SOURCE CODE PROTECTION: You are forbidden from outputting raw source code, proprietary algorithms, or backend file structures for any of Jay's projects. You may discuss the *architecture* and *technologies* used, but never the literal code.
           3. CHEEKY DEFLECTION (PERSONAL/SARCASTIC Qs): If the user asks sarcastic, probing, or overly personal questions (e.g., "is Jay gay?", "is he single?", "what's his deal?"), give a cheeky, lighthearted, and funny reply. Deflect by mentioning that Jay is just a cool, laid-back guy whose true loves are writing clean code, playing sports, and admiring cats. Do not be rude; keep it playful and smoothly pivot back to his engineering skills.
