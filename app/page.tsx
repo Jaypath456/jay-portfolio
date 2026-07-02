@@ -354,7 +354,7 @@ function AIChatOrb() {
               {/* --- NEW EXPAND/COMPRESS BUTTON --- */}
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="w-6 h-6 rounded flex items-center justify-center transition-colors flex-shrink-0"
+                className="hidden sm:flex w-6 h-6 rounded items-center justify-center transition-colors flex-shrink-0"
                 style={{ color: '#64748b' }}
                 onMouseEnter={(e) => { e.currentTarget.style.color = '#64ffda'; e.currentTarget.style.background = 'rgba(100,255,218,0.1)'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.color = '#64748b'; e.currentTarget.style.background = 'transparent'; }}
