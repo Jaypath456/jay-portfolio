@@ -1104,7 +1104,7 @@ export default function Home() {
                           </svg>
                           VIEW RESUME
                         </motion.a>
-                        <span className="text-[10px] font-mono italic" style={{ color: '#64748b' }}>(not a virus, promise)</span>
+                        {/* <span className="text-[10px] font-mono italic" style={{ color: '#64748b' }}>(not a virus, promise)</span> */}
                       </div>
                     </div>
                   </motion.div>
