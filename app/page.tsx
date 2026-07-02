@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import WorldMap from '../components/WorldMap';
-
+import ReactMarkdown from 'react-markdown';
 
 // ─── Animation Variants ───────────────────────────────────────────────────────
 
@@ -353,7 +353,14 @@ function AIChatOrb() {
                       ? { background: 'rgba(100,255,218,0.12)', color: '#e2e8f0', borderRadius: '12px 12px 3px 12px', border: '1px solid rgba(100,255,218,0.15)' }
                       : { background: 'rgba(255,255,255,0.04)', color: '#94a3b8', borderRadius: '12px 12px 12px 3px', border: '1px solid rgba(255,255,255,0.06)' }}
                   >
-                    {msg.content}
+                    {/* THE FIX IS HERE */}
+                    {msg.role === 'user' ? (
+                      msg.content
+                    ) : (
+                      <div className="space-y-2 flex flex-col">
+                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               ))}
