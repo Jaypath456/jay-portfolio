@@ -56,8 +56,19 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ reply: response.text });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Gemini Route Error:", error);
-    return NextResponse.json({ error: "Failed to process request" }, { status: 500 });
+
+    // Check if the error is the 503 High Demand issue
+    if (error?.status === 503 || error?.message?.includes('high demand')) {
+      return NextResponse.json({ 
+        reply: "Phew, I'm getting asked a lot of questions right now and need a quick breather! Give me a minute or two and ask again. In the meantime, feel free to email Jay directly!" 
+      });
+    }
+
+    // Generic fallback for other errors
+    return NextResponse.json({ 
+      reply: "Oops, my circuits got a little crossed. Try asking that again!" 
+    });
   }
 }
