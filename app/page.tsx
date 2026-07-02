@@ -193,9 +193,10 @@ function AIChatOrb() {
   const [dragging, setDragging] = useState(false);
   const [didDrag, setDidDrag]   = useState(false);
   const [pos, setPos]           = useState({ x: 0, y: 0 });
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([
-    { role: 'assistant', content: "Hi! I'm Jay's AI assistant. Ask me about his experience, skills, or projects — I know everything about him! 🚀" },
+    { role: 'assistant', content: "Hi! I'm Jay's AI assistant. Ask me about his experience, skills, or projects, I know everything about him! 🚀" },
   ]);
 
   const dragStart      = useRef({ mx: 0, my: 0, ox: 0, oy: 0 });
@@ -259,8 +260,16 @@ function AIChatOrb() {
 
   if (!mounted) return null;
 
-  const panelLeft = Math.min(Math.max(pos.x - 320, 12), (typeof window !== 'undefined' ? window.innerWidth : 1200) - 360);
-  const panelTop  = pos.y - 480 < 12 ? pos.y + 36 : pos.y - 480;
+    // --- REPLACE YOUR OLD panelLeft AND panelTop WITH THIS: ---
+    const winWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
+    const winHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
+
+    const chatWidth = isExpanded ? Math.min(480, winWidth - 24) : 340;
+    const chatHeight = isExpanded ? Math.min(640, winHeight - 120) : 430;
+
+    const panelLeft = Math.min(Math.max(pos.x - chatWidth + 20, 12), winWidth - chatWidth - 12);
+    const panelTop  = pos.y - chatHeight - 50 < 12 ? pos.y + 36 : pos.y - chatHeight - 50;
+    // ----------------------------------------------------------
 
   return (
     <>
@@ -325,9 +334,9 @@ function AIChatOrb() {
             className="chat-inner fixed z-[59] flex flex-col rounded-2xl overflow-hidden"
             initial={{ opacity: 0, scale: 0.9, y: 12 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 12 }}
             transition={{ type: 'spring', duration: 0.4, bounce: 0.2 }}
-            style={{ left: panelLeft, top: panelTop, width: 340, height: 430, background: 'linear-gradient(180deg,#071424,#050d1a)', border: '1px solid rgba(100,255,218,0.15)', boxShadow: '0 24px 64px rgba(0,0,0,0.7)' }}
+            style={{ left: panelLeft, top: panelTop, width: chatWidth, height: chatHeight, background: 'linear-gradient(180deg,#071424,#050d1a)', border: '1px solid rgba(100,255,218,0.15)', boxShadow: '0 24px 64px rgba(0,0,0,0.7)' }}
           >
-            {/* Header */}
+{/* Header */}
             <div className="flex items-center gap-3 px-4 py-3 flex-shrink-0" style={{ borderBottom: '1px solid rgba(100,255,218,0.08)' }}>
               <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(100,255,218,0.1)', border: '1px solid rgba(100,255,218,0.2)' }}>
                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="#64ffda" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -341,6 +350,27 @@ function AIChatOrb() {
                   <span className="text-[9px] font-mono" style={{ color: '#475569' }}>claude-agent · online</span>
                 </div>
               </div>
+
+              {/* --- NEW EXPAND/COMPRESS BUTTON --- */}
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="w-6 h-6 rounded flex items-center justify-center transition-colors flex-shrink-0"
+                style={{ color: '#64748b' }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = '#64ffda'; e.currentTarget.style.background = 'rgba(100,255,218,0.1)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = '#64748b'; e.currentTarget.style.background = 'transparent'; }}
+                aria-label={isExpanded ? "Minimize chat" : "Expand chat"}
+              >
+                {isExpanded ? (
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="4 14 10 14 10 20" /><polyline points="20 10 14 10 14 4" /><line x1="14" y1="10" x2="21" y2="3" /><line x1="3" y1="21" x2="10" y2="14" />
+                  </svg>
+                ) : (
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" />
+                  </svg>
+                )}
+              </button>
+              {/* ---------------------------------- */}
             </div>
 
             {/* Messages */}
