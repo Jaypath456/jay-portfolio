@@ -1199,7 +1199,7 @@ export default function Home() {
                     <SectionHeader whiteText="Featured" tealText="Projects" subtitle="Academic and personal builds showcasing applied engineering" />
                     <motion.div className="grid grid-cols-1 xl:grid-cols-2 gap-4" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ProjectCard
-                        date="Jun 2026"
+                        date="Jul 2026"
                         icon="LMS" title="Learning Management System" href="https://github.com/Jaypath456/classavo"
                         desc="Full-stack, decoupled LMS with role-based access for instructors and students. Instructors author chapter content in a Slate.js rich-text editor, publish courses, and run live Kahoot-style quiz sessions with a real-time leaderboard; students enroll, take async or live quizzes with instant grading, and chat over course-scoped WebSocket channels. Redis backs four concurrent roles — cache, Celery broker, Channels pub/sub layer, and live-session state — with idempotent grading and graceful degradation if Redis goes down. Benchmarked throughput under concurrent load with a custom Locust and asyncio-based WebSocket test harness. JWT auth (SimpleJWT) with a custom JWT-over-WebSocket handshake for authenticating real-time connections."
                         note="Built to explore distributed system design — real-time fan-out, shared state across processes, and performance under load"
