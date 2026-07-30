@@ -1177,17 +1177,17 @@ export default function Home() {
                     <SectionHeader whiteText="Professional" tealText="Experience" subtitle="Engineering and infrastructure roles across startups and research" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ExpCard
-                        period="Aug 2024 — Aug 2025" title="Software Engineer" company="Thesis Mumbai Tech"
+                        period="August 2024 — August 2025" title="Software Engineer" company="Thesis Mumbai Tech"
                         desc="Built and scaled healthcare modules (Patient Management, Consent) supporting 10k+ records. Developed an IoT baby-warmer system with real-time PostgreSQL pipelines and 2s live monitoring. Built a color-blindness diagnostic module achieving 97% clinical reliability. Containerized 3+ projects with Docker (90% setup time reduction), integrated secure PDF generation and WebRTC video conferencing. Conducted 20+ technical interviews and mentored new hires."
                         tags={['Python', 'Django', 'PostgreSQL', 'Docker', 'ReactJS', 'WebRTC', 'IoT']}
                       />
                       <ExpCard
-                        period="Nov 2023 — May 2024" title="Cloud Engineer Intern" company="Data Maven"
+                        period="November 2023 — May 2024" title="Cloud Engineer Intern" company="Data Maven"
                         desc="Designed and deployed scalable cloud infrastructure on AWS using EC2 and RDS. Optimized VPC networking for secure, low-latency backend communication. Streamlined resource provisioning and supported deployment of data-intensive applications."
                         tags={['AWS', 'EC2', 'RDS', 'VPC', 'Cloud Infrastructure']}
                       />
                       <ExpCard
-                        period="Jun 2023 — Aug 2023" title="Data Engineer Intern" company="Go Digital Technology Consulting"
+                        period="June 2023 — August 2023" title="Data Engineer Intern" company="Go Digital Technology Consulting"
                         desc="Analyzed real-world datasets using Python (Pandas, NumPy) and MySQL to extract trends and deliver actionable business insights."
                         tags={['Python', 'Pandas', 'NumPy', 'MySQL', 'Data Analysis']}
                       />
@@ -1199,11 +1199,11 @@ export default function Home() {
                     <SectionHeader whiteText="Featured" tealText="Projects" subtitle="Academic and personal builds showcasing applied engineering" />
                     <motion.div className="grid grid-cols-1 xl:grid-cols-2 gap-4" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ProjectCard
-                        date="Jun 2026"
+                        date="August 2026"
                         icon="LMS" title="Learning Management System" href="https://github.com/Jaypath456/classavo"
-                        desc="Full-stack Learning Management System with role-based access for instructors and students. Instructors author chapter content with a Slate.js rich-text editor (Plate.js-compatible JSON), control per-chapter visibility, and publish courses — students browse a unified catalog, enroll, and track progress. Built an automated quiz engine with instant grading, a Django Channels-powered real-time messaging system for office hours and announcements, and an interactive scheduling tool for deadlines and lectures. JWT auth via SimpleJWT with Axios interceptors for clean, DRY API calls."
-                        note="Built to explore full-stack development and rich-text editing"
-                        tags={['Django', 'DRF', 'React', 'JWT', 'Slate.js', 'REST API', 'PostgreSQL', 'WebSockets']}
+                        desc="Full-stack, decoupled LMS with role-based access for instructors and students. Instructors author chapter content in a Slate.js rich-text editor, publish courses, and run live Kahoot-style quiz sessions with a real-time leaderboard; students enroll, take async or live quizzes with instant grading, and chat over course-scoped WebSocket channels. Redis backs four concurrent roles — cache, Celery broker, Channels pub/sub layer, and live-session state — with idempotent grading and graceful degradation if Redis goes down. Benchmarked throughput under concurrent load with a custom Locust and asyncio-based WebSocket test harness. JWT auth (SimpleJWT) with a custom JWT-over-WebSocket handshake for authenticating real-time connections."
+                        note="Built to explore distributed system design — real-time fan-out, shared state across processes, and performance under load"
+                        tags={['Django', 'DRF', 'React', 'Django Channels', 'Redis', 'Celery', 'WebSockets', 'JWT', 'Slate.js', 'PostgreSQL', 'Locust', 'Load Testing']}
                       />
                       <ProjectCard
                         date="May 2026" 
@@ -1212,28 +1212,28 @@ export default function Home() {
                         tags={['C', 'Kernel', 'Syscalls', 'Process Synchronization', 'Memory Management']}
                       />
                       <ProjectCard
-                        date="Apr 2026"
+                        date="April 2026"
                         icon="OCR" title="AI Metadata Extraction Pipeline" href="https://github.com/Jaypath456/AI_metadata_extraction_pipeline"
                         desc="Engineered a hybrid OCR-LLM metadata extraction pipeline using Tesseract-OCR and Qwen-35B across 1,000+ legacy law journals. Automated end-to-end author metadata entry, reducing manual workload by 90% while maintaining 92%+ accuracy. Designed a confidence-scoring layer (aiscore: 100/85/50 by source) to flag low-confidence extractions for targeted human review, reducing audit scope without sacrificing accuracy. Containerized the full pipeline with Docker."
                         note="Industry collaboration"
                         tags={['Python', 'Tesseract-OCR', 'Qwen-35B', 'LLMs', 'Docker', 'ETL']}
                       />
                       <ProjectCard
-                        date="Mar 2026"
+                        date="March 2026"
                         icon="GNN" title="Fraud Detection with Graph Neural Networks" href="https://github.com/Jaypath456/gnn-fraud-detection"
                         desc="GraphSAGE-based fraud detection on the IEEE-CIS dataset. Converted tabular transactions into a graph using shared card, device, and email features to capture relational patterns. Compared GraphSAGE against an MLP baseline and a GAT model, achieving 0.93 AUC-ROC and 0.57 F1 on the fraud class. Handled severe class imbalance using Focal Loss for robust training and evaluation. Validated the architecture on the Elliptic Bitcoin dataset (0.99 AUC)."
                         note="Academic project"
                         tags={['PyTorch', 'GraphSAGE', 'GAT', 'MLP', 'Graph Neural Networks', 'Python', 'IEEE-CIS']}
                       />
                       <ProjectCard
-                        date="Nov 2025"
+                        date="November 2025"
                         icon="IoT" title="Temperature Monitoring System" href="https://github.com/Jaypath456/UB_hackathon"
                         desc="End-to-end IoT pipeline: Arduino Uno streams continuous temperature readings over WiFi to a ReactJS live dashboard. Django backend processes sensor data with Auth0 authentication for secure transmission."
                         note="Team of 3 · Academic project"
                         tags={['Arduino', 'Django', 'ReactJS', 'Auth0', 'IoT', 'PostgreSQL']}
                       />
                       <ProjectCard
-                        date="Apr 2023"
+                        date="April 2023"
                         icon="🎵" title="Music Genre Classification" href="https://github.com/Jaypath456/Music-Genre-Classification"
                         desc="Classified audio files into genres using feature extraction techniques, achieving 97.68% accuracy. Published in IJRAR Volume 10, Issue 2. Algorithms: CatBoost, KNN."
                         note="Undergraduate Capstone Project"
@@ -1248,7 +1248,7 @@ export default function Home() {
                     <motion.div className="space-y-3" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <EducationCard
                         degree="M.S. Computer Science" school="University at Buffalo, SUNY"
-                        period="Aug 2025 — Dec 2026" gpa="3.85 / 4.0"
+                        period="August 2025 — December 2026" gpa="3.85 / 4.0"
                         highlights={[
                           'Focus: Machine Learning, Graph Neural Networks, Agentic AI',
                           'Industry project: OCR-LLM metadata pipeline for HeinOnline (CSE 611)',
@@ -1258,7 +1258,7 @@ export default function Home() {
                       />
                       <EducationCard
                         degree="B.E. Information Technology" school="VESIT · Mumbai University, India"
-                        period="Aug 2019 — May 2023" gpa="7.83 / 10"
+                        period="August 2019 — May 2023" gpa="7.83 / 10"
                         highlights={[
                           'Capstone: Music Genre Classification — published in IJRAR, Vol. 10, Issue 2',
                           'Achieved 97.68% classification accuracy using CatBoost and KNN',
@@ -1282,19 +1282,19 @@ export default function Home() {
                     <SectionHeader whiteText="Certs, Awards &" tealText="Publications" subtitle="Credentials, recognitions, and published research" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <AwardCard
-                        year="Feb 2026" title="Certificate of Appreciation" org="University at Buffalo"
+                        year="February 2026" title="Certificate of Appreciation" org="University at Buffalo"
                         href="https://drive.google.com/file/d/15yVN_8Dbgkt-B_pCi7V1fGcuibhWLiNA/view?usp=sharing"
                         desc='Recognized as Event Manager for organizing "GitHub: Hands-On from Basics to Advanced" workshop for the Dept. of Computer Science & Engineering. Mentored participants on repository workflows, branching, and collaborative development.'
                         tags={['Git', 'GitHub', 'Technical Training', 'Event Management']}
                       />
                       <AwardCard
-                        year="Jul 2024" title="AWS Cloud Practitioner" org="Amazon Web Services"
+                        year="July 2024" title="AWS Cloud Practitioner" org="Amazon Web Services"
                         href="https://www.credly.com/badges/6a3649a7-3e17-487b-bff4-b27c6b69ff62/public_url"
                         desc="Certified in core AWS cloud concepts, infrastructure services, security, and pricing models - covering EC2, RDS, VPC, S3, and IAM."
                         tags={['AWS', 'Cloud', 'Certification']}
                       />
                       <AwardCard
-                        year="Apr 2023" title="Research Publication" org="IJRAR"
+                        year="April 2023" title="Research Publication" org="IJRAR"
                         href="https://ijrar.org/papers/IJRAR23B2524.pdf"
                         desc='J. Pathare, D. Ahuja, R. Singh, M. Sabnis - "Music Genre Classification" - International Journal of Research and Analytical Reviews, Volume 10, Issue 2. ISSN: 2348-1269. Achieved 97.68% classification accuracy using CatBoost and KNN.'
                         tags={['Research', 'ML', 'Published', 'IJRAR']}
