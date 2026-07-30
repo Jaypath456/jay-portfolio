@@ -21,13 +21,16 @@ export const PORTFOLIO_CONTEXT = `
 
 ## DETAILED PROJECT KNOWLEDGE BASE
 ### 1. Decoupled Learning Management System (LMS)
-* Date: June 2026
-* Architecture: Decoupled Client-Server (REST API). Django/DRF Backend, React.js Frontend.
-* Authentication: Stateless JWT via SimpleJWT, stored securely. Axios interceptors automatically attach tokens.
-* Rich Text Editor: Plate.js (built on Slate.js) for headless JSON-tree data structuring, allowing complex course chapter creation.
-* Automated Quiz Engine: Django models for questions/submissions. Handles automated grading and secure score logging.
-* Real-Time Messaging: Django Channels (ASGI) and WebSockets backend; WebSocket API frontend for instant office hours and announcements.
-* Interactive Schedule Maker: React Big Calendar integrated with Django Date/Time models for centralized deadline management.
+* Date: July 2026
+* Architecture: Decoupled Client-Server (REST API + WebSockets). Django/DRF Backend, React.js Frontend, PostgreSQL, Redis, Celery.
+* Authentication: Stateless JWT via SimpleJWT, with Axios interceptors auto-attaching tokens; custom JWT-over-WebSocket handshake authenticates real-time connections at connect time.
+* Rich Text Editor: Plate.js (built on Slate.js) for headless JSON-tree data structuring, allowing complex course chapter creation with per-chapter visibility control.
+* Automated Quiz Engine: Django models for questions/submissions with idempotent, automated grading — supports both async (take-anytime) and live, Kahoot-style quiz sessions.
+* Real-Time Messaging & Live Sessions: Django Channels (ASGI) and WebSockets backend, Redis pub/sub for fan-out across clients — powers course-scoped chat and live-quiz leaderboards (Redis sorted sets).
+* Shared State Layer: Single Redis instance serving four roles — cache, Celery broker, Channels pub/sub layer, and ephemeral live-session state — with graceful degradation if Redis is unavailable.
+* Interactive Schedule Maker: A backtracking constraint-satisfaction algorithm auto-generates conflict-free timetables from section/term data, rendered via React Big Calendar.
+* Performance Validation: Custom Locust + asyncio WebSocket load-testing harness to benchmark REST/WebSocket throughput under concurrent connections and measure the impact of Redis-layer optimizations.
+
 
 ### 2. AI Metadata Extraction Pipeline (HeinOnline)
 * Date: April 2026 (CSE 611 Industry Collaboration)
