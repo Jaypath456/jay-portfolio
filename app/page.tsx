@@ -347,7 +347,7 @@ function AIChatOrb() {
                 <div className="text-[11px] font-bold tracking-wide" style={{ color: '#e2e8f0' }}>Jay's AI Assistant</div>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 2, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full" style={{ background: '#64ffda' }} />
-                  <span className="text-[9px] font-mono" style={{ color: '#475569' }}>claude-agent · online</span>
+                  <span className="text-[9px] font-mono" style={{ color: '#475569' }}>personal-agent · online</span>
                 </div>
               </div>
 
