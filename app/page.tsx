@@ -1082,7 +1082,7 @@ export default function Home() {
                           <span style={{ transition: 'color 0.2s' }} className={isActive ? '' : 'group-hover:text-slate-400'}>
                             {item === 'about'   ? 'About Me'        :
                              item === 'stack'   ? 'Technical Stack' :
-                             item === 'awards'  ? 'Certs & Awards'  :
+                             item === 'awards'  ? 'Certificates & Awards'  :
                              item === 'contact' ? 'Get In Touch'    : item}
                           </span>
                           {isActive && (
@@ -1279,7 +1279,7 @@ export default function Home() {
 
                   {/* Certs, Awards & Publications */}
                   <section id="awards" className="scroll-mt-24">
-                    <SectionHeader whiteText="Certs, Awards &" tealText="Publications" subtitle="Credentials, recognitions, and published research" />
+                    <SectionHeader whiteText="Certificates, Awards &" tealText="Publications" subtitle="Credentials, recognitions, and published research" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <AwardCard
                         year="Feb 2026" title="Certificate of Appreciation" org="University at Buffalo"
@@ -1295,7 +1295,7 @@ export default function Home() {
                       />
                       <AwardCard
                         year="Apr 2023" title="Research Publication" org="IJRAR"
-                        href="https://ijrar.org/papers/IJRAR23B2524.pdf"
+                        href="https://www.ijrar.org/papers/IJRAR23B1728.pdf"
                         desc='J. Pathare, D. Ahuja, R. Singh, M. Sabnis - "Music Genre Classification" - International Journal of Research and Analytical Reviews, Volume 10, Issue 2. ISSN: 2348-1269. Achieved 97.68% classification accuracy using CatBoost and KNN.'
                         tags={['Research', 'ML', 'Published', 'IJRAR']}
                       />
