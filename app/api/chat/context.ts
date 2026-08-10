@@ -21,16 +21,16 @@ export const PORTFOLIO_CONTEXT = `
 
 ## DETAILED PROJECT KNOWLEDGE BASE
 ### 1. Decoupled Learning Management System (LMS)
-* Date: July 2026
-* Architecture: Decoupled Client-Server (REST API + WebSockets). Django/DRF Backend, React.js Frontend, PostgreSQL, Redis, Celery.
-* Authentication: Stateless JWT via SimpleJWT, with Axios interceptors auto-attaching tokens; custom JWT-over-WebSocket handshake authenticates real-time connections at connect time.
-* Rich Text Editor: Plate.js (built on Slate.js) for headless JSON-tree data structuring, allowing complex course chapter creation with per-chapter visibility control.
-* Automated Quiz Engine: Django models for questions/submissions with idempotent, automated grading — supports both async (take-anytime) and live, Kahoot-style quiz sessions.
-* Real-Time Messaging & Live Sessions: Django Channels (ASGI) and WebSockets backend, Redis pub/sub for fan-out across clients — powers course-scoped chat and live-quiz leaderboards (Redis sorted sets).
-* Shared State Layer: Single Redis instance serving four roles — cache, Celery broker, Channels pub/sub layer, and ephemeral live-session state — with graceful degradation if Redis is unavailable.
-* Interactive Schedule Maker: A backtracking constraint-satisfaction algorithm auto-generates conflict-free timetables from section/term data, rendered via React Big Calendar.
-* Performance Validation: Custom Locust + asyncio WebSocket load-testing harness to benchmark REST/WebSocket throughput under concurrent connections and measure the impact of Redis-layer optimizations.
-
+Date: July 2026
+Architecture: Decoupled Client-Server (REST API + WebSockets). Django/DRF Backend, React.js Frontend, PostgreSQL, Redis, Celery.
+Authentication: Stateless JWT via SimpleJWT, with Axios interceptors auto-attaching tokens; custom JWT-over-WebSocket handshake authenticates real-time connections at connect time.
+Rich Text Editor: Plate.js (built on Slate.js) for headless JSON-tree data structuring, allowing complex course chapter creation with per-chapter visibility control.
+Automated Quiz Engine: Django models for questions/submissions with idempotent, automated grading — supports both async (take-anytime) and live, Kahoot-style quiz sessions.
+Real-Time Messaging & Live Sessions: Django Channels (ASGI) and WebSockets backend, Redis pub/sub for fan-out across clients — powers course-scoped chat and live-quiz leaderboards (Redis sorted sets).
+Shared State Layer: Single Redis instance serving four roles — cache, Celery broker, Channels pub/sub layer, and ephemeral live-session state — with graceful degradation if Redis is unavailable.
+Interactive Schedule Maker: A backtracking constraint-satisfaction algorithm auto-generates conflict-free timetables from section/term data, rendered via React Big Calendar.
+Performance Validation: Custom Locust + asyncio WebSocket load-testing harness to benchmark REST/WebSocket throughput under concurrent connections and measure the impact of Redis-layer optimizations.
+Access Control: Server-side role assignment (no client-side self-promotion to instructor), enforced password validation, and a patched schedule-confirmation flow that prevents enrollment bypass into unpublished courses.
 
 ### 2. AI Metadata Extraction Pipeline (HeinOnline)
 * Date: April 2026 (CSE 611 Industry Collaboration)

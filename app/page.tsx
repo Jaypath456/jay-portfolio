@@ -1156,13 +1156,13 @@ export default function Home() {
                     <SectionHeader whiteText="About" tealText="Me" subtitle="Software Engineer specializing in scalable backends and applied ML" />
                     <motion.div className="space-y-5 text-[14px] sm:text-[15px] leading-relaxed" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants} style={{ color: '#64748b' }}>
                       <motion.p variants={itemVariants}>
-                        I'm a software engineer specializing in backend systems and machine learning. Currently pursuing my <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>MS in Computer Science at the University at Buffalo</strong>, my work focuses on turning complex data into scalable architectures, whether that means training GraphSAGE models for fraud detection or engineering hybrid OCR-LLM pipelines for industry clients.
+                        I'm a software engineer specializing in backend systems and machine learning. Currently pursuing my <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>MS in Computer Science at the University at Buffalo</strong>, my recent focus has been distributed systems design — most recently a real-time platform where a single Redis instance serves as cache, message broker, and pub/sub layer simultaneously, load-tested to handle concurrent WebSocket connections under real traffic.
                       </motion.p>
                       <motion.p variants={itemVariants}>
-                        Before coming to New York, I was a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Software Engineer at Thesis Mumbai Tech</strong>, where I built healthcare platforms managing 10,000+ patient records, and architected cloud infrastructure as an AWS Intern. I hold an AWS Cloud Practitioner certification, have published research in ML classification, and specialize in turning complex data models into resilient, scalable backend architectures.
+                        Before New York, I was a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Software Engineer at Thesis Mumbai Tech</strong>, building healthcare platforms that manage 10,000+ patient records, and earlier architected cloud infrastructure as an AWS Intern. I hold an AWS Cloud Practitioner certification and have published research in ML classification. Along the way I've also picked up mentoring and leadership experience - conducting 20+ technical interviews, mentoring new hires, and organizing a Git/GitHub workshop for UB's CS department.
                       </motion.p>
                       <motion.p variants={itemVariants}>
-                        When I'm not writing Python or optimizing PostgreSQL queries, you can usually find me analyzing chess strategies, tinkering with my Linux setup, or keeping up with the latest advancements in Large Language Models!
+                        When I'm not writing Python or debugging a race condition in a Redis pub/sub layer, you'll usually find me analyzing chess strategies, tinkering with my Linux setup, or keeping up with the latest in Large Language Models!
                       </motion.p>
                       <motion.div variants={itemVariants}>
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-mono" style={{ background: 'rgba(100,255,218,0.06)', border: '1px solid rgba(100,255,218,0.15)', color: '#64ffda' }}>
@@ -1200,7 +1200,7 @@ export default function Home() {
                     <motion.div className="grid grid-cols-1 xl:grid-cols-2 gap-4" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ProjectCard
                         date="Jul 2026"
-                        icon="LMS" title="Learning Management System" href="https://github.com/Jaypath456/classavo"
+                        icon="LMS" title="Learning Management System" href="https://github.com/Jaypath456/decoupled-Learning-Management-System"
                         desc="Full-stack, decoupled LMS with role-based access for instructors and students. Instructors author chapter content in a Slate.js rich-text editor, publish courses, and run live Kahoot-style quiz sessions with a real-time leaderboard; students enroll, take async or live quizzes with instant grading, and chat over course-scoped WebSocket channels. Redis backs four concurrent roles — cache, Celery broker, Channels pub/sub layer, and live-session state — with idempotent grading and graceful degradation if Redis goes down. Benchmarked throughput under concurrent load with a custom Locust and asyncio-based WebSocket test harness. JWT auth (SimpleJWT) with a custom JWT-over-WebSocket handshake for authenticating real-time connections."
                         note="Built to explore distributed system design — real-time fan-out, shared state across processes, and performance under load"
                         tags={['Django', 'DRF', 'React', 'Django Channels', 'Redis', 'Celery', 'WebSockets', 'JWT', 'Slate.js', 'PostgreSQL', 'Locust', 'Load Testing']}
