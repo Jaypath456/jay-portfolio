@@ -871,7 +871,7 @@ function AwardCard({ year, title, org, href, desc, tags }: {
 
 
 // ─── Sidebar Social Links ─────────────────────────────────────────────────────
-const EMAIL_ADDRESS = 'jaypathare123@gmail.com';
+const EMAIL_ADDRESS = 'jayadmit456@gmail.com';
 const GMAIL_COMPOSE_URL = `https://mail.google.com/mail/?view=cm&fs=1&to=${EMAIL_ADDRESS}`;
 const socialLinks = [
   {
@@ -1312,7 +1312,7 @@ export default function Home() {
                           I'm actively exploring full-time opportunities in backend systems engineering and machine learning. Available for F-1 OPT from December 2026. If you have an interesting problem to solve or simply want to connect, drop me a message!
                         </p>
                         <div className="grid grid-cols-1 gap-2.5 text-left text-xs font-mono max-w-xs mx-auto pt-2">
-                          <CopyableRow icon="✉" iconColor="#2dd4bf" value="jaypathare123@gmail.com" />
+                          <CopyableRow icon="✉" iconColor="#2dd4bf" value="jayadmit456@gmail.com" />
                           <CopyableRow icon="📍" iconColor="#818cf8" value="Buffalo, NY, USA" displayValue="Buffalo, NY, USA · Open to relocation" />
                           <CopyableRow icon="📞" iconColor="#facc15" value="+17163039924" displayValue="+1 (716) 303-9924" />
                         </div>
