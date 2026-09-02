@@ -20,7 +20,18 @@ export const PORTFOLIO_CONTEXT = `
 * Data Engineer Intern at Go Digital Technology Consulting (Jun 2023 - Aug 2023): Extracted business insights from real-world datasets using Python, Pandas, NumPy, and MySQL.
 
 ## DETAILED PROJECT KNOWLEDGE BASE
-### 1. Decoupled Learning Management System (LMS)
+### 1. LLM Resume Tailoring Pipeline (Verified, Not Trusted)
+* Date: August 2026
+* Objective: Automate per-JD resume tailoring while treating the LLM's own claims about its output as unverified until proven — the LLM never gets to be the judge of its own work.
+* Architecture: Gemini generates tailored content -> pdflatex compiles the real PDF -> pdftotext extracts the actual rendered text -> deterministic Python checks measure it against the JD -> only genuinely failing sections get sent back for a targeted re-fix, never a full rewrite.
+* Honesty Guardrails: A hardcoded "explicitly unsupported" list hard-blocks fabricated technologies (e.g. Kafka, FastAPI) from ever appearing; a second fuzzy-matching layer strips any skill claim that can't be traced back to source content, even ones the model phrases cleverly enough to sound plausible.
+* Narrative-Coherence Check: Regex-level backstop that catches bullets quietly merging two separate accomplishments into one inflated sentence — a failure mode the prompt alone didn't reliably prevent.
+* Independent Verification: Groq proofreads the final compiled PDF text for genuine typos and garbled rendering artifacts — a separate model, run after and independent of the one that wrote the content, so nothing grades its own homework.
+* Cost-Aware Retry Logic: Detects when a fix is purely mechanical (a banned term needing removal) and skips the API call entirely; detects when the model has already declined a fix as impossible and stops re-asking, instead of burning quota chasing the same "no."
+* Real Bug Fixed In Production Use: Diagnosed a rendering-artifact cascade where a Unicode replacement character (U+FFFD) from a LaTeX bullet glyph was being misread as a content typo, causing the pipeline to burn through 3 separate API accounts trying to "fix" text that was never actually broken — root-caused it to the PDF-extraction layer and patched it there instead of the content layer.
+* Stack: Python, Gemini API (multi-account rotation for free-tier resilience), Groq API, pdflatex, pdftotext, LaTeX.
+
+### 2. Decoupled Learning Management System (LMS)
 Date: July 2026
 Architecture: Decoupled Client-Server (REST API + WebSockets). Django/DRF Backend, React.js Frontend, PostgreSQL, Redis, Celery.
 Authentication: Stateless JWT via SimpleJWT, with Axios interceptors auto-attaching tokens; custom JWT-over-WebSocket handshake authenticates real-time connections at connect time.
@@ -32,7 +43,7 @@ Interactive Schedule Maker: A backtracking constraint-satisfaction algorithm aut
 Performance Validation: Custom Locust + asyncio WebSocket load-testing harness to benchmark REST/WebSocket throughput under concurrent connections and measure the impact of Redis-layer optimizations.
 Access Control: Server-side role assignment (no client-side self-promotion to instructor), enforced password validation, and a patched schedule-confirmation flow that prevents enrollment bypass into unpublished courses.
 
-### 2. AI Metadata Extraction Pipeline (HeinOnline)
+### 3. AI Metadata Extraction Pipeline (HeinOnline)
 * Date: April 2026 (CSE 611 Industry Collaboration)
 * Objective: End-to-end Dockerized AI pipeline to extract bibliographic info from raw legal journal scans, replacing manual data entry.
 * Impact: Jumped from 57.03% to 90.81% accuracy. Processed 31,215 pages in 40.6 hours ($21.82 total cost, $0.00077/page). 0 API failures across 10,719 calls. Reduced manual workload by 90%.
@@ -44,7 +55,7 @@ Access Control: Server-side role assignment (no client-side self-promotion to in
 * Smart Fallback OCR: Attempts Tesseract-OCR first. If "scrap" is detected, dynamically routes to Qwen3-VL-8B for multimodal pixel reading.
 * Database: PostgreSQL used with rapidFuzz for author normalization.
 
-### 3. Relational Fraud Detection using Graph Neural Networks (GNN)
+### 4. Relational Fraud Detection using Graph Neural Networks (GNN)
 * Date: March 2026 (CSE 676A Deep Learning)
 * Objective: Convert tabular transaction data into graphs to capture relational fraud rings.
 * Datasets: IEEE-CIS (Primary, highly imbalanced 27.6x ratio) and Elliptic Bitcoin (Benchmark).
@@ -56,17 +67,17 @@ Access Control: Server-side role assignment (no client-side self-promotion to in
 * Class Imbalance Strategy: Used Focal Loss (Gamma=2.0) with inverse-frequency weights to force the model to focus on hard fraud cases instead of easy legitimate ones.
 * Validation: GraphSAGE achieved 0.988 AUC on the Elliptic dataset, proving the architecture works perfectly on clean explicit graphs.
 
-### 4. Pintos OS: User Programs
+### 5. Pintos OS: User Programs
 * Date: May 2026 (CSE 521)
 * Details: Engineered User Programs subsystem in C. Implemented argument parsing, process synchronization with semaphores, and memory safety checks. Hardened the kernel with verify-before-dereference validation.
 
-### 5. CampusSense IoT Platform
+### 6. CampusSense IoT Platform
 * Date: November 2025 (UB Hacking)
 * Hardware: Arduino microcontrollers with MPI 3118A sensors.
 * Software: Django backend (Auth0 authentication, PostgreSQL), React frontend dashboard.
 * Workflow: Arduino streams continuous temperature readings over WiFi. Django parses and stores data. React polls API for live UI updates.
 
-### 6. Music Genre Classification
+### 7. Music Genre Classification
 * Date: April 2023 (Published in IJRAR)
 * Details: Audio feature extraction pipeline hitting 97.68% accuracy using CatBoost and KNN.
 
