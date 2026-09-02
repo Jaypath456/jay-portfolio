@@ -15,7 +15,7 @@ export const PORTFOLIO_CONTEXT = `
 * Bachelor of Engineering in Information Technology: Vivekanand Education Society’s Institute of Technology, Mumbai University (Aug 2019 — May 2023). Graduated with a 7.83/10 GPA.
 ---
 ## Professional Experience
-* Lead Software Engineer at Thesis Mumbai Tech (Aug 2024 - Aug 2025): Engineered and scaled healthcare modules supporting over 10,000 patient records. Developed an IoT baby-warmer system with real-time PostgreSQL pipelines for live monitoring. Containerized projects using Docker, reducing setup time by 90%. Conducted technical interviews and mentored new hires.
+* Software Engineer at Thesis Mumbai Tech (Aug 2024 - Aug 2025): Engineered and scaled healthcare modules supporting over 10,000 patient records. Developed an IoT baby-warmer system with real-time PostgreSQL pipelines for live monitoring. Containerized projects using Docker, reducing setup time by 90%. Conducted technical interviews and mentored new hires.
 * Cloud Engineer Intern at Data Maven (Nov 2023 - May 2024): Designed and deployed scalable cloud infrastructure on AWS utilizing EC2, RDS, and VPC for secure backend communication.
 * Data Engineer Intern at Go Digital Technology Consulting (Jun 2023 - Aug 2023): Extracted business insights from real-world datasets using Python, Pandas, NumPy, and MySQL.
 
@@ -84,7 +84,7 @@ Access Control: Server-side role assignment (no client-side self-promotion to in
 ---
 
 ## Contact & Links
-* Email: jaypathare123@gmail.com
-* GitHub: https://github.com/jaypathare
+* Email: jayadmit456@gmail.com
+* GitHub: github.com/Jaypath456
 * LinkedIn: https://linkedin.com/in/jaypathare
 `;
