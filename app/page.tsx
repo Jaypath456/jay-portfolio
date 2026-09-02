@@ -1200,7 +1200,7 @@ export default function Home() {
                     <motion.div className="grid grid-cols-1 xl:grid-cols-2 gap-4" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                      <ProjectCard
 			  date="Aug 2026"
-			  icon="LLM" title="LLM Resume Tailoring Pipeline" href="https://github.com/YOUR_USERNAME/llm-resume-pipeline"
+			  icon="LLM" title="LLM Resume Tailoring Pipeline" href="https://github.com/Jaypath456/llm-resume-pipeline"
 			  desc="Built a pipeline that tailors my resume per job description using Gemini, then refuses to trust the model's own claim that the output is correct. It actually compiles the LaTeX, extracts the real rendered PDF text, and runs deterministic checks for layout fit, fabricated skills, and narrative coherence before anything is marked done. A second, independent model (Groq) proofreads the final PDF separately from the one that wrote it, so nothing grades its own work. Along the way I diagnosed a real production bug where a font-rendering artifact was being mistaken for a content typo, burning through several API accounts trying to 'fix' text that was never actually broken."
   			note="Open source · built to explore reliable verification loops for LLM-generated output"
   			tags={['Python', 'Gemini API', 'Groq', 'LaTeX', 'pdflatex', 'Prompt Engineering', 'LLM Orchestration']}
