@@ -1182,7 +1182,7 @@ export default function Home() {
                         tags={['Python', 'Django', 'PostgreSQL', 'Docker', 'ReactJS', 'WebRTC', 'IoT']}
                       />
                       <ExpCard
-                        period="Nov 2023 — May 2024" title="Cloud Engineer Intern" company="Data Maven"
+                        period="Nov 2023 — May 2024" title="Cloud Engineer Intern" company="Data Maven Pvt Ltd"
                         desc="Designed and deployed scalable cloud infrastructure on AWS using EC2 and RDS. Optimized VPC networking for secure, low-latency backend communication. Streamlined resource provisioning and supported deployment of data-intensive applications."
                         tags={['AWS', 'EC2', 'RDS', 'VPC', 'Cloud Infrastructure']}
                       />
