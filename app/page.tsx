@@ -761,7 +761,7 @@ const techStack: { category: string; icon: string; items: { name: string }[] }[]
   {
     category: 'Backend & Systems', icon: '⚙️',
     items: [
-      { name: 'Django' }, { name: 'REST API' }, { name: 'Node.js' }, { name: 'Operating Systems' },
+      { name: 'Django' }, { name: 'DRF' }, { name: 'Django Channels' }, { name: 'REST API' }, { name: 'Operating Systems' },
       { name: 'WebRTC' }, { name: 'OAuth / Auth0' }, { name: 'ETL Pipelines' },
       { name: 'JSON Web Tokens' }, { name: 'WebSockets' },
     ],
@@ -769,20 +769,20 @@ const techStack: { category: string; icon: string; items: { name: string }[] }[]
   {
     category: 'Cloud & DevOps', icon: '☁️',
     items: [
-      { name: 'AWS (EC2, RDS, VPC)' }, { name: 'Docker' }, { name: 'Git' },
-      { name: 'CI/CD' }, { name: 'Linux (Ubuntu)' },
+      { name: 'AWS (EC2, RDS, VPC)' }, { name: 'Docker' }, { name: 'Docker Compose' }, { name: 'Git' },
+      { name: 'Linux (Ubuntu)' },
     ],
   },
   {
     category: 'Programming Languages', icon: '</>',
     items: [
-      { name: 'Python' }, { name: 'JavaScript' }, { name: 'SQL' }, { name: 'HTML / CSS' },
+      { name: 'Python' }, { name: 'C' }, { name: 'SQL' }, { name: 'HTML / CSS' },
     ],
   },
   {
     category: 'Databases & Data Stores', icon: '🗄️',
     items: [
-      { name: 'PostgreSQL' }, { name: 'MySQL' }, { name: 'SQLite' }, { name: 'Redis' },
+      { name: 'PostgreSQL' }, { name: 'MySQL' }, { name: 'Redis' },
     ],
   },
   {
@@ -1178,7 +1178,7 @@ export default function Home() {
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ExpCard
                         period="Aug 2024 — Aug 2025" title="Software Engineer" company="Thesis Mumbai Tech"
-                        desc="Built and scaled healthcare modules (Patient Management, Consent) supporting 10k+ records. Developed an IoT baby-warmer system with real-time PostgreSQL pipelines and 2s live monitoring. Built a color-blindness diagnostic module achieving 97% clinical reliability. Containerized 3+ projects with Docker (90% setup time reduction), integrated secure PDF generation and WebRTC video conferencing. Conducted 20+ technical interviews and mentored new hires."
+                        desc="Worked on healthcare products end to end, from discussing requirements with clients and building prototypes to splitting tasks across the team and reviewing their work. Built Patient Management and Consent modules supporting 10k+ records. Developed a real-time IoT baby-warmer pipeline using WebSockets, Redis, and PostgreSQL with ~2s live monitoring. Integrated an Ishihara-based color-blindness diagnostic module with automated reports and real-time result visualization. Built a WebRTC telemedicine feature that allowed nurses to connect patients with remote doctors. Containerized 3+ projects with Docker, reducing environment setup time by 90%. Conducted 20+ technical interviews and mentored new hires."
                         tags={['Python', 'Django', 'PostgreSQL', 'Docker', 'ReactJS', 'WebRTC', 'IoT']}
                       />
                       <ExpCard
@@ -1188,7 +1188,7 @@ export default function Home() {
                       />
                       <ExpCard
                         period="Jun 2023 — Aug 2023" title="Data Engineer Intern" company="Go Digital Technology Consulting"
-                        desc="Analyzed real-world datasets using Python (Pandas, NumPy) and MySQL to extract trends and deliver actionable business insights."
+                        desc="Built a simple ETL workflow using Python, Pandas, NumPy, and MySQL to extract, clean, and transform business data. Used the processed data to generate reports and identify operational trends."
                         tags={['Python', 'Pandas', 'NumPy', 'MySQL', 'Data Analysis']}
                       />
                     </motion.div>
@@ -1210,25 +1210,25 @@ export default function Home() {
                         icon="LMS" title="Learning Management System" href="https://github.com/Jaypath456/decoupled-Learning-Management-System"
                         desc="Full-stack, decoupled LMS with role-based access for instructors and students. Instructors author chapter content in a Slate.js rich-text editor, publish courses, and run live Kahoot-style quiz sessions with a real-time leaderboard; students enroll, take async or live quizzes with instant grading, and chat over course-scoped WebSocket channels. Redis backs four concurrent roles — cache, Celery broker, Channels pub/sub layer, and live-session state — with idempotent grading and graceful degradation if Redis goes down. Benchmarked throughput under concurrent load with a custom Locust and asyncio-based WebSocket test harness. JWT auth (SimpleJWT) with a custom JWT-over-WebSocket handshake for authenticating real-time connections."
                         note="Built to explore distributed system design — real-time fan-out, shared state across processes, and performance under load"
-                        tags={['Django', 'DRF', 'React', 'Django Channels', 'Redis', 'Celery', 'WebSockets', 'JWT', 'Slate.js', 'PostgreSQL', 'Locust', 'Load Testing']}
+                        tags={['Django', 'DRF', 'React', 'Django Channels', 'Redis', 'WebSockets', 'JWT', 'PostgreSQL', 'Docker Compose', 'Locust', 'Load Testing']}
                       />
                       <ProjectCard
                         date="May 2026" 
                         icon="⚙️" title="Pintos OS: User Programs" href="https://github.com/CSE-421-521-Spring2026/pa2-it_worked_on_my_system"
-                        desc="Built the User Programs subsystem for the Pintos OS kernel. Engineered a secure argument-passing system and utilized semaphores to guarantee safe process synchronization between parents and children. Prevented kernel panics by strictly validating all user memory pointers before access and adding fine-grained locks to protect file operations."                        note="Academic project · CSE 521"
+                        desc="Implemented the User Programs layer of the Pintos x86 teaching OS in C. Built process execution, argument passing, parent-child synchronization, wait/exit handling, and clean process termination. Added a system-call handler supporting 13 operations and file-descriptor management for up to 128 open files per process. Used locks and semaphores for synchronization, validated user memory before kernel access, and prevented writes to running executables. Passed all 80 project tests covering concurrency, memory faults, and edge cases."                        note="Academic project · CSE 521"
                         tags={['C', 'Kernel', 'Syscalls', 'Process Synchronization', 'Memory Management']}
                       />
                       <ProjectCard
                         date="Apr 2026"
                         icon="OCR" title="AI Metadata Extraction Pipeline" href="https://github.com/Jaypath456/AI_metadata_extraction_pipeline"
-                        desc="Engineered a hybrid OCR-LLM metadata extraction pipeline using Tesseract-OCR and Qwen-35B across 1,000+ legacy law journals. Automated end-to-end author metadata entry, reducing manual workload by 90% while maintaining 92%+ accuracy. Designed a confidence-scoring layer (aiscore: 100/85/50 by source) to flag low-confidence extractions for targeted human review, reducing audit scope without sacrificing accuracy. Containerized the full pipeline with Docker."
-                        note="Industry collaboration"
+                        desc="Built an OCR-LLM metadata extraction pipeline for 47 law journals and 28k+ page images using CrossRef, web scraping, Tesseract-OCR, and Qwen models. Combined outputs from the different sources using fuzzy matching and converted the final metadata into validated YAML. Over five iterations, improved extraction accuracy from 57% to 90.81% while reducing manual data-entry work by ~90%. Parallelized journal processing with a worker pool so available CPU cores could process journals independently. Added an aiscore confidence system (100/85/50 by source) to flag uncertain fields for human review. Containerized the complete pipeline with Docker."
+                        note="Graduate Student Developer · CSE 611 · Team of 5 · HeinOnline"
                         tags={['Python', 'Tesseract-OCR', 'Qwen-35B', 'LLMs', 'Docker', 'ETL']}
                       />
                       <ProjectCard
                         date="Mar 2026"
                         icon="GNN" title="Fraud Detection with Graph Neural Networks" href="https://github.com/Jaypath456/gnn-fraud-detection"
-                        desc="GraphSAGE-based fraud detection on the IEEE-CIS dataset. Converted tabular transactions into a graph using shared card, device, and email features to capture relational patterns. Compared GraphSAGE against an MLP baseline and a GAT model, achieving 0.93 AUC-ROC and 0.57 F1 on the fraud class. Handled severe class imbalance using Focal Loss for robust training and evaluation. Validated the architecture on the Elliptic Bitcoin dataset (0.99 AUC)."
+                        desc="Built a GraphSAGE fraud-detection model on the IEEE-CIS dataset with 590k+ transactions. Converted transactions into a graph using shared card, address, and email features while limiting very large groups to keep the graph manageable. Handled the 27:1 class imbalance using Focal Loss and threshold tuning. During testing, found that GAT struggled with high-degree hubs while GraphSAGE was more stable. GraphSAGE reached 0.9259 AUC-ROC and 0.5641 fraud F1, compared with 0.8584 AUC for the MLP baseline."
                         note="Academic project"
                         tags={['PyTorch', 'GraphSAGE', 'GAT', 'MLP', 'Graph Neural Networks', 'Python', 'IEEE-CIS']}
                       />
