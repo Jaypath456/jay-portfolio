@@ -1156,7 +1156,7 @@ export default function Home() {
                     <SectionHeader whiteText="About" tealText="Me" subtitle="Software Engineer specializing in scalable backends and applied ML" />
                     <motion.div className="space-y-5 text-[14px] sm:text-[15px] leading-relaxed" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants} style={{ color: '#64748b' }}>
                       <motion.p variants={itemVariants}>
-                        I'm a software engineer specializing in backend systems and machine learning. Currently pursuing my <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>MS in Computer Science at the University at Buffalo</strong>, my recent focus has been distributed systems design — most recently a real-time platform where a single Redis instance serves as cache, message broker, and pub/sub layer simultaneously, load-tested to handle concurrent WebSocket connections under real traffic.
+                I'm a software engineer specializing in backend systems and machine learning. Currently pursuing my <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>MS in Computer Science at the University at Buffalo</strong>, my recent focus has been distributed systems design, most recently a real-time platform where a single Redis instance serves as cache, message broker, and pub/sub layer simultaneously, load-tested to handle concurrent WebSocket connections under real traffic.
                       </motion.p>
                       <motion.p variants={itemVariants}>
                         Before New York, I was a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Software Engineer at Thesis Mumbai Tech</strong>, building healthcare platforms that manage 10,000+ patient records, and earlier architected cloud infrastructure as an AWS Intern. I hold an AWS Cloud Practitioner certification and have published research in ML classification. Along the way I've also picked up mentoring and leadership experience - conducting 20+ technical interviews, mentoring new hires, and organizing a Git/GitHub workshop for UB's CS department.
@@ -1208,8 +1208,8 @@ export default function Home() {
                       <ProjectCard
                         date="Jul 2026"
                         icon="LMS" title="Learning Management System" href="https://github.com/Jaypath456/decoupled-Learning-Management-System"
-                        desc="Full-stack, decoupled LMS with role-based access for instructors and students. Instructors author chapter content in a Slate.js rich-text editor, publish courses, and run live Kahoot-style quiz sessions with a real-time leaderboard; students enroll, take async or live quizzes with instant grading, and chat over course-scoped WebSocket channels. Redis backs four concurrent roles — cache, Celery broker, Channels pub/sub layer, and live-session state — with idempotent grading and graceful degradation if Redis goes down. Benchmarked throughput under concurrent load with a custom Locust and asyncio-based WebSocket test harness. JWT auth (SimpleJWT) with a custom JWT-over-WebSocket handshake for authenticating real-time connections."
-                        note="Built to explore distributed system design — real-time fan-out, shared state across processes, and performance under load"
+                desc="Full-stack, decoupled LMS with role-based access for instructors and students. Instructors author chapter content in a Slate.js rich-text editor, publish courses, and run live Kahoot-style quiz sessions with a real-time leaderboard; students enroll, take async or live quizzes with instant grading, and chat over course-scoped WebSocket channels. Redis backs four concurrent roles (cache, Celery broker, Channels pub/sub layer, and live-session state) with idempotent grading and graceful degradation if Redis goes down. Benchmarked throughput under concurrent load with a custom Locust and asyncio-based WebSocket test harness. JWT auth (SimpleJWT) with a custom JWT-over-WebSocket handshake for authenticating real-time connections."
+                        note="Built to explore distributed system design, real-time fan-out, shared state across processes, and performance under load"
                         tags={['Django', 'DRF', 'React', 'Django Channels', 'Redis', 'WebSockets', 'JWT', 'PostgreSQL', 'Docker Compose', 'Locust', 'Load Testing']}
                       />
                       <ProjectCard
@@ -1259,7 +1259,7 @@ export default function Home() {
                         highlights={[
                           'Focus: Machine Learning, Graph Neural Networks, Agentic AI',
                           'Industry project: OCR-LLM metadata pipeline for HeinOnline (CSE 611)',
-                          'Organized Git & GitHub workshop for CS&E dept — Certificate of Appreciation',
+                          'Organized Git & GitHub workshop for CS&E dept, Certificate of Appreciation',
                           'Public Safety Aide, University at Buffalo campus',
                         ]}
                       />
@@ -1267,7 +1267,7 @@ export default function Home() {
                         degree="B.E. Information Technology" school="VESIT · Mumbai University, India"
                         period="Aug 2019 — May 2023" gpa="7.83 / 10"
                         highlights={[
-                          'Capstone: Music Genre Classification — published in IJRAR, Vol. 10, Issue 2',
+                          'Capstone: Music Genre Classification, published in IJRAR, Vol. 10, Issue 2',
                           'Achieved 97.68% classification accuracy using CatBoost and KNN',
                           'Coursework: Data Structures, DBMS, Networking, OOP',
                           'Active participant in campus software testing events',
