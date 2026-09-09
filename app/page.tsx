@@ -441,11 +441,11 @@ function AIChatOrb() {
 
 // ─── Experience Card ──────────────────────────────────────────────────────────
 
-function ExpCard({ period, title, company, desc, tags }: {
+function ExpCard({ period, title, company, bullets, tags }: {
   period: string;
   title: string;
   company: string;
-  desc: string;
+  bullets: string[];
   tags: string[];
 }) {
   const [hovered, setHovered] = useState(false);
@@ -465,36 +465,88 @@ function ExpCard({ period, title, company, desc, tags }: {
         <div className="flex items-start gap-3.5">
           <div
             className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-            style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', border: '1px solid rgba(100,255,218,0.15)', transition: 'all 0.3s' }}
+            style={{
+              background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)',
+              border: '1px solid rgba(100,255,218,0.15)',
+              transition: 'all 0.3s'
+            }}
           >
-            <svg className="w-5 h-5" style={{ color: hovered ? '#64ffda' : 'rgba(100,255,218,0.8)', transition: 'color 0.2s' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+            <svg
+              className="w-5 h-5"
+              style={{
+                color: hovered ? '#64ffda' : 'rgba(100,255,218,0.8)',
+                transition: 'color 0.2s'
+              }}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
             </svg>
           </div>
+
           <div className="pt-0.5">
-            <h3 className="font-bold text-[15px]" style={{ color: hovered ? '#64ffda' : '#e2e8f0', transition: 'color 0.2s' }}>
+            <h3
+              className="font-bold text-[15px]"
+              style={{
+                color: hovered ? '#64ffda' : '#e2e8f0',
+                transition: 'color 0.2s'
+              }}
+            >
               {title}
             </h3>
-            <div className="text-[13px] mt-0.5" style={{ color: '#64748b' }}>{company}</div>
+
+            <div className="text-[13px] mt-0.5" style={{ color: '#64748b' }}>
+              {company}
+            </div>
           </div>
         </div>
-        <div className="text-[10px] font-bold tracking-widest uppercase font-mono sm:text-right mt-1 sm:mt-0 pt-1" style={{ color: '#475569' }}>
+
+        <div
+          className="text-[10px] font-bold tracking-widest uppercase font-mono sm:text-right mt-1 sm:mt-0 pt-1"
+          style={{ color: '#475569' }}
+        >
           {period}
         </div>
       </div>
 
-      {/* Description */}
-      <div className="relative z-10 mt-1">
-        <p className="text-[13px] leading-relaxed" style={{ color: hovered ? '#94a3b8' : '#64748b', transition: 'color 0.2s' }}>
-          {desc}
-        </p>
-      </div>
+      {/* Bullet points */}
+      <ul className="relative z-10 mt-1 space-y-1.5">
+        {bullets.map((bullet, i) => (
+          <li
+            key={i}
+            className="flex items-start gap-2 text-[12px] sm:text-[13px] leading-relaxed"
+            style={{
+              color: hovered ? '#94a3b8' : '#64748b',
+              transition: 'color 0.2s'
+            }}
+          >
+            <span
+              className="mt-[7px] w-1 h-1 rounded-full flex-shrink-0"
+              style={{ background: '#64ffda' }}
+            />
+            <span>{bullet}</span>
+          </li>
+        ))}
+      </ul>
 
       {/* Tags */}
       <div className="relative z-10 flex flex-wrap gap-1.5 mt-2">
         {tags.map(t => (
-          <span key={t} className="text-[10px] px-2.5 py-0.5 rounded-full font-medium tracking-wide"
-            style={{ background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)', color: '#64ffda', border: '1px solid rgba(100,255,218,0.15)', transition: 'background 0.2s' }}>
+          <span
+            key={t}
+            className="text-[10px] px-2.5 py-0.5 rounded-full font-medium tracking-wide"
+            style={{
+              background: hovered ? 'rgba(100,255,218,0.1)' : 'rgba(100,255,218,0.05)',
+              color: '#64ffda',
+              border: '1px solid rgba(100,255,218,0.15)',
+              transition: 'background 0.2s'
+            }}
+          >
             {t}
           </span>
         ))}
