@@ -1230,17 +1230,31 @@ export default function Home() {
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ExpCard
                         period="Aug 2024 — Aug 2025" title="Software Engineer" company="Thesis Mumbai Tech"
-                        desc="Worked on healthcare products end to end, from discussing requirements with clients and building prototypes to splitting tasks across the team and reviewing their work. Built Patient Management and Consent modules supporting 10k+ records. Developed a real-time IoT baby-warmer pipeline using WebSockets, Redis, and PostgreSQL with ~2s live monitoring. Integrated an Ishihara-based color-blindness diagnostic module with automated reports and real-time result visualization. Built a WebRTC telemedicine feature that allowed nurses to connect patients with remote doctors. Containerized 3+ projects with Docker, reducing environment setup time by 90%. Conducted 20+ technical interviews and mentored new hires."
+			  bullets={[
+			    "Worked on healthcare products end to end, from discussing requirements with clients and building prototypes to splitting tasks across the team and reviewing their work.",
+			    "Built Patient Management and Consent modules supporting 10k+ records.",
+			    "Developed a real-time IoT baby-warmer pipeline using WebSockets, Redis, and PostgreSQL with ~2s live monitoring.",
+			    "Integrated an Ishihara-based color-blindness diagnostic module with automated reports and real-time result visualization.",
+			    "Built a WebRTC telemedicine feature that allowed nurses to connect patients with remote doctors.",
+			    "Containerized 3+ projects with Docker, reducing environment setup time by 90%. Conducted 20+ technical interviews and mentored new hires."
+			  ]}
                         tags={['Python', 'Django', 'PostgreSQL', 'Docker', 'ReactJS', 'WebRTC', 'IoT']}
                       />
                       <ExpCard
                         period="Nov 2023 — May 2024" title="Cloud Engineer Intern" company="Data Maven Pvt Ltd"
-                        desc="Designed and deployed scalable cloud infrastructure on AWS using EC2 and RDS. Optimized VPC networking for secure, low-latency backend communication. Streamlined resource provisioning and supported deployment of data-intensive applications."
+			  bullets={[
+			    "Deployed backend infrastructure on AWS using EC2 and RDS.",
+			    "Configured VPC networking for secure, low-latency backend communication.",
+			    "Streamlined resource provisioning and supported deployments for data-intensive applications."
+			  ]}
                         tags={['AWS', 'EC2', 'RDS', 'VPC', 'Cloud Infrastructure']}
                       />
                       <ExpCard
                         period="Jun 2023 — Aug 2023" title="Data Engineer Intern" company="Go Digital Technology Consulting"
-                        desc="Built a simple ETL workflow using Python, Pandas, NumPy, and MySQL to extract, clean, and transform business data. Used the processed data to generate reports and identify operational trends."
+  bullets={[
+    "Built an ETL workflow using Python, Pandas, NumPy, and MySQL to extract, clean, and transform business data.",
+    "Used the processed data to generate reports and identify operational trends."
+  ]}
                         tags={['Python', 'Pandas', 'NumPy', 'MySQL', 'Data Analysis']}
                       />
                     </motion.div>
