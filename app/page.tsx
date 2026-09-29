@@ -807,7 +807,7 @@ const techStack: { category: string; icon: string; items: { name: string }[] }[]
       { name: 'PyTorch' }, { name: 'TensorFlow' }, { name: 'scikit-learn' },
       { name: 'LLMs' }, { name: 'Graph Neural Networks' }, { name: 'CNNs' },
       { name: 'RNNs' }, { name: 'Prompt Engineering' }, { name: 'OCR Pipelines' },
-      { name: 'GraphSAGE' },
+      { name: 'GraphSAGE' }, { name: 'Agentic AI' }, { name: 'Tool Calling' },
     ],
   },
   {
@@ -815,7 +815,8 @@ const techStack: { category: string; icon: string; items: { name: string }[] }[]
     items: [
       { name: 'Django' }, { name: 'DRF' }, { name: 'Django Channels' }, { name: 'REST API' }, { name: 'Operating Systems' },
       { name: 'WebRTC' }, { name: 'OAuth / Auth0' }, { name: 'ETL Pipelines' },
-      { name: 'JSON Web Tokens' }, { name: 'WebSockets' },
+      { name: 'JSON Web Tokens' }, { name: 'WebSockets' }, { name: 'Redis Pub/Sub' },
+      { name: 'Static Analysis' },
     ],
   },
   {
@@ -828,19 +829,19 @@ const techStack: { category: string; icon: string; items: { name: string }[] }[]
   {
     category: 'Programming Languages', icon: '</>',
     items: [
-      { name: 'Python' }, { name: 'C' }, { name: 'SQL' }, { name: 'HTML / CSS' },
+      { name: 'Python' }, { name: 'Go' }, { name: 'C' }, { name: 'SQL' }, { name: 'HTML / CSS' },
     ],
   },
   {
     category: 'Databases & Data Stores', icon: '🗄️',
     items: [
-      { name: 'PostgreSQL' }, { name: 'MySQL' }, { name: 'Redis' },
+      { name: 'PostgreSQL' }, { name: 'MySQL' }, { name: 'MongoDB' }, { name: 'Redis' },
     ],
   },
   {
     category: 'Frameworks & UI', icon: '🛠️',
     items: [
-      { name: 'React' }, { name: 'Slate.js / Plate.js' },
+      { name: 'React' }, { name: 'Pydantic' }, { name: 'Slate.js / Plate.js' },
       { name: 'Pandas' }, { name: 'NumPy' }, { name: 'Matplotlib' }, { name: 'Tableau' },
     ],
   },
@@ -1111,7 +1112,7 @@ export default function Home() {
 
                   {/* Metrics */}
                   <motion.div variants={sidebarItem} className="grid grid-cols-3 gap-2.5">
-                    {[{ n: '3.85', label: 'GPA / 4.0' }, { n: '1+', label: 'yrs exp.' }, { n: "Dec '26", label: 'MS CS' }].map(({ n, label }) => (
+                    {[{ n: '3.85', label: 'GPA / 4.0' }, { n: '1+', label: 'yrs exp.' }, { n: "Feb '27", label: 'MS CS' }].map(({ n, label }) => (
                       <div key={label} className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                         <div className="text-[17px] font-extrabold" style={{ color: '#e2e8f0' }}>{n}</div>
                         <div className="text-[9px] uppercase tracking-widest font-bold mt-0.5" style={{ color: '#475569' }}>{label}</div>
@@ -1205,20 +1206,20 @@ export default function Home() {
 
                   {/* About */}
                   <section id="about" className="scroll-mt-24">
-                    <SectionHeader whiteText="About" tealText="Me" subtitle="Software Engineer specializing in scalable backends and applied ML" />
+                    <SectionHeader whiteText="About" tealText="Me" subtitle="Software Engineer specializing in scalable backends, applied ML, and agentic AI" />
                     <motion.div className="space-y-5 text-[14px] sm:text-[15px] leading-relaxed" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants} style={{ color: '#64748b' }}>
                       <motion.p variants={itemVariants}>
-                I'm a software engineer specializing in backend systems and machine learning. Currently pursuing my <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>MS in Computer Science at the University at Buffalo</strong>, my recent focus has been distributed systems design, most recently a real-time platform where a single Redis instance serves as cache, message broker, and pub/sub layer simultaneously, load-tested to handle concurrent WebSocket connections under real traffic.
+                I'm a software engineer specializing in backend systems and machine learning. Currently pursuing my <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>MS in Computer Science at the University at Buffalo</strong>, my recent work sits where agents meet real systems: RIPPLE, a bounded agent that predicts which parts of a Python codebase a feature will touch and then checks that prediction against the real Git diff, and LaunchOps, an onboarding platform whose live-quiz service runs as two Go replicas coordinated through Redis Pub/Sub.
                       </motion.p>
                       <motion.p variants={itemVariants}>
-                        Before New York, I was a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Software Engineer at Thesis Mumbai Tech</strong>, building healthcare platforms that manage 10,000+ patient records, and earlier architected cloud infrastructure as an AWS Intern. I hold an AWS Cloud Practitioner certification and have published research in ML classification. Along the way I've also picked up mentoring and leadership experience - conducting 20+ technical interviews, mentoring new hires, and organizing a Git/GitHub workshop for UB's CS department.
+                        Before New York, I was a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Software Engineer at Thesis Mumbai Tech</strong>, building healthcare platforms that manage 10,000+ patient records, and earlier deployed AWS infrastructure as a Cloud Engineer Intern at Data Maven. I hold an AWS Cloud Practitioner certification and have published research in ML classification. Along the way I've also picked up mentoring and leadership experience - conducting 20+ technical interviews, mentoring new hires, and organizing a Git/GitHub workshop for UB's CS department.
                       </motion.p>
                       <motion.p variants={itemVariants}>
                         When I'm not writing Python or debugging a race condition in a Redis pub/sub layer, you'll usually find me analyzing chess strategies, tinkering with my Linux setup, or keeping up with the latest in Large Language Models!
                       </motion.p>
                       <motion.div variants={itemVariants}>
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-mono" style={{ background: 'rgba(100,255,218,0.06)', border: '1px solid rgba(100,255,218,0.15)', color: '#64ffda' }}>
-                          📍 Buffalo, NY · Open to relocation · F-1 OPT eligible Dec 2026
+                          📍 Buffalo, NY · Open to relocation · F-1 OPT eligible Feb 2027
                         </div>
                       </motion.div>
                     </motion.div>
@@ -1264,19 +1265,26 @@ export default function Home() {
 <section id="projects" className="scroll-mt-24">
                     <SectionHeader whiteText="Featured" tealText="Projects" subtitle="Academic and personal builds showcasing applied engineering" />
                     <motion.div className="grid grid-cols-1 xl:grid-cols-2 gap-4" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
-                     <ProjectCard
-			  date="Aug 2026"
-			  icon="LLM" title="LLM Resume Tailoring Pipeline" href="https://github.com/Jaypath456/llm-resume-pipeline"
-			  desc="Built a pipeline that tailors my resume per job description using Gemini, then refuses to trust the model's own claim that the output is correct. It actually compiles the LaTeX, extracts the real rendered PDF text, and runs deterministic checks for layout fit, fabricated skills, and narrative coherence before anything is marked done. A second, independent model (Groq) proofreads the final PDF separately from the one that wrote it, so nothing grades its own work. Along the way I diagnosed a real production bug where a font-rendering artifact was being mistaken for a content typo, burning through several API accounts trying to 'fix' text that was never actually broken."
-  			note="Open source · built to explore reliable verification loops for LLM-generated output"
-  			tags={['Python', 'Gemini API', 'Groq', 'LaTeX', 'pdflatex', 'Prompt Engineering', 'LLM Orchestration']}
-/>
+                      <ProjectCard
+                        date="Sep 2026"
+                        icon="LLM" title="LLM Application Optimization Engine" href="https://github.com/Jaypath456/llm-resume-pipeline"
+                        desc="Built a multi-model pipeline that turns a job description into a tailored one-page resume, a grounded cover letter, and an independent fit assessment. An optimizer scores every valid 3-project assignment, then uses dynamic programming to spend a fixed bullet budget on the job requirements that still need proof. Cut typical end-to-end runtime by ~73% (~11 to ~3 minutes) by running three generation workers in a bounded pool, regenerating only what failed, and replacing avoidable model calls with local fixes. Model output is treated as untrusted: Python rejects unsupported technologies, borrowed evidence, and changed metrics, then compiles the LaTeX and reads the PDF back to check the file that actually ships. A separate reviewer model can only propose defects, and Python confirms each one against the evidence before it changes a score. Traced one run of broken output to a single replacement character produced during PDF text extraction, and fixed it at the file layer instead of in the generated text. Backed by a 2,500+ test pytest suite, including metamorphic tests, with no live API calls."
+                        note="Open source · built to explore reliable verification loops for LLM-generated output"
+                        tags={['Python', 'Qwen', 'Groq', 'pytest', 'LaTeX', 'Concurrency', 'Dynamic Programming', 'Prompt Engineering']}
+                      />
+                      <ProjectCard
+                        date="Sep 2026"
+                        icon="RPL" title="RIPPLE: Agentic Change-Impact Analysis" href="#"
+                        desc="Built RIPPLE, a local command-line agent that reads a Python repository and a feature request, then predicts which files, dependencies, and tests the change will touch before any code is written. A deterministic index built with Python's ast module and Git covers symbols, imports, tests, and framework facts, and parse failures are recorded instead of crashing the run. The LLM only chooses the next probe (code search, symbol inspection, references, dependencies, tests, or Git co-change history) based on what it has already seen, while Python executes every tool, validates arguments and evidence, caps outputs, and enforces tool-call and no-progress limits. After the feature is built, RIPPLE compares the predicted change surface with the actual Git diff, classifies expected, adjacent, unexpected, and missing changes, flags missing tests and stale callers, and investigates only the surprising files. An evaluation harness hides the real diff of historical feature changes and scores predictions with precision, recall, F1, and Recall@K against keyword and dependency-expansion baselines."
+                        note="Personal project · read-only on target repositories · benchmark results pending"
+                        tags={['Python', 'Agentic AI', 'Tool Calling', 'Python AST', 'Static Analysis', 'Git', 'Pydantic', 'pytest']}
+                      />
                       <ProjectCard
                         date="Jul 2026"
-                        icon="LMS" title="Learning Management System" href="https://github.com/Jaypath456/decoupled-Learning-Management-System"
-                desc="Full-stack, decoupled LMS with role-based access for instructors and students. Instructors author chapter content in a Slate.js rich-text editor, publish courses, and run live Kahoot-style quiz sessions with a real-time leaderboard; students enroll, take async or live quizzes with instant grading, and chat over course-scoped WebSocket channels. Redis backs four concurrent roles (cache, Celery broker, Channels pub/sub layer, and live-session state) with idempotent grading and graceful degradation if Redis goes down. Benchmarked throughput under concurrent load with a custom Locust and asyncio-based WebSocket test harness. JWT auth (SimpleJWT) with a custom JWT-over-WebSocket handshake for authenticating real-time connections."
-                        note="Built to explore distributed system design, real-time fan-out, shared state across processes, and performance under load"
-                        tags={['Django', 'DRF', 'React', 'Django Channels', 'Redis', 'WebSockets', 'JWT', 'PostgreSQL', 'Docker Compose', 'Locust', 'Load Testing']}
+                        icon="OPS" title="LaunchOps: Office Onboarding & Real-Time Learning Platform" href="https://github.com/Jaypath456/decoupled-Learning-Management-System"
+                        desc="Built LaunchOps, an office onboarding platform in Django REST Framework, React, and PostgreSQL whose 20-task workflow spans HR, IT, manager, and employee roles, with a real-time quiz service in Go. Every task has an owner, prerequisites, and validated evidence, and the server rejects completing another role's task, forged evidence, skipped prerequisites, duplicate submissions, and HR signoff while support issues are still open. The employee learning track links five lessons to five assessments, keeps failed attempts on retry, and requires every published assessment to meet a 70% pass mark before training counts as complete. The Go WebSocket quiz service runs as two replicas behind nginx, with Redis Pub/Sub fanning events out across replicas and a Redis Lua script enforcing question deadlines and first-answer claims. Live answers are stored in MongoDB behind a unique (room, question, user) index so a resubmitted answer is never stored twice, and Django checks JWT identity, enrollment, and host privileges before a Go worker receives room data. Wrote a repeatable Django-versus-Go WebSocket benchmark that records p50/p95/p99 latency, missed events, and connection failures across varying numbers of users."
+                        note="Payroll, provisioning, and identity steps are labeled demo simulations · Go benchmark results pending"
+                        tags={['Go', 'Redis Pub/Sub', 'Redis Lua', 'MongoDB', 'Django', 'DRF', 'React', 'PostgreSQL', 'WebSockets', 'nginx', 'JWT', 'Docker Compose']}
                       />
                       <ProjectCard
                         date="May 2026" 
@@ -1294,7 +1302,7 @@ export default function Home() {
                       <ProjectCard
                         date="Mar 2026"
                         icon="GNN" title="Fraud Detection with Graph Neural Networks" href="https://github.com/Jaypath456/gnn-fraud-detection"
-                        desc="Built a GraphSAGE fraud-detection model on the IEEE-CIS dataset with 590k+ transactions. Converted transactions into a graph using shared card, address, and email features while limiting very large groups to keep the graph manageable. Handled the 27:1 class imbalance using Focal Loss and threshold tuning. During testing, found that GAT struggled with high-degree hubs while GraphSAGE was more stable. GraphSAGE reached 0.9259 AUC-ROC and 0.5641 fraud F1, compared with 0.8584 AUC for the MLP baseline."
+                        desc="Built a GraphSAGE fraud-detection model on the IEEE-CIS dataset with 590k+ transactions. Converted transactions into a graph using shared card, address, and email features while limiting very large groups to keep the graph manageable. Handled the ~27.6:1 class imbalance using Focal Loss and threshold tuning. During testing, found that GAT struggled with high-degree hubs while GraphSAGE was more stable. GraphSAGE reached 0.9259 AUC-ROC and 0.5641 fraud F1, compared with ~0.858 AUC for the MLP baseline. An edge ablation showed the graph links lift AUC from ~0.895 with no edges to ~0.911 with all of them."
                         note="Academic project"
                         tags={['PyTorch', 'GraphSAGE', 'GAT', 'MLP', 'Graph Neural Networks', 'Python', 'IEEE-CIS']}
                       />
@@ -1321,7 +1329,7 @@ export default function Home() {
                     <motion.div className="space-y-3" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <EducationCard
                         degree="M.S. Computer Science" school="University at Buffalo, SUNY"
-                        period="Aug 2025 — Dec 2026" gpa="3.85 / 4.0"
+                        period="Aug 2025 — Feb 2027" gpa="3.85 / 4.0"
                         highlights={[
                           'Focus: Machine Learning, Graph Neural Networks, Agentic AI',
                           'Industry project: OCR-LLM metadata pipeline for HeinOnline (CSE 611)',
@@ -1382,7 +1390,7 @@ export default function Home() {
                       <div className="mb-6"><WorldMap /></div>
                       <div className="text-center max-w-md mx-auto space-y-4 relative z-10 pt-2 font-sans">
                         <p className="text-xs leading-relaxed font-normal" style={{ color: '#64748b' }}>
-                          I'm actively exploring full-time opportunities in backend systems engineering and machine learning. Available for F-1 OPT from December 2026. If you have an interesting problem to solve or simply want to connect, drop me a message!
+                          I'm actively exploring full-time opportunities in backend systems engineering and machine learning. Available for F-1 OPT from February 2027. If you have an interesting problem to solve or simply want to connect, drop me a message!
                         </p>
                         <div className="grid grid-cols-1 gap-2.5 text-left text-xs font-mono max-w-xs mx-auto pt-2">
                           <CopyableRow icon="✉" iconColor="#2dd4bf" value="jayadmit456@gmail.com" />
