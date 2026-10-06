@@ -1314,26 +1314,26 @@ export default function Home() {
                         note="Team of 4 · Hackathon prototype on simulated marketplace data · no real ACV or Copart integration"
                         tags={['Python', 'LangGraph', 'Claude API', 'Multi-Agent Systems', 'Human-in-the-Loop', 'Streamlit', 'React', 'Server-Sent Events', 'pytest', 'Hackathon Winner']}
                       />
+                        <ProjectCard
+                          date="Oct 2026"
+                          icon="LDG" title="LedgerFlow: Event-Driven Payment Ledger" href="#"
+                          desc="Built an event-driven payment ledger with Java 25, Spring Boot, Kafka, and PostgreSQL that stays correct under retries, duplicate messages, and crashes. Uses a transactional outbox, idempotent consumers, and double-entry accounting for exactly-once financial effects over at-least-once delivery. In a 200-request race on one account, exactly 50 payments succeeded, 150 were safely rejected, and the balance ended at $0. Passed 94 automated tests and a 27/27-run chaos campaign with 0 invariant violations, including 14 JVM crashes. Cut p95 latency from 121 ms to 51 ms at 200 payments/s by tuning outbox polling."
+                          note="Personal project · local single-instance stack, not production or highly available · performance and recovery figures are local-machine measurements"
+                          tags={['Java', 'Spring Boot', 'Apache Kafka', 'PostgreSQL', 'Flyway', 'Transactional Outbox', 'Idempotency', 'Double-Entry Ledger', 'Chaos Testing', 'JUnit 5', 'Testcontainers', 'k6', 'Docker Compose', 'GitHub Actions']}
+                        />
                       <ProjectCard
-                        date="Oct 2026"
+                        date="Sep 2026"
                         icon="RPL" title="RIPPLE: Agentic Change-Impact Analysis" href="#"
                         desc="Built RIPPLE, a command-line Agentic AI tool that predicts which files, tests, and dependencies a feature request will touch in a Python repository before any code is written. The LLM picks what to investigate, while Python runs 7 analysis tools, validates every piece of evidence, and caps each run at 25 tool calls. On 30 fresh tasks from 16 repositories, it reached 0.306 precision and 0.311 MRR with 0 unsupported accepted claims. A post-change check compares the prediction to the real Git diff and flags unexpected edits, missing tests, and stale callers."
                         note="Personal project · Python repositories only · target code is analyzed read-only, never executed · stage-B result uses oracle pre-change predictions · not deployed in production"
                         tags={['Python', 'Agentic AI', 'Tool Calling', 'Python AST', 'Static Analysis', 'Git', 'Pydantic', 'pytest', 'Agent Evaluation']}
                       />
                       <ProjectCard
-                        date="Sep 2026"
+                        date="Aug 2026"
                         icon="LLM" title="LLM Application Optimization Engine" href="https://github.com/Jaypath456/llm-resume-pipeline"
                         desc="Built a multi-model pipeline that turns a job description into a tailored resume, cover letter, and fit assessment. Python checks every generated claim against source evidence and rejects unsupported ones. Cut typical runtime by ~73% (~11 to ~3 minutes) with three concurrent workers, backed by a 2,500+ test pytest suite."
                         note="Open source · built to explore reliable verification loops for LLM-generated output"
                         tags={['Python', 'Qwen', 'Groq', 'pytest', 'LaTeX', 'Concurrency', 'Dynamic Programming', 'Prompt Engineering']}
-                      />
-                      <ProjectCard
-                        date="Jul 2026"
-                        icon="LDG" title="LedgerFlow: Event-Driven Payment Ledger" href="#"
-                        desc="Built an event-driven payment ledger with Java 25, Spring Boot, Kafka, and PostgreSQL that stays correct under retries, duplicate messages, and crashes. Uses a transactional outbox, idempotent consumers, and double-entry accounting for exactly-once financial effects over at-least-once delivery. In a 200-request race on one account, exactly 50 payments succeeded, 150 were safely rejected, and the balance ended at $0. Passed 94 automated tests and a 27/27-run chaos campaign with 0 invariant violations, including 14 JVM crashes. Cut p95 latency from 121 ms to 51 ms at 200 payments/s by tuning outbox polling."
-                        note="Personal project · local single-instance stack, not production or highly available · performance and recovery figures are local-machine measurements"
-                        tags={['Java', 'Spring Boot', 'Apache Kafka', 'PostgreSQL', 'Flyway', 'Transactional Outbox', 'Idempotency', 'Double-Entry Ledger', 'Chaos Testing', 'JUnit 5', 'Testcontainers', 'k6', 'Docker Compose', 'GitHub Actions']}
                       />
                       <ProjectCard
                         date="Jun 2026"
