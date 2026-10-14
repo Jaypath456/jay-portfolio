@@ -1247,14 +1247,14 @@ export default function Home() {
                 I'm a software engineer specializing in backend systems and machine learning. Currently pursuing my <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>MS in Computer Science at the University at Buffalo</strong>, my recent work sits where agents meet real systems: RIPPLE, a bounded agent that predicts which parts of a Python codebase a feature will touch and then checks that prediction against the real Git diff, LedgerFlow, an event-driven payment ledger built to stay correct under duplicate delivery, concurrency, and JVM crashes, and LaunchOps, an onboarding platform whose live-quiz service runs as two Go replicas coordinated through Redis Pub/Sub.
                       </motion.p>
                       <motion.p variants={itemVariants}>
-                        Before New York, I was a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Software Engineer at Thesis Mumbai Tech</strong>, building healthcare platforms that manage 10,000+ patient records, and earlier deployed AWS infrastructure as a Cloud Engineer Intern at Data Maven. I hold an AWS Cloud Practitioner certification, have published research in ML classification, and co-built GoingOnce, a four-agent car-marketplace prototype that won 1st place in the ACV Auctions + Copart challenge at UB's AI for Good Hackathon. Along the way I've also picked up mentoring and leadership experience - conducting 20+ technical interviews, mentoring new hires, and organizing a Git/GitHub workshop for UB's CS department.
+                        Before New York, I was a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Software Engineer at Thesis Mumbai Tech</strong>, building healthcare platforms that manage 10,000+ patient records, and earlier deployed AWS infrastructure as a Cloud Engineer Intern at Data Maven. I hold an AWS Cloud Practitioner certification, have published research in ML classification, and co-built GoingOnce, a four-agent car-marketplace prototype that won 1st place in the ACV Auctions + Copart challenge at UB's AI for Good Hackathon. Along the way I've also picked up mentoring and leadership experience - interviewing about 20 student candidates, mentoring new hires, and organizing a Git/GitHub workshop for UB's CS department.
                       </motion.p>
                       <motion.p variants={itemVariants}>
                         When I'm not writing Python or debugging a race condition in a Redis pub/sub layer, you'll usually find me analyzing chess strategies, tinkering with my Linux setup, or keeping up with the latest in Large Language Models!
                       </motion.p>
                       <motion.div variants={itemVariants}>
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-mono" style={{ background: 'rgba(100,255,218,0.06)', border: '1px solid rgba(100,255,218,0.15)', color: '#64ffda' }}>
-                          📍 Buffalo, NY · Open to relocation · F-1 OPT eligible Feb 2027
+                          📍 Buffalo, NY · Open to relocation · F-1 OPT from Feb 2027, subject to approval
                         </div>
                       </motion.div>
                     </motion.div>
@@ -1265,30 +1265,31 @@ export default function Home() {
                     <SectionHeader whiteText="Professional" tealText="Experience" subtitle="Engineering and infrastructure roles across startups and research" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ExpCard
-                        period="Jan 2026 — Apr 2026" title="Graduate Student Developer (CSE 611 Project)" company="HeinOnline"
+                        period="Jan 2026 — Apr 2026" title="Software Engineer Practicum" company="HeinOnline (University at Buffalo)"
                         bullets={[
-                          "Engineered a fault-tolerant OCR/LLM metadata extraction pipeline (Tesseract-OCR, Qwen-VL:8b, Qwen-35B) across three independent sources: CrossRef API, web scrapers, and OCR/LLM vision to extract article titles, authors, DOIs, page ranges, and ToC data from law journals (30k+ pages).",
-                          "Built a fuzzy-matching engine to merge outputs into a validated structure, cutting manual data-entry work by approximately 90% and pushing extraction accuracy to approximately 91% over five iterations, benchmarked against ground truth.",
-                          "Parallelized the pipeline with a worker pool that pulls the next journal from a shared queue on completion, and added an \"aiscore\" system to flag low-confidence fields for human review."
+                          "Engineered a fault-tolerant metadata extraction pipeline combining CrossRef API, web scrapers, and OCR/LLM vision (Tesseract, Qwen3-VL 8B, Qwen3.5-35B) to process 28k+ pages of law journals.",
+                          "Merged all three sources into one validated structure with fuzzy matching, cutting manual data entry by ~90% and pushing extraction accuracy to about 91% over five iterations, benchmarked against ground truth.",
+                          "Parallelized the pipeline with a CPU-based worker pool that pulls journals from a shared queue, cutting total processing time by over 80%, and added confidence scoring to flag low-confidence fields for human review.",
+                          "Standardized author names by matching them to HeinOnline's 500+ authors in PostgreSQL, even when spelled differently."
                         ]}
-                        tags={['Python', 'Tesseract-OCR', 'Qwen', 'CrossRef API', 'Fuzzy Matching', 'Docker', 'Team of 5']}
+                        tags={['Python', 'Tesseract-OCR', 'Qwen', 'CrossRef API', 'Fuzzy Matching', 'Docker', 'PostgreSQL', 'Team of 5']}
                       />
                       <ExpCard
                         period="Aug 2024 — Aug 2025" title="Software Engineer" company="Thesis Mumbai Tech"
                         bullets={[
-                          "Led delivery of platform modules end to end: gathered requirements in client meetings, prototyped to validate scope, and broke the finalized work down across a small team.",
-                          "Reviewed and merged team pull requests alongside my own code, catching issues and maintaining code quality.",
-                          "Built and scaled healthcare modules (Patient Management, Consent) supporting 10k+ records on normalized relational schemas for fast retrieval and reporting, and designed a real-time WebSocket + Redis pipeline feeding IoT baby-warmer sensor data into PostgreSQL with ~2s live monitoring.",
-                          "Delivered a real-time telemedicine consultation feature (WebRTC) connecting on-site nurses with remote doctors to review test results and procedures with patients, alongside secure PDF report generation, and added a color-blindness diagnostic module (95%+ accuracy) with automated reporting for practitioners.",
-                          "Containerized 3+ production projects using Docker and Docker Compose, keeping local, staging, and deployment environments consistent and reducing new-developer setup time by ~90%.",
-                          "Conducted 20+ technical interviews and mentored new hires."
+                          "Led end-to-end delivery of healthcare platform modules with a team of 4: gathered requirements in client meetings, prototyped to validate scope, and broke the finalized work into tasks.",
+                          "Developed Patient Management and Consent modules on normalized schemas for 10k+ records, plus a real-time WebSocket + Redis pipeline streaming IoT baby-warmer data into PostgreSQL with ~2s live monitoring.",
+                          "Delivered a WebRTC telemedicine feature that let remote doctors review test results with patients and on-site nurses, plus PDF report generation and a color-blindness diagnostic module (95%+ accuracy) with automated reporting.",
+                          "Containerized 3+ production projects with Docker Compose for consistent local, staging, and deployment environments.",
+                          "Built a heartbeat monitoring dashboard for 4 production projects, pinging each site every 5 minutes to track health.",
+                          "Interviewed about 20 student candidates and onboarded the new hires, mentoring them through weekly coding rounds over their first 3 weeks and introducing them to the production projects and tech stack."
                         ]}
                         tags={['Python', 'Django', 'PostgreSQL', 'Redis', 'Docker', 'ReactJS', 'WebRTC', 'WebSockets', 'IoT', 'Agile / Scrum']}
                       />
                       <ExpCard
                         period="Nov 2023 — May 2024" title="Cloud Engineer Intern" company="Data Maven Pvt Ltd"
                         bullets={[
-                          "Designed and deployed scalable AWS infrastructure (EC2, RDS) with VPC networking and security groups for secure, low-latency communication between backend services.",
+                          "Deployed backend services on AWS EC2 and RDS, using VPC networking and security groups to restrict access.",
                           "Automated cloud resource provisioning, cutting setup time by ~40% and reducing deployment issues."
                         ]}
                         tags={['AWS', 'EC2', 'RDS', 'VPC', 'Security Groups', 'Cloud Infrastructure']}
@@ -1296,7 +1297,7 @@ export default function Home() {
                       <ExpCard
                         period="Jun 2023 — Aug 2023" title="Data Engineer Intern" company="Go Digital Technology Consulting"
                         bullets={[
-                          "Developed an ETL workflow using Python (Pandas, NumPy) and MySQL to process and clean large business datasets, producing reports on key operational trends."
+                          "Developed a Python (Pandas, NumPy) and MySQL ETL workflow to clean and standardize transaction and ledger data and generate automated anomaly reports for the compliance and audit team."
                         ]}
                         tags={['Python', 'Pandas', 'NumPy', 'MySQL', 'ETL']}
                       />
@@ -1314,54 +1315,54 @@ export default function Home() {
                         note="Team of 4 · Hackathon prototype on simulated marketplace data · no real ACV or Copart integration"
                         tags={['Python', 'LangGraph', 'Claude API', 'Multi-Agent Systems', 'Human-in-the-Loop', 'Streamlit', 'React', 'Server-Sent Events', 'pytest', 'Hackathon Winner']}
                       />
-                        <ProjectCard
-                          date="Oct 2026"
-                          icon="LDG" title="LedgerFlow: Event-Driven Payment Ledger" href="https://github.com/Jaypath456/ledgerFlow"
-                          desc="Built an event-driven payment ledger with Java 25, Spring Boot, Kafka, and PostgreSQL that stays correct under retries, duplicate messages, and crashes. Uses a transactional outbox, idempotent consumers, and double-entry accounting for exactly-once financial effects over at-least-once delivery. In a 200-request race on one account, exactly 50 payments succeeded, 150 were safely rejected, and the balance ended at $0. Passed 94 automated tests and a 27/27-run chaos campaign with 0 invariant violations, including 14 JVM crashes. Cut p95 latency from 121 ms to 51 ms at 200 payments/s by tuning outbox polling."
-                          note="Personal project · local single-instance stack, not production or highly available · performance and recovery figures are local-machine measurements"
-                          tags={['Java', 'Spring Boot', 'Apache Kafka', 'PostgreSQL', 'Flyway', 'Transactional Outbox', 'Idempotency', 'Double-Entry Ledger', 'Chaos Testing', 'JUnit 5', 'Testcontainers', 'k6', 'Docker Compose', 'GitHub Actions']}
-                        />
                       <ProjectCard
-                        date="Sep 2026"
+                        date="Oct 2026"
+                        icon="LDG" title="LedgerFlow: Event-Driven Payment Ledger" href="https://github.com/Jaypath456/ledgerFlow"
+                        desc="Built an event-driven payment ledger with Java 25, Spring Boot, Kafka, and PostgreSQL that stays correct under retries, duplicate messages, and crashes. Uses a transactional outbox, idempotent consumers, and double-entry accounting for exactly-once financial effects over at-least-once delivery. In a 200-request race on one account, exactly 50 payments succeeded, 150 were safely rejected, and the balance ended at $0. Passed 94 automated tests and a 27/27-run chaos campaign with 0 invariant violations, including 14 JVM crashes. Cut p95 latency from 121 ms to 51 ms at 200 payments/s by tuning outbox polling."
+                        note="Personal project · local single-instance stack, not production or highly available · performance and recovery figures are local-machine measurements"
+                        tags={['Java', 'Spring Boot', 'Apache Kafka', 'PostgreSQL', 'Flyway', 'Transactional Outbox', 'Idempotency', 'Double-Entry Ledger', 'Chaos Testing', 'JUnit 5', 'Testcontainers', 'k6', 'Docker Compose', 'GitHub Actions']}
+                      />
+                      <ProjectCard
+                        date="Aug 2026"
                         icon="RPL" title="RIPPLE: Agentic Change-Impact Analysis" href="https://github.com/Jaypath456/ripple"
                         desc="Built RIPPLE, a command-line Agentic AI tool that predicts which files, tests, and dependencies a feature request will touch in a Python repository before any code is written. The LLM picks what to investigate, while Python runs 7 analysis tools, validates every piece of evidence, and caps each run at 25 tool calls. On 30 fresh tasks from 16 repositories, it reached 0.306 precision and 0.311 MRR with 0 unsupported accepted claims. A post-change check compares the prediction to the real Git diff and flags unexpected edits, missing tests, and stale callers."
                         note="Personal project · Python repositories only · target code is analyzed read-only, never executed · stage-B result uses oracle pre-change predictions · not deployed in production"
                         tags={['Python', 'Agentic AI', 'Tool Calling', 'Python AST', 'Static Analysis', 'Git', 'Pydantic', 'pytest', 'Agent Evaluation']}
                       />
                       <ProjectCard
-                        date="Aug 2026"
+                        date="Jul 2026"
                         icon="LLM" title="LLM Application Optimization Engine" href="https://github.com/Jaypath456/llm-resume-pipeline"
                         desc="Built a multi-model pipeline that turns a job description into a tailored resume, cover letter, and fit assessment. Python checks every generated claim against source evidence and rejects unsupported ones. Cut typical runtime by ~73% (~11 to ~3 minutes) with three concurrent workers, backed by a 2,500+ test pytest suite."
                         note="Open source · built to explore reliable verification loops for LLM-generated output"
-                        tags={['Python', 'Qwen', 'Groq', 'pytest', 'LaTeX', 'Concurrency', 'Dynamic Programming', 'Prompt Engineering']}
-                      />
-                      <ProjectCard
-                        date="Jun 2026"
-                        icon="OPS" title="LaunchOps: Office Onboarding & Real-Time Learning Platform" href="https://github.com/Jaypath456/LaunchOps"
-                        desc="Built LaunchOps, an office onboarding platform (Django REST Framework, React, PostgreSQL) with a 20-task workflow across HR, IT, manager, and employee roles, enforced on the server. Includes a learning track with five lessons and graded quizzes (70% to pass). The live-quiz service runs as two Go replicas behind nginx, using Redis Pub/Sub and MongoDB for live answers."
-                        note="Personal project · payroll, provisioning, and identity steps are labeled demo simulations · MongoDB holds live answers only, PostgreSQL stays primary · Go benchmark harness built, results pending"
-                        tags={['Go', 'Redis Pub/Sub', 'Redis Lua', 'MongoDB', 'Django', 'DRF', 'Django Channels', 'React', 'PostgreSQL', 'WebSockets', 'nginx', 'JWT', 'Locust', 'Docker Compose']}
+                        tags={['Python', 'Qwen', 'Novita API', 'Groq', 'pytest', 'LaTeX', 'Concurrency', 'Dynamic Programming', 'Prompt Engineering']}
                       />
                       <ProjectCard
                         date="May 2026" 
-                        icon="⚙️" title="Pintos OS: User Programs" href="https://github.com/CSE-421-521-Spring2026/pa2-it_worked_on_my_system"
-                        desc="Built the user-programs layer of the Pintos x86 teaching OS in C: process startup, argument passing, wait and exit, and a system-call handler for 13 operations. Tracks up to 128 open files per process, uses locks and memory checks to avoid deadlocks and crashes, and passed all 80 project tests."
-                        note="Academic project · CSE 521"
+                        icon="⚙️" title="Pintos OS: User Programs" href="#"
+                        desc="Built the user-programs layer of the Pintos x86 teaching OS in C: process startup, argument passing, wait and exit, and a system-call handler for 13 operations. Tracks up to 128 open files per process, uses locks and memory-access safety checks, and passed all 80 project tests."
+                        note="Academic project · CSE 521 · course repo is private"
                         tags={['C', 'Kernel', 'Syscalls', 'Process Synchronization', 'Memory Management']}
+                      />
+                      <ProjectCard
+                        date="Apr 2026"
+                        icon="GNN" title="Fraud Detection with Graph Neural Networks" href="https://github.com/Jaypath456/gnn-fraud-detection"
+                        desc="Built a GraphSAGE fraud-detection model on the IEEE-CIS dataset (590k+ transactions) by linking transactions that share card, address, or email features. Used Focal Loss and threshold tuning for the ~27.6:1 class imbalance. GraphSAGE reached 0.9259 AUC-ROC versus ~0.858 for an MLP baseline, while GAT did worse. On the separate Elliptic dataset, GraphSAGE reached about 0.988 AUC."
+                        note="Academic project"
+                        tags={['PyTorch', 'GraphSAGE', 'GAT', 'MLP', 'Graph Neural Networks', 'Python', 'IEEE-CIS', 'Elliptic']}
                       />
                       <ProjectCard
                         date="Jan — Apr 2026"
                         icon="OCR" title="AI Metadata Extraction Pipeline" href="https://github.com/Jaypath456/AI_metadata_extraction_pipeline"
-                        desc="Built an OCR and LLM pipeline that extracts metadata from 47 law journals (28k+ page images) using CrossRef, web scraping, Tesseract-OCR, and Qwen models. Fuzzy matching merges the sources into validated YAML, raising accuracy from 57% to 90.81% over five iterations and cutting manual entry by ~90%. A worker pool processes journals in parallel, and an aiscore flags low-confidence fields for human review."
-                        note="Graduate Student Developer · CSE 611 · Team of 5 · HeinOnline"
+                        desc="Built an OCR and LLM pipeline that extracts metadata from 47 law journals (28k+ page images) using CrossRef, web scraping, Tesseract-OCR, and Qwen models. Fuzzy matching merges the sources into validated YAML, reaching 90.81% accuracy over five iterations and cutting manual entry by ~90%. A worker pool processes journals in parallel, and an aiscore flags low-confidence fields for human review."
+                        note="Software Engineer Practicum · Team of 5 · HeinOnline"
                         tags={['Python', 'Tesseract-OCR', 'Qwen-35B', 'LLMs', 'Docker', 'ETL']}
                       />
                       <ProjectCard
                         date="Mar 2026"
-                        icon="GNN" title="Fraud Detection with Graph Neural Networks" href="https://github.com/Jaypath456/gnn-fraud-detection"
-                        desc="Built a GraphSAGE fraud-detection model on the IEEE-CIS dataset (590k+ transactions) by linking transactions that share card, address, or email features. Used Focal Loss and threshold tuning for the ~27.6:1 class imbalance. GraphSAGE reached 0.9259 AUC-ROC versus ~0.858 for an MLP baseline, while GAT struggled with high-degree hubs."
-                        note="Academic project"
-                        tags={['PyTorch', 'GraphSAGE', 'GAT', 'MLP', 'Graph Neural Networks', 'Python', 'IEEE-CIS']}
+                        icon="OPS" title="LaunchOps: Office Onboarding & Real-Time Learning Platform" href="https://github.com/Jaypath456/LaunchOps"
+                        desc="Built LaunchOps, an office onboarding platform (Django REST Framework, React, PostgreSQL) with a 20-task workflow across HR, IT, manager, and employee roles, enforced on the server. Includes a learning track with five lessons and graded quizzes (70% to pass). The live-quiz service runs as two Go replicas behind nginx, using Redis Pub/Sub and MongoDB for live answers."
+                        note="Personal project · payroll, provisioning, and identity steps are labeled demo simulations · MongoDB holds live answers only, PostgreSQL stays primary · Go benchmark harness built, results pending"
+                        tags={['Go', 'Redis Pub/Sub', 'Redis Lua', 'MongoDB', 'Django', 'DRF', 'Django Channels', 'React', 'PostgreSQL', 'WebSockets', 'nginx', 'JWT', 'Locust', 'Docker Compose']}
                       />
                       <ProjectCard
                         date="Nov 2025"
@@ -1389,14 +1390,14 @@ export default function Home() {
                         period="Aug 2025 — Feb 2027" gpa="3.85 / 4.0"
                         highlights={[
                           'Focus: Machine Learning, Graph Neural Networks, Agentic AI',
-                          'Industry project: OCR-LLM metadata pipeline for HeinOnline (CSE 611)',
+                          'Industry project: OCR-LLM metadata pipeline for HeinOnline (practicum)',
                           'Organized Git & GitHub workshop for CS&E dept, Certificate of Appreciation',
                           'Public Safety Aide, University at Buffalo campus',
                         ]}
                       />
                       <EducationCard
                         degree="B.E. Information Technology" school="VESIT · Mumbai University, India"
-                        period="Aug 2019 — May 2023" gpa="7.83 / 10"
+                        period="Aug 2019 — May 2023"
                         highlights={[
                           'Capstone: Music Genre Classification, published in IJRAR, Vol. 10, Issue 2',
                           'Achieved 97.68% classification accuracy using CatBoost and KNN',
@@ -1453,7 +1454,7 @@ export default function Home() {
                       <div className="mb-6"><WorldMap /></div>
                       <div className="text-center max-w-md mx-auto space-y-4 relative z-10 pt-2 font-sans">
                         <p className="text-xs leading-relaxed font-normal" style={{ color: '#64748b' }}>
-                          I'm actively exploring full-time opportunities in backend systems engineering and machine learning. Available for F-1 OPT from February 2027. If you have an interesting problem to solve or simply want to connect, drop me a message!
+                          I'm actively exploring full-time opportunities in backend systems engineering and machine learning. Available for F-1 OPT from February 2027, subject to approval. If you have an interesting problem to solve or simply want to connect, drop me a message!
                         </p>
                         <div className="grid grid-cols-1 gap-2.5 text-left text-xs font-mono max-w-xs mx-auto pt-2">
                           <CopyableRow icon="✉" iconColor="#2dd4bf" value="jayadmit456@gmail.com" />
