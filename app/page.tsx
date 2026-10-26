@@ -804,65 +804,30 @@ function TechCard({ category, icon, items }: { category: string; icon: string; i
 
 const techStack: { category: string; icon: string; items: { name: string }[] }[] = [
   {
+    category: 'Programming Languages', icon: '</>',
+    items: [
+      { name: 'Python' }, { name: 'Java' }, { name: 'JavaScript' }, { name: 'Go' }, { name: 'C' }, { name: 'SQL' },
+    ],
+  },
+  {
     category: 'ML & AI', icon: '🧠',
     items: [
       { name: 'PyTorch' }, { name: 'PyTorch Geometric' }, { name: 'TensorFlow' }, { name: 'scikit-learn' },
-      { name: 'Machine Learning' }, { name: 'Deep Learning' }, { name: 'LLMs' }, { name: 'Prompt Engineering' },
-      { name: 'Agentic AI' }, { name: 'Multi-Agent Systems' }, { name: 'LangGraph' }, { name: 'Tool Calling' },
-      { name: 'Human-in-the-Loop Workflows' }, { name: 'Claude API' }, { name: 'Groq API' },
-      { name: 'Graph Neural Networks' }, { name: 'GraphSAGE' }, { name: 'GAT' }, { name: 'CNNs' },
-      { name: 'RNNs' }, { name: 'Transformers' }, { name: 'Focal Loss' }, { name: 'Model Evaluation' },
-      { name: 'OCR (Tesseract)' }, { name: 'Fuzzy Matching' }, { name: 'Threshold Optimization' },
-      { name: 'Data Preprocessing' }, { name: 'Data Transformation' },
+      { name: 'Machine Learning' }, { name: 'Deep Learning' }, { name: 'Transformers' }, { name: 'LLMs' },
+      { name: 'Prompt Engineering' }, { name: 'Agentic AI' }, { name: 'Multi-Agent Systems' }, { name: 'LangGraph' },
+      { name: 'Tool Calling' }, { name: 'Claude API' }, { name: 'Graph Neural Networks' }, { name: 'GraphSAGE' },
+      { name: 'OCR (Tesseract)' },
     ],
   },
   {
     category: 'Backend & Systems', icon: '⚙️',
     items: [
-      { name: 'Django' }, { name: 'DRF' }, { name: 'Django Channels' }, { name: 'REST API' },
-      { name: 'Apache Kafka' }, { name: 'Event-Driven Architecture' }, { name: 'Microservices' },
-      { name: 'Distributed Systems' }, { name: 'Transactional Outbox' }, { name: 'Idempotency' },
-      { name: 'Double-Entry Ledger' }, { name: 'ACID Transactions' }, { name: 'Row-Level Locking' },
-      { name: 'WebSockets' }, { name: 'Redis Pub/Sub' }, { name: 'WebRTC' }, { name: 'OAuth / Auth0' },
-      { name: 'JSON Web Tokens' }, { name: 'ETL Pipelines' }, { name: 'Web Scraping' }, { name: 'CrossRef API' },
-      { name: 'Real-Time Monitoring' }, { name: 'IoT (Arduino Uno)' },
-      { name: 'Operating Systems' }, { name: 'Kernel Development' }, { name: 'Process Lifecycle' }, { name: 'Static Analysis' },
-      { name: 'Kafka KRaft' }, { name: 'Idempotent Consumers' }, { name: 'Reconciliation' }, { name: 'Daphne (ASGI)' }, { name: 'asyncio' },
-      { name: 'JSON / YAML' },
-    ],
-  },
-  {
-    category: 'Software Engineering', icon: '🏗️',
-    items: [
-      { name: 'System Design' }, { name: 'Full-Stack Development' }, { name: 'Backend Development' },
-      { name: 'OOP' }, { name: 'Payment Systems' }, { name: 'Concurrency' }, { name: 'Thread Synchronization' },
-      { name: 'Parallel Processing' }, { name: 'Multiprocessing / Worker Pools' },
-      { name: 'Dependency Analysis' }, { name: 'Change-Impact Analysis' }, { name: 'Regression Analysis' }, { name: 'Backtracking Algorithms' },
-      { name: 'Agile' }, { name: 'Scrum' },
-    ],
-  },
-  {
-    category: 'Testing & Reliability', icon: '🧪',
-    items: [
-      { name: 'Unit Testing' }, { name: 'pytest' }, { name: 'JUnit 5' }, { name: 'AssertJ' }, { name: 'Awaitility' }, { name: 'Testcontainers' },
-      { name: 'Chaos Testing' }, { name: 'Fault Injection' }, { name: 'Load Testing' },
-      { name: 'Latency Measurement' }, { name: 'k6' }, { name: 'Locust' }, { name: 'Continuous Integration' },
-      { name: 'Actuator / Micrometer' },
-    ],
-  },
-  {
-    category: 'Cloud & DevOps', icon: '☁️',
-    items: [
-      { name: 'AWS (EC2, RDS, VPC)' }, { name: 'Docker' }, { name: 'Docker Compose' }, { name: 'Git' },
-      { name: 'GitHub' }, { name: 'GitHub Actions' }, { name: 'Maven' }, { name: 'Flyway' },
-      { name: 'Linux' }, { name: 'GitHub Copilot' }, { name: 'Cursor' }, { name: 'Claude Code' }, { name: 'LaTeX' },
-    ],
-  },
-  {
-    category: 'Programming Languages', icon: '</>',
-    items: [
-      { name: 'Python' }, { name: 'Java' }, { name: 'JavaScript' }, { name: 'Go' }, { name: 'C' },
-      { name: 'SQL' }, { name: 'HTML / CSS' },
+      { name: 'Django' }, { name: 'DRF' }, { name: 'REST API' }, { name: 'Apache Kafka' },
+      { name: 'Event-Driven Architecture' }, { name: 'Microservices' }, { name: 'Distributed Systems' },
+      { name: 'Transactional Outbox' }, { name: 'Idempotency' }, { name: 'ACID Transactions' },
+      { name: 'WebSockets' }, { name: 'Redis Pub/Sub' }, { name: 'WebRTC' }, { name: 'JSON Web Tokens' },
+      { name: 'ETL Pipelines' }, { name: 'Web Scraping' }, { name: 'Operating Systems' }, { name: 'Kernel Development' },
+      { name: 'Static Analysis' },
     ],
   },
   {
@@ -874,10 +839,31 @@ const techStack: { category: string; icon: string; items: { name: string }[] }[]
   {
     category: 'Frameworks & UI', icon: '🛠️',
     items: [
-      { name: 'React' }, { name: 'Spring Boot' }, { name: 'Spring MVC' }, { name: 'Spring Kafka' },
-      { name: 'Spring JDBC / JdbcClient' }, { name: 'Streamlit' }, { name: 'Pydantic' },
-      { name: 'Slate.js / Plate.js' }, { name: 'Pandas' }, { name: 'NumPy' }, { name: 'Librosa' },
-      { name: 'CatBoost' }, { name: 'NetworkX' }, { name: 'Matplotlib' }, { name: 'Tableau' }, { name: 'Power BI' },
+      { name: 'React' }, { name: 'Spring Boot' }, { name: 'Streamlit' }, { name: 'Pydantic' },
+      { name: 'Pandas' }, { name: 'NumPy' },
+    ],
+  },
+  {
+    category: 'Software Engineering', icon: '🏗️',
+    items: [
+      { name: 'System Design' }, { name: 'Full-Stack Development' }, { name: 'Backend Development' },
+      { name: 'OOP' }, { name: 'Payment Systems' }, { name: 'Concurrency' }, { name: 'Thread Synchronization' },
+      { name: 'Parallel Processing' }, { name: 'Agile' }, { name: 'Scrum' },
+    ],
+  },
+  {
+    category: 'Testing & Reliability', icon: '🧪',
+    items: [
+      { name: 'Unit Testing' }, { name: 'pytest' }, { name: 'JUnit 5' }, { name: 'Testcontainers' },
+      { name: 'Chaos Testing' }, { name: 'Load Testing' }, { name: 'k6' }, { name: 'Locust' },
+      { name: 'Continuous Integration' },
+    ],
+  },
+  {
+    category: 'Cloud & DevOps', icon: '☁️',
+    items: [
+      { name: 'AWS (EC2, RDS, VPC)' }, { name: 'Docker' }, { name: 'Docker Compose' }, { name: 'Git' },
+      { name: 'GitHub' }, { name: 'GitHub Actions' }, { name: 'Linux' },
     ],
   },
 ];
@@ -1267,8 +1253,8 @@ export default function Home() {
                       <ExpCard
                         period="Jan 2026 — Apr 2026" title="Software Engineer Practicum" company="HeinOnline (University at Buffalo)"
                         bullets={[
-                          "Engineered a fault-tolerant metadata extraction pipeline combining CrossRef API, web scrapers, and OCR/LLM vision (Tesseract, Qwen3-VL 8B, Qwen3.5-35B) to process 28k+ pages of law journals.",
-                          "Merged all three sources into one validated structure with fuzzy matching, cutting manual data entry by ~90% and pushing extraction accuracy to about 91% over five iterations, benchmarked against ground truth.",
+                          "Engineered a metadata extraction pipeline combining CrossRef API, web scrapers, and OCR/LLM vision (Tesseract, Qwen3-VL 8B, Qwen3.5-35B) to process 28k+ pages of law journals.",
+                          "Merged all three sources with fuzzy matching, cutting manual data entry by ~90% and reaching about 91% extraction accuracy against ground truth over five iterations.",
                           "Parallelized the pipeline with a CPU-based worker pool that pulls journals from a shared queue, cutting total processing time by over 80%, and added confidence scoring to flag low-confidence fields for human review.",
                           "Standardized author names by matching them to HeinOnline's 500+ authors in PostgreSQL, even when spelled differently."
                         ]}
@@ -1277,8 +1263,8 @@ export default function Home() {
                       <ExpCard
                         period="Aug 2024 — Aug 2025" title="Software Engineer" company="Thesis Mumbai Tech"
                         bullets={[
-                          "Led end-to-end delivery of healthcare platform modules with a team of 4: gathered requirements in client meetings, prototyped to validate scope, and broke the finalized work into tasks.",
-                          "Developed Patient Management and Consent modules on normalized schemas for 10k+ records, plus a real-time WebSocket + Redis pipeline streaming IoT baby-warmer data into PostgreSQL with ~2s live monitoring.",
+                          "Led a team of 4 to deliver healthcare platform modules: gathered requirements in client meetings, prototyped to validate scope, and broke the finalized work into tasks.",
+                          "Developed Patient Management and Consent modules for 10k+ records, plus a real-time pipeline (WebSocket and Redis) streaming IoT baby-warmer data into PostgreSQL with ~2s live monitoring.",
                           "Delivered a WebRTC telemedicine feature that let remote doctors review test results with patients and on-site nurses, plus PDF report generation and a color-blindness diagnostic module (95%+ accuracy) with automated reporting.",
                           "Containerized 3+ production projects with Docker Compose for consistent local, staging, and deployment environments.",
                           "Built a heartbeat monitoring dashboard for 4 production projects, pinging each site every 5 minutes to track health.",
@@ -1305,78 +1291,57 @@ export default function Home() {
                   </section>
 
                   {/* Projects */}
-<section id="projects" className="scroll-mt-24">
+                  <section id="projects" className="scroll-mt-24">
                     <SectionHeader whiteText="Featured" tealText="Projects" subtitle="Academic and personal builds showcasing applied engineering" />
                     <motion.div className="grid grid-cols-1 xl:grid-cols-2 gap-4" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ProjectCard
                         date="Oct 2026"
                         icon="AGT" title="GoingOnce: Multi-Agent Car Marketplace" href="https://github.com/raunakpandey1/goingonce"
-                        desc="Co-built GoingOnce, a four-agent car-dealer marketplace prototype with LangGraph and Claude, with Buy, Sell, Negotiate, and Fleet agents. Won 1st place in the ACV Auctions + Copart challenge at UB's AI for Good Hackathon Design Challenge. Claude handles language and photos, while search, pricing, and negotiation math run in plain code so results repeat. Includes a Streamlit app, a React front end, and 24 pytest tests."
-                        note="Team of 4 · Hackathon prototype on simulated marketplace data · no real ACV or Copart integration"
-                        tags={['Python', 'LangGraph', 'Claude API', 'Multi-Agent Systems', 'Human-in-the-Loop', 'Streamlit', 'React', 'Server-Sent Events', 'pytest', 'Hackathon Winner']}
+                        desc="Co-built GoingOnce, a car marketplace prototype where four AI agents handle buying, selling, negotiating and fleet management (LangGraph and Claude). It won 1st place in the ACV Auctions + Copart challenge at UB's AI for Good Hackathon. Claude handles language and photos while search and pricing math run in plain code so results stay repeatable."
+                        note="Team of 4 · Hackathon prototype on simulated data"
+                        tags={['Python', 'LangGraph', 'Claude API', 'Multi-Agent Systems', 'React']}
                       />
                       <ProjectCard
                         date="Oct 2026"
                         icon="LDG" title="LedgerFlow: Event-Driven Payment Ledger" href="https://github.com/Jaypath456/ledgerFlow"
-                        desc="Built an event-driven payment ledger with Java 25, Spring Boot, Kafka, and PostgreSQL that stays correct under retries, duplicate messages, and crashes. Uses a transactional outbox, idempotent consumers, and double-entry accounting for exactly-once financial effects over at-least-once delivery. In a 200-request race on one account, exactly 50 payments succeeded, 150 were safely rejected, and the balance ended at $0. Passed 94 automated tests and a 27/27-run chaos campaign with 0 invariant violations, including 14 JVM crashes. Cut p95 latency from 121 ms to 51 ms at 200 payments/s by tuning outbox polling."
-                        note="Personal project · local single-instance stack, not production or highly available · performance and recovery figures are local-machine measurements"
-                        tags={['Java', 'Spring Boot', 'Apache Kafka', 'PostgreSQL', 'Flyway', 'Transactional Outbox', 'Idempotency', 'Double-Entry Ledger', 'Chaos Testing', 'JUnit 5', 'Testcontainers', 'k6', 'Docker Compose', 'GitHub Actions']}
+                        desc="Built a payment ledger (Java, Spring Boot, Kafka and PostgreSQL) that stays correct when messages repeat or requests overlap or the app crashes. It uses safe-to-repeat message handling and double-entry accounting so every payment takes effect exactly once. Passed 58 automated tests and a 27-run crash campaign with 0 violations; in a 200-request race on one account exactly 50 payments succeeded and the balance ended at $0."
+                        note="Personal project · local setup, not production · figures measured locally"
+                        tags={['Java', 'Spring Boot', 'Kafka', 'PostgreSQL', 'Docker Compose']}
                       />
                       <ProjectCard
                         date="Aug 2026"
                         icon="RPL" title="RIPPLE: Agentic Change-Impact Analysis" href="https://github.com/Jaypath456/ripple"
-                        desc="Built RIPPLE, a command-line Agentic AI tool that predicts which files, tests, and dependencies a feature request will touch in a Python repository before any code is written. The LLM picks what to investigate, while Python runs 7 analysis tools, validates every piece of evidence, and caps each run at 25 tool calls. On 30 fresh tasks from 16 repositories, it reached 0.306 precision and 0.311 MRR with 0 unsupported accepted claims. A post-change check compares the prediction to the real Git diff and flags unexpected edits, missing tests, and stale callers."
-                        note="Personal project · Python repositories only · target code is analyzed read-only, never executed · stage-B result uses oracle pre-change predictions · not deployed in production"
-                        tags={['Python', 'Agentic AI', 'Tool Calling', 'Python AST', 'Static Analysis', 'Git', 'Pydantic', 'pytest', 'Agent Evaluation']}
+                        desc="Built RIPPLE, a command-line AI tool that predicts which files and tests a feature will touch in a Python codebase and later checks that guess against the real Git diff. The AI picks what to investigate while plain Python runs 7 analysis tools and checks every piece of evidence it uses. On 30 new tasks from 16 repositories it reached 0.306 precision with 0 unsupported claims accepted."
+                        note="Personal project · Python repositories only · target code is analyzed and never run"
+                        tags={['Python', 'Agentic AI', 'Static Analysis', 'Git', 'pytest']}
                       />
                       <ProjectCard
                         date="Jul 2026"
                         icon="LLM" title="LLM Application Optimization Engine" href="https://github.com/Jaypath456/llm-resume-pipeline"
-                        desc="Built a multi-model pipeline that turns a job description into a tailored resume, cover letter, and fit assessment. Python checks every generated claim against source evidence and rejects unsupported ones. Cut typical runtime by ~73% (~11 to ~3 minutes) with three concurrent workers, backed by a 2,500+ test pytest suite."
-                        note="Open source · built to explore reliable verification loops for LLM-generated output"
-                        tags={['Python', 'Qwen', 'Novita API', 'Groq', 'pytest', 'LaTeX', 'Concurrency', 'Dynamic Programming', 'Prompt Engineering']}
+                        desc="Built a pipeline that turns a job description into a tailored resume and cover letter and fit assessment using several AI models. Python checks every generated claim against source evidence and rejects any it cannot support. Three parallel workers cut typical runtime by about 73% (11 to 3 minutes) and a 2,500+ test suite keeps it reliable."
+                        note="Open source"
+                        tags={['Python', 'LLMs', 'pytest', 'Concurrency', 'Prompt Engineering']}
                       />
                       <ProjectCard
-                        date="May 2026" 
+                        date="May 2026"
                         icon="⚙️" title="Pintos OS: User Programs" href="#"
-                        desc="Built the user-programs layer of the Pintos x86 teaching OS in C: process startup, argument passing, wait and exit, and a system-call handler for 13 operations. Tracks up to 128 open files per process, uses locks and memory-access safety checks, and passed all 80 project tests."
+                        desc="Built the user-programs layer of Pintos, a teaching operating system, in C. It handles process startup, argument passing, wait and exit and 13 system calls with locks and memory safety checks. Each process can hold up to 128 open files and the code passed all 80 project tests."
                         note="Academic project · CSE 521 · course repo is private"
-                        tags={['C', 'Kernel', 'Syscalls', 'Process Synchronization', 'Memory Management']}
+                        tags={['C', 'Kernel', 'Syscalls', 'Synchronization']}
                       />
                       <ProjectCard
                         date="Apr 2026"
                         icon="GNN" title="Fraud Detection with Graph Neural Networks" href="https://github.com/Jaypath456/gnn-fraud-detection"
-                        desc="Built a GraphSAGE fraud-detection model on the IEEE-CIS dataset (590k+ transactions) by linking transactions that share card, address, or email features. Used Focal Loss and threshold tuning for the ~27.6:1 class imbalance. GraphSAGE reached 0.9259 AUC-ROC versus ~0.858 for an MLP baseline, while GAT did worse. On the separate Elliptic dataset, GraphSAGE reached about 0.988 AUC."
+                        desc="Built a fraud detection model (GraphSAGE) on the IEEE-CIS dataset of 590k+ transactions by linking transactions that share a card or address or email. It reached 0.9259 AUC-ROC against about 0.858 for a basic MLP baseline using Focal Loss and threshold tuning for the ~27.6:1 class imbalance. On the separate Elliptic dataset it reached about 0.988 AUC."
                         note="Academic project"
-                        tags={['PyTorch', 'GraphSAGE', 'GAT', 'MLP', 'Graph Neural Networks', 'Python', 'IEEE-CIS', 'Elliptic']}
-                      />
-                      <ProjectCard
-                        date="Jan — Apr 2026"
-                        icon="OCR" title="AI Metadata Extraction Pipeline" href="https://github.com/Jaypath456/AI_metadata_extraction_pipeline"
-                        desc="Built an OCR and LLM pipeline that extracts metadata from 47 law journals (28k+ page images) using CrossRef, web scraping, Tesseract-OCR, and Qwen models. Fuzzy matching merges the sources into validated YAML, reaching 90.81% accuracy over five iterations and cutting manual entry by ~90%. A worker pool processes journals in parallel, and an aiscore flags low-confidence fields for human review."
-                        note="Software Engineer Practicum · Team of 5 · HeinOnline"
-                        tags={['Python', 'Tesseract-OCR', 'Qwen-35B', 'LLMs', 'Docker', 'ETL']}
+                        tags={['PyTorch', 'GraphSAGE', 'Graph Neural Networks', 'Python']}
                       />
                       <ProjectCard
                         date="Mar 2026"
                         icon="OPS" title="LaunchOps: Office Onboarding & Real-Time Learning Platform" href="https://github.com/Jaypath456/LaunchOps"
-                        desc="Built LaunchOps, an office onboarding platform (Django REST Framework, React, PostgreSQL) with a 20-task workflow across HR, IT, manager, and employee roles, enforced on the server. Includes a learning track with five lessons and graded quizzes (70% to pass). The live-quiz service runs as two Go replicas behind nginx, using Redis Pub/Sub and MongoDB for live answers."
-                        note="Personal project · payroll, provisioning, and identity steps are labeled demo simulations · MongoDB holds live answers only, PostgreSQL stays primary · Go benchmark harness built, results pending"
-                        tags={['Go', 'Redis Pub/Sub', 'Redis Lua', 'MongoDB', 'Django', 'DRF', 'Django Channels', 'React', 'PostgreSQL', 'WebSockets', 'nginx', 'JWT', 'Locust', 'Docker Compose']}
-                      />
-                      <ProjectCard
-                        date="Nov 2025"
-                        icon="IoT" title="Temperature Monitoring System" href="https://github.com/Jaypath456/UB_hackathon"
-                        desc="Built an IoT system at a weekend hackathon that tracks building temperatures in real time with Arduino sensors. A Django REST Framework backend validates readings and stores them in PostgreSQL, and a ReactJS dashboard shows current temperatures by location."
-                        note="Team of 3 · UB Hacking Fall 2025"
-                        tags={['Arduino', 'Django', 'DRF', 'ReactJS', 'Auth0', 'IoT', 'PostgreSQL', 'REST APIs']}
-                      />
-                      <ProjectCard
-                        date="Apr 2023"
-                        icon="🎵" title="Music Genre Classification" href="https://github.com/Jaypath456/Music-Genre-Classification"
-                        desc="Classified audio files into genres using feature extraction techniques, achieving 97.68% accuracy. Published in IJRAR Volume 10, Issue 2. Algorithms: CatBoost, KNN."
-                        note="Undergraduate Capstone Project"
-                        tags={['Python', 'CatBoost', 'KNN', 'Feature Extraction', 'Published Research']}
+                        desc="Built LaunchOps, an office onboarding platform (Django, React and PostgreSQL) with a 20-task checklist shared across HR and IT and manager and employee roles and enforced on the server. It also has a learning track with five lessons and graded quizzes (70% to pass). An optional live-quiz service in Go runs as two copies behind nginx and uses Redis and MongoDB for live answers."
+                        note="Personal project · payroll and identity steps are demo simulations"
+                        tags={['Django', 'React', 'PostgreSQL', 'Go', 'Redis']}
                       />
                     </motion.div>
                   </section>
@@ -1387,7 +1352,7 @@ export default function Home() {
                     <motion.div className="space-y-3" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <EducationCard
                         degree="M.S. Computer Science" school="University at Buffalo, SUNY"
-                        period="Aug 2025 — Feb 2027" gpa="3.85 / 4.0"
+                        period="Aug 2025 — Dec 2026" gpa="3.85 / 4.0"
                         highlights={[
                           'Focus: Machine Learning, Graph Neural Networks, Agentic AI',
                           'Industry project: OCR-LLM metadata pipeline for HeinOnline (practicum)',
