@@ -1295,25 +1295,18 @@ export default function Home() {
                     <SectionHeader whiteText="Featured" tealText="Projects" subtitle="Projects I built, tested and kept improving" />
                     <motion.div className="grid grid-cols-1 xl:grid-cols-2 gap-4" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ProjectCard
-                        date="Oct 2026"
-                        icon="LDG" title="LedgerFlow: Payments Backend & Double-Entry Ledger" href="https://github.com/Jaypath456/ledgerFlow"
-                        desc="Connected two Spring Boot services through Kafka to record payments in a PostgreSQL double-entry ledger. Retries don't post payments twice and account locks protect balances when requests overlap. Passed 84 tests on real PostgreSQL and Kafka; one load-test ramp sustained about 1,200 payments per second on a single laptop."
-                        note="Personal project · Local tests and load measurements"
-                        tags={['Java', 'Spring Boot', 'Kafka', 'PostgreSQL', 'Docker Compose']}
-                      />
-                      <ProjectCard
-                        date="Mar 2026"
-                        icon="OPS" title="LaunchOps: Employee Onboarding Workflows" href="https://github.com/Jaypath456/LaunchOps"
-                        desc="Built an onboarding platform with Django, MongoDB and React, with 20 tasks across HR, IT, managers and employees. Roles, prerequisites and evidence checks control completion while worker retries avoid creating duplicate accounts in simulated services. Passed 126 backend tests and 47 frontend tests; three local crash campaigns kept data checks intact with failed jobs flagged for IT review."
-                        note="Personal project · External services are simulated"
-                        tags={['Django', 'React', 'TypeScript', 'MongoDB', 'Go']}
-                      />
-                      <ProjectCard
                         date="Nov 2026"
                         icon="TRI" title="Triage Incident Agent" href="#"
                         desc="Developed a Python and LangGraph agent that reads incident logs, metrics and runbooks to draft reports for human review. It checks cited evidence IDs, blocks forbidden actions and caps each run at six model attempts and seven tool attempts. It covers four incident types and supports inconclusive reports when the evidence is thin."
                         note="Capstone project · Synthetic incidents · Drafts need human review"
                         tags={['Python', 'LangGraph', 'Pydantic', 'Tool Calling', 'pytest']}
+                      />
+                      <ProjectCard
+                        date="Oct 2026"
+                        icon="LDG" title="LedgerFlow: Payments Backend & Double-Entry Ledger" href="https://github.com/Jaypath456/ledgerFlow"
+                        desc="Connected two Spring Boot services through Kafka to record payments in a PostgreSQL double-entry ledger. Retries don't post payments twice and account locks protect balances when requests overlap. Passed 84 tests on real PostgreSQL and Kafka; one load-test ramp sustained about 1,200 payments per second on a single laptop."
+                        note="Personal project · Local tests and load measurements"
+                        tags={['Java', 'Spring Boot', 'Kafka', 'PostgreSQL', 'Docker Compose']}
                       />
                       <ProjectCard
                         date="Oct 2026"
@@ -1349,6 +1342,13 @@ export default function Home() {
                         desc="Trained a GraphSAGE fraud model on 590k+ IEEE-CIS transactions, linking records that share card, address or email details. It reached 0.9259 AUC-ROC against about 0.858 for an MLP baseline, using focal loss and threshold tuning for the roughly 27.6:1 class imbalance. On the separate Elliptic dataset, it reached about 0.988 AUC."
                         note="Academic project"
                         tags={['PyTorch', 'GraphSAGE', 'Graph Neural Networks', 'Python']}
+                      />
+                      <ProjectCard
+                        date="Mar 2026"
+                        icon="OPS" title="LaunchOps: Employee Onboarding Workflows" href="https://github.com/Jaypath456/LaunchOps"
+                        desc="Built an onboarding platform with Django, MongoDB and React, with 20 tasks across HR, IT, managers and employees. Roles, prerequisites and evidence checks control completion while worker retries avoid creating duplicate accounts in simulated services. Passed 126 backend tests and 47 frontend tests; three local crash campaigns kept data checks intact with failed jobs flagged for IT review."
+                        note="Personal project · External services are simulated"
+                        tags={['Django', 'React', 'TypeScript', 'MongoDB', 'Go']}
                       />
                     </motion.div>
                   </section>
