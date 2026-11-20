@@ -196,7 +196,7 @@ function AIChatOrb() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([
-    { role: 'assistant', content: "Hi! I'm Jay's AI assistant. Ask me about his experience, skills, or projects, I know everything about him! 🚀" },
+    { role: 'assistant', content: "Hi! I'm Jay's portfolio assistant. Ask me about his work, projects or skills!" },
   ]);
 
   const dragStart      = useRef({ mx: 0, my: 0, ox: 0, oy: 0 });
@@ -617,7 +617,7 @@ function ProjectCard({ icon, title, href, desc, tags, note, date }: {
       {/* Description */}
       <div className="mt-4 space-y-1.5 relative z-10 flex-1">
 
-        {/* First sentence — always visible */}
+        {/* First sentence – always visible */}
         {sentences.length > 0 && (
           <div className="flex items-start gap-2 text-[12px] sm:text-[13px] leading-relaxed" style={{ color: hovered ? '#94a3b8' : '#64748b', transition: 'color 0.2s' }}>
             <span className="mt-2 w-1 h-1 rounded-full flex-shrink-0" style={{ background: '#64ffda' }} />
@@ -633,7 +633,7 @@ function ProjectCard({ icon, title, href, desc, tags, note, date }: {
           </div>
         )}
 
-        {/* Remaining sentences — slide in on hover */}
+        {/* Remaining sentences – slide in on hover */}
         <AnimatePresence>
           {hovered && (
             <motion.div
@@ -669,7 +669,7 @@ function ProjectCard({ icon, title, href, desc, tags, note, date }: {
         </AnimatePresence>
       </div>
 
-      {/* Tags — always visible */}
+      {/* Tags – always visible */}
       <div className="flex flex-wrap gap-1.5 mt-auto pt-4 relative z-10">
         {tags.map(t => (
           <span key={t} className="text-[10px] px-2.5 py-0.5 rounded-full font-medium tracking-wide"
@@ -806,7 +806,7 @@ const techStack: { category: string; icon: string; items: { name: string }[] }[]
   {
     category: 'Programming Languages', icon: '</>',
     items: [
-      { name: 'Python' }, { name: 'Java' }, { name: 'JavaScript' }, { name: 'Go' }, { name: 'C' }, { name: 'SQL' },
+      { name: 'Python' }, { name: 'Java' }, { name: 'JavaScript' }, { name: 'TypeScript' }, { name: 'Go' }, { name: 'C' }, { name: 'SQL' },
     ],
   },
   {
@@ -825,7 +825,7 @@ const techStack: { category: string; icon: string; items: { name: string }[] }[]
       { name: 'Django' }, { name: 'DRF' }, { name: 'REST API' }, { name: 'Apache Kafka' },
       { name: 'Event-Driven Architecture' }, { name: 'Microservices' }, { name: 'Distributed Systems' },
       { name: 'Transactional Outbox' }, { name: 'Idempotency' }, { name: 'ACID Transactions' },
-      { name: 'WebSockets' }, { name: 'Redis Pub/Sub' }, { name: 'WebRTC' }, { name: 'JSON Web Tokens' },
+      { name: 'WebSockets' }, { name: 'JSON Schema' }, { name: 'WebRTC' }, { name: 'JSON Web Tokens' },
       { name: 'ETL Pipelines' }, { name: 'Web Scraping' }, { name: 'Operating Systems' }, { name: 'Kernel Development' },
       { name: 'Static Analysis' },
     ],
@@ -979,7 +979,7 @@ function CopyableRow({ icon, iconColor, value, displayValue }: {
       setCopied(true);
       setTimeout(() => setCopied(false), 1600);
     } catch {
-      // clipboard API unavailable — fail silently
+      // clipboard API unavailable – fail silently
     }
   };
 
@@ -1227,16 +1227,16 @@ export default function Home() {
 
                   {/* About */}
                   <section id="about" className="scroll-mt-24">
-                    <SectionHeader whiteText="About" tealText="Me" subtitle="Software Engineer specializing in scalable backends, applied ML, and agentic AI" />
+                    <SectionHeader whiteText="About" tealText="Me" subtitle="I build backend systems, developer tools and AI agents" />
                     <motion.div className="space-y-5 text-[14px] sm:text-[15px] leading-relaxed" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants} style={{ color: '#64748b' }}>
                       <motion.p variants={itemVariants}>
-                I'm a software engineer specializing in backend systems and machine learning. Currently pursuing my <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>MS in Computer Science at the University at Buffalo</strong>, my recent work sits where agents meet real systems: RIPPLE, a bounded agent that predicts which parts of a Python codebase a feature will touch and then checks that prediction against the real Git diff, LedgerFlow, an event-driven payment ledger built to stay correct under duplicate delivery, concurrency, and JVM crashes, and LaunchOps, an onboarding platform whose live-quiz service runs as two Go replicas coordinated through Redis Pub/Sub.
+                I'm a software engineer working on backend systems and AI tools while earning my <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>MS in Computer Science at the University at Buffalo</strong>. I like building things I can test and explain: LedgerFlow keeps payment records balanced through retries and crashes, RIPPLE maps the files a code change could affect and LaunchOps handles employee onboarding with clear roles and checks. My latest project, Triage Incident Agent, reads logs, metrics and runbooks to draft incident reports for human review. I care about what happens when things go wrong, so I test those cases too.
                       </motion.p>
                       <motion.p variants={itemVariants}>
-                        Before New York, I was a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Software Engineer at Thesis Mumbai Tech</strong>, building healthcare platforms that manage 10,000+ patient records, and earlier deployed AWS infrastructure as a Cloud Engineer Intern at Data Maven. I hold an AWS Cloud Practitioner certification, have published research in ML classification, and co-built GoingOnce, a four-agent car-marketplace prototype that won 1st place in the ACV Auctions + Copart challenge at UB's AI for Good Hackathon. Along the way I've also picked up mentoring and leadership experience - interviewing about 20 student candidates, mentoring new hires, and organizing a Git/GitHub workshop for UB's CS department.
+                        Before Buffalo, I was a <strong style={{ color: '#e2e8f0', fontWeight: 500 }}>Software Engineer at Thesis Mumbai Tech</strong>, building healthcare tools for 10,000+ patient records. Earlier, I deployed AWS services at Data Maven. At UB, I helped build HeinOnline's metadata pipeline and co-built GoingOnce with a four-person team, winning 1st place in the ACV Auctions + Copart hackathon challenge. I've also interviewed about 20 student candidates, mentored new hires and organized a Git/GitHub workshop for UB's CS department. I hold an AWS Cloud Practitioner certification and have published research in music genre classification.
                       </motion.p>
                       <motion.p variants={itemVariants}>
-                        When I'm not writing Python or debugging a race condition in a Redis pub/sub layer, you'll usually find me analyzing chess strategies, tinkering with my Linux setup, or keeping up with the latest in Large Language Models!
+                        Away from code, you'll usually find me studying chess strategies, tinkering with my Linux setup or trying out language models. There's always something new I want to figure out!
                       </motion.p>
                       <motion.div variants={itemVariants}>
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-mono" style={{ background: 'rgba(100,255,218,0.06)', border: '1px solid rgba(100,255,218,0.15)', color: '#64ffda' }}>
@@ -1248,42 +1248,42 @@ export default function Home() {
 
                   {/* Experience */}
                   <section id="experience" className="scroll-mt-24">
-                    <SectionHeader whiteText="Professional" tealText="Experience" subtitle="Engineering and infrastructure roles across startups and research" />
+                    <SectionHeader whiteText="Professional" tealText="Experience" subtitle="Healthcare software, data pipelines and cloud services" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ExpCard
-                        period="Jan 2026 — Apr 2026" title="Software Engineer Practicum" company="HeinOnline (University at Buffalo)"
+                        period="Jan 2026 – Apr 2026" title="Software Engineer Practicum" company="HeinOnline (University at Buffalo)"
                         bullets={[
-                          "Engineered a metadata extraction pipeline combining CrossRef API, web scrapers, and OCR/LLM vision (Tesseract, Qwen3-VL 8B, Qwen3.5-35B) to process 28k+ pages of law journals.",
-                          "Merged all three sources with fuzzy matching, cutting manual data entry by ~90% and reaching about 91% extraction accuracy against ground truth over five iterations.",
-                          "Parallelized the pipeline with a CPU-based worker pool that pulls journals from a shared queue, cutting total processing time by over 80%, and added confidence scoring to flag low-confidence fields for human review.",
+                          "Developed a pipeline combining CrossRef API, web scrapers and OCR/LLM vision (Tesseract, Qwen3-VL 8B, Qwen3.5-35B) to extract metadata from 28k+ law journal pages.",
+                          "Combined all three sources with fuzzy matching, cutting manual entry by about 90% and reaching about 91% extraction accuracy over five rounds of testing.",
+                          "Ran journals in parallel through a shared worker queue, cutting processing time by over 80% and flagging uncertain fields for human review.",
                           "Standardized author names by matching them to HeinOnline's 500+ authors in PostgreSQL, even when spelled differently."
                         ]}
                         tags={['Python', 'Tesseract-OCR', 'Qwen', 'CrossRef API', 'Fuzzy Matching', 'Docker', 'PostgreSQL', 'Team of 5']}
                       />
                       <ExpCard
-                        period="Aug 2024 — Aug 2025" title="Software Engineer" company="Thesis Mumbai Tech"
+                        period="Aug 2024 – Aug 2025" title="Software Engineer" company="Thesis Mumbai Tech"
                         bullets={[
-                          "Led a team of 4 to deliver healthcare platform modules: gathered requirements in client meetings, prototyped to validate scope, and broke the finalized work into tasks.",
-                          "Developed Patient Management and Consent modules for 10k+ records, plus a real-time pipeline (WebSocket and Redis) streaming IoT baby-warmer data into PostgreSQL with ~2s live monitoring.",
-                          "Delivered a WebRTC telemedicine feature that let remote doctors review test results with patients and on-site nurses, plus PDF report generation and a color-blindness diagnostic module (95%+ accuracy) with automated reporting.",
-                          "Containerized 3+ production projects with Docker Compose for consistent local, staging, and deployment environments.",
-                          "Built a heartbeat monitoring dashboard for 4 production projects, pinging each site every 5 minutes to track health.",
-                          "Interviewed about 20 student candidates and onboarded the new hires, mentoring them through weekly coding rounds over their first 3 weeks and introducing them to the production projects and tech stack."
+                          "Led technical work with a team of 4: met clients, built prototypes to agree on scope and split the work into tasks.",
+                          "Delivered Patient Management and Consent modules for 10k+ records and streamed baby-warmer readings through WebSockets and Redis into PostgreSQL for live monitoring at about 2-second intervals.",
+                          "Added WebRTC calls so remote doctors could review results with patients and nurses, plus PDF reports and a color-blindness test with 95%+ accuracy.",
+                          "Packaged 3+ production projects with Docker Compose so local, staging and deployment environments used the same setup.",
+                          "Tracked the health of 4 production projects with a heartbeat dashboard that pings each site every 5 minutes.",
+                          "Interviewed about 20 student candidates and helped new hires get started through weekly coding sessions over their first 3 weeks."
                         ]}
                         tags={['Python', 'Django', 'PostgreSQL', 'Redis', 'Docker', 'ReactJS', 'WebRTC', 'WebSockets', 'IoT', 'Agile / Scrum']}
                       />
                       <ExpCard
-                        period="Nov 2023 — May 2024" title="Cloud Engineer Intern" company="Data Maven Pvt Ltd"
+                        period="Nov 2023 – May 2024" title="Cloud Engineer Intern" company="Data Maven Pvt Ltd"
                         bullets={[
                           "Deployed backend services on AWS EC2 and RDS, using VPC networking and security groups to restrict access.",
-                          "Automated cloud resource provisioning, cutting setup time by ~40% and reducing deployment issues."
+                          "Automated cloud setup, cutting setup time by about 40% and reducing deployment issues."
                         ]}
                         tags={['AWS', 'EC2', 'RDS', 'VPC', 'Security Groups', 'Cloud Infrastructure']}
                       />
                       <ExpCard
-                        period="Jun 2023 — Aug 2023" title="Data Engineer Intern" company="Go Digital Technology Consulting"
+                        period="Jun 2023 – Aug 2023" title="Data Engineer Intern" company="Go Digital Technology Consulting"
                         bullets={[
-                          "Developed a Python (Pandas, NumPy) and MySQL ETL workflow to clean and standardize transaction and ledger data and generate automated anomaly reports for the compliance and audit team."
+                          "Created a Python (Pandas, NumPy) and MySQL ETL workflow to clean transaction data and automate anomaly reports for the compliance and audit team."
                         ]}
                         tags={['Python', 'Pandas', 'NumPy', 'MySQL', 'ETL']}
                       />
@@ -1292,69 +1292,76 @@ export default function Home() {
 
                   {/* Projects */}
                   <section id="projects" className="scroll-mt-24">
-                    <SectionHeader whiteText="Featured" tealText="Projects" subtitle="Academic and personal builds showcasing applied engineering" />
+                    <SectionHeader whiteText="Featured" tealText="Projects" subtitle="Projects I built, tested and kept improving" />
                     <motion.div className="grid grid-cols-1 xl:grid-cols-2 gap-4" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
+                      <ProjectCard
+                        date="Nov 2026"
+                        icon="LDG" title="LedgerFlow: Payments Backend & Double-Entry Ledger" href="https://github.com/Jaypath456/ledgerFlow"
+                        desc="Connected two Spring Boot services through Kafka to record payments in a PostgreSQL double-entry ledger. Retries don't post payments twice and account locks protect balances when requests overlap. Passed 84 tests on real PostgreSQL and Kafka; one load-test ramp sustained about 1,200 payments per second on a single laptop."
+                        note="Personal project · Local tests and load measurements"
+                        tags={['Java', 'Spring Boot', 'Kafka', 'PostgreSQL', 'Docker Compose']}
+                      />
+                      <ProjectCard
+                        date="Nov 2026"
+                        icon="OPS" title="LaunchOps: Employee Onboarding Workflows" href="https://github.com/Jaypath456/LaunchOps"
+                        desc="Built an onboarding platform with Django, MongoDB and React, with 20 tasks across HR, IT, managers and employees. Roles, prerequisites and evidence checks control completion while worker retries avoid creating duplicate accounts in simulated services. Passed 126 backend tests and 47 frontend tests; three local crash campaigns kept data checks intact with failed jobs flagged for IT review."
+                        note="Personal project · External services are simulated"
+                        tags={['Django', 'React', 'TypeScript', 'MongoDB', 'Go']}
+                      />
+                      <ProjectCard
+                        date="Nov 2026"
+                        icon="TRI" title="Triage Incident Agent" href="#"
+                        desc="Developed a Python and LangGraph agent that reads incident logs, metrics and runbooks to draft reports for human review. It checks cited evidence IDs, blocks forbidden actions and caps each run at six model attempts and seven tool attempts. It covers four incident types and supports inconclusive reports when the evidence is thin."
+                        note="Capstone project · Synthetic incidents · Drafts need human review"
+                        tags={['Python', 'LangGraph', 'Pydantic', 'Tool Calling', 'pytest']}
+                      />
                       <ProjectCard
                         date="Oct 2026"
                         icon="AGT" title="GoingOnce: Multi-Agent Car Marketplace" href="https://github.com/raunakpandey1/goingonce"
-                        desc="Co-built GoingOnce, a car marketplace prototype where four AI agents handle buying, selling, negotiating and fleet management (LangGraph and Claude). It won 1st place in the ACV Auctions + Copart challenge at UB's AI for Good Hackathon. Claude handles language and photos while search and pricing math run in plain code so results stay repeatable."
+                        desc="Worked with a four-person team on a car marketplace prototype, focusing on negotiation and fleet agents plus the Streamlit and React interfaces. Four agents handle buying, selling, negotiation and fleet planning with human approval before simulated bids or listings. We won 1st place in the ACV Auctions + Copart challenge at UB's AI for Good Hackathon."
                         note="Team of 4 · Hackathon prototype on simulated data"
                         tags={['Python', 'LangGraph', 'Claude API', 'Multi-Agent Systems', 'React']}
                       />
                       <ProjectCard
-                        date="Oct 2026"
-                        icon="LDG" title="LedgerFlow: Event-Driven Payment Ledger" href="https://github.com/Jaypath456/ledgerFlow"
-                        desc="Built a payment ledger (Java, Spring Boot, Kafka and PostgreSQL) that stays correct when messages repeat or requests overlap or the app crashes. It uses safe-to-repeat message handling and double-entry accounting so every payment takes effect exactly once. Passed 58 automated tests and a 27-run crash campaign with 0 violations; in a 200-request race on one account exactly 50 payments succeeded and the balance ended at $0."
-                        note="Personal project · local setup, not production · figures measured locally"
-                        tags={['Java', 'Spring Boot', 'Kafka', 'PostgreSQL', 'Docker Compose']}
-                      />
-                      <ProjectCard
                         date="Aug 2026"
-                        icon="RPL" title="RIPPLE: Agentic Change-Impact Analysis" href="https://github.com/Jaypath456/ripple"
-                        desc="Built RIPPLE, a command-line AI tool that predicts which files and tests a feature will touch in a Python codebase and later checks that guess against the real Git diff. The AI picks what to investigate while plain Python runs 7 analysis tools and checks every piece of evidence it uses. On 30 new tasks from 16 repositories it reached 0.306 precision with 0 unsupported claims accepted."
-                        note="Personal project · Python repositories only · target code is analyzed and never run"
-                        tags={['Python', 'Agentic AI', 'Static Analysis', 'Git', 'pytest']}
+                        icon="RPL" title="RIPPLE: Change-Impact Analysis for Python" href="https://github.com/Jaypath456/ripple"
+                        desc="Created a command-line tool that predicts which Python files and tests a feature could affect, then checks the prediction against a real Git diff. Python runs seven analysis tools and rejects missing or fabricated evidence without executing the target code. The offline suite passes 856 tests; diff checks flag missing tests, unrelated edits and callers left behind after signature changes."
+                        note="Personal project · Python repositories only · 6 optional UI tests skipped"
+                        tags={['Python', 'Static Analysis', 'Git', 'Pydantic', 'pytest']}
                       />
                       <ProjectCard
                         date="Jul 2026"
                         icon="LLM" title="LLM Application Optimization Engine" href="https://github.com/Jaypath456/llm-resume-pipeline"
-                        desc="Built a pipeline that turns a job description into a tailored resume and cover letter and fit assessment using several AI models. Python checks every generated claim against source evidence and rejects any it cannot support. Three parallel workers cut typical runtime by about 73% (11 to 3 minutes) and a 2,500+ test suite keeps it reliable."
+                        desc="Automated resume and cover letter generation from job descriptions, with a separate fit assessment. Python rejects unsupported claims, checks numbers against source evidence and verifies the generated PDF layout. Three AI workers write in parallel, cutting typical runtime by about 73%, backed by 2,500+ automated tests."
                         note="Open source"
-                        tags={['Python', 'LLMs', 'pytest', 'Concurrency', 'Prompt Engineering']}
+                        tags={['Python', 'LLMs', 'pytest', 'Concurrency', 'LaTeX']}
                       />
                       <ProjectCard
                         date="May 2026"
                         icon="⚙️" title="Pintos OS: User Programs" href="#"
-                        desc="Built the user-programs layer of Pintos, a teaching operating system, in C. It handles process startup, argument passing, wait and exit and 13 system calls with locks and memory safety checks. Each process can hold up to 128 open files and the code passed all 80 project tests."
-                        note="Academic project · CSE 521 · course repo is private"
+                        desc="Implemented the user-programs layer of Pintos, a teaching operating system, in C. It handles process startup, arguments, parent-child waiting and 13 system calls with locks and memory checks. Each process supports up to 128 open files and all 80 project tests pass."
+                        note="Academic project · CSE 521 · Course repo is private"
                         tags={['C', 'Kernel', 'Syscalls', 'Synchronization']}
                       />
                       <ProjectCard
                         date="Apr 2026"
                         icon="GNN" title="Fraud Detection with Graph Neural Networks" href="https://github.com/Jaypath456/gnn-fraud-detection"
-                        desc="Built a fraud detection model (GraphSAGE) on the IEEE-CIS dataset of 590k+ transactions by linking transactions that share a card or address or email. It reached 0.9259 AUC-ROC against about 0.858 for a basic MLP baseline using Focal Loss and threshold tuning for the ~27.6:1 class imbalance. On the separate Elliptic dataset it reached about 0.988 AUC."
+                        desc="Trained a GraphSAGE fraud model on 590k+ IEEE-CIS transactions, linking records that share card, address or email details. It reached 0.9259 AUC-ROC against about 0.858 for an MLP baseline, using focal loss and threshold tuning for the roughly 27.6:1 class imbalance. On the separate Elliptic dataset, it reached about 0.988 AUC."
                         note="Academic project"
                         tags={['PyTorch', 'GraphSAGE', 'Graph Neural Networks', 'Python']}
-                      />
-                      <ProjectCard
-                        date="Mar 2026"
-                        icon="OPS" title="LaunchOps: Office Onboarding & Real-Time Learning Platform" href="https://github.com/Jaypath456/LaunchOps"
-                        desc="Built LaunchOps, an office onboarding platform (Django, React and PostgreSQL) with a 20-task checklist shared across HR and IT and manager and employee roles and enforced on the server. It also has a learning track with five lessons and graded quizzes (70% to pass). An optional live-quiz service in Go runs as two copies behind nginx and uses Redis and MongoDB for live answers."
-                        note="Personal project · payroll and identity steps are demo simulations"
-                        tags={['Django', 'React', 'PostgreSQL', 'Go', 'Redis']}
                       />
                     </motion.div>
                   </section>
 
                   {/* Education */}
                   <section id="education" className="scroll-mt-24">
-                    <SectionHeader whiteText="Academic" tealText="Background" subtitle="University training and research specializations" />
+                    <SectionHeader whiteText="Academic" tealText="Background" subtitle="What I studied and built along the way" />
                     <motion.div className="space-y-3" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <EducationCard
                         degree="M.S. Computer Science" school="University at Buffalo, SUNY"
-                        period="Aug 2025 — Dec 2026" gpa="3.85 / 4.0"
+                        period="Aug 2025 – Dec 2026" gpa="3.85 / 4.0"
                         highlights={[
-                          'Focus: Machine Learning, Graph Neural Networks, Agentic AI',
+                          'Capstone: Triage Incident Agent',
                           'Industry project: OCR-LLM metadata pipeline for HeinOnline (practicum)',
                           'Organized Git & GitHub workshop for CS&E dept, Certificate of Appreciation',
                           'Public Safety Aide, University at Buffalo campus',
@@ -1362,7 +1369,7 @@ export default function Home() {
                       />
                       <EducationCard
                         degree="B.E. Information Technology" school="VESIT · Mumbai University, India"
-                        period="Aug 2019 — May 2023"
+                        period="Aug 2019 – May 2023"
                         highlights={[
                           'Capstone: Music Genre Classification, published in IJRAR, Vol. 10, Issue 2',
                           'Achieved 97.68% classification accuracy using CatBoost and KNN',
@@ -1375,7 +1382,7 @@ export default function Home() {
 
                   {/* Technical Stack */}
                   <section id="stack" className="scroll-mt-24">
-                    <SectionHeader whiteText="Technical" tealText="Competencies" subtitle="Languages, frameworks, and tools I bring to the table" />
+                    <SectionHeader whiteText="Technical" tealText="Competencies" subtitle="Languages, frameworks and tools I work with" />
                     <motion.div className="grid grid-cols-1 sm:grid-cols-2 gap-4" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       {techStack.map(t => <TechCard key={t.category} {...t} />)}
                     </motion.div>
@@ -1383,24 +1390,24 @@ export default function Home() {
 
                   {/* Certs, Awards & Publications */}
                   <section id="awards" className="scroll-mt-24">
-                    <SectionHeader whiteText="Certificates, Awards &" tealText="Publications" subtitle="Credentials, recognitions, and published research" />
+                    <SectionHeader whiteText="Certificates, Awards &" tealText="Publications" subtitle="Awards, certifications and published work" />
                     <motion.div className="space-y-2" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <AwardCard
                         year="Oct 2026" title="1st Place, ACV Auctions + Copart Challenge" org="AI for Good Hackathon Design Challenge · University at Buffalo"
                         href="https://github.com/raunakpandey1/goingonce"
-                        desc="Team of four won 1st place in the ACV Auctions + Copart challenge at the AI for Good Hackathon Design Challenge, hosted by UB's Startup and Innovation Collaboratory, for GoingOnce: a four-agent car-marketplace prototype built with LangGraph and Claude on simulated marketplace data."
+                        desc="Our four-person team won 1st place in the ACV Auctions + Copart challenge at UB's AI for Good Hackathon for GoingOnce, a car marketplace prototype built with LangGraph and Claude on simulated data."
                         tags={['Hackathon', '1st Place', 'Team of 4', 'LangGraph', 'Multi-Agent Systems']}
                       />
                       <AwardCard
                         year="Feb 2026" title="Certificate of Appreciation" org="University at Buffalo"
                         href="https://drive.google.com/file/d/15yVN_8Dbgkt-B_pCi7V1fGcuibhWLiNA/view?usp=sharing"
-                        desc='Recognized as Event Manager for organizing "GitHub: Hands-On from Basics to Advanced" workshop for the Dept. of Computer Science & Engineering. Mentored participants on repository workflows, branching, and collaborative development.'
+                        desc='Recognized for organizing the CS department&#39;s "GitHub: Hands-On from Basics to Advanced" workshop. Helped participants work with repositories, branches and shared code.'
                         tags={['Git', 'GitHub', 'Technical Training', 'Event Management']}
                       />
                       <AwardCard
                         year="Jul 2024" title="AWS Cloud Practitioner" org="Amazon Web Services"
                         href="https://www.credly.com/badges/6a3649a7-3e17-487b-bff4-b27c6b69ff62/public_url"
-                        desc="Certified in core AWS cloud concepts, infrastructure services, security, and pricing models - covering EC2, RDS, VPC, S3, and IAM."
+                        desc="Certified in AWS cloud concepts, services, security and pricing, covering EC2, RDS, VPC, S3 and IAM."
                         tags={['AWS', 'Cloud', 'Certification']}
                       />
                       <AwardCard
@@ -1419,7 +1426,7 @@ export default function Home() {
                       <div className="mb-6"><WorldMap /></div>
                       <div className="text-center max-w-md mx-auto space-y-4 relative z-10 pt-2 font-sans">
                         <p className="text-xs leading-relaxed font-normal" style={{ color: '#64748b' }}>
-                          I'm actively exploring full-time opportunities in backend systems engineering and machine learning. Available for F-1 OPT from February 2027, subject to approval. If you have an interesting problem to solve or simply want to connect, drop me a message!
+                          I'm looking for full-time roles in backend engineering and machine learning. Available for F-1 OPT from February 2027, subject to approval. If you're building something interesting or want to talk about my work, I'd love to hear from you!
                         </p>
                         <div className="grid grid-cols-1 gap-2.5 text-left text-xs font-mono max-w-xs mx-auto pt-2">
                           <CopyableRow icon="✉" iconColor="#2dd4bf" value="jayadmit456@gmail.com" />
