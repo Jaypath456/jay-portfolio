@@ -810,6 +810,12 @@ const techStack: { category: string; icon: string; items: { name: string }[] }[]
     ],
   },
   {
+    category: 'Databases & Data Stores', icon: '🗄️',
+    items: [
+      { name: 'PostgreSQL' }, { name: 'MySQL' }, { name: 'MongoDB' }, { name: 'Redis' },
+    ],
+  },
+  {
     category: 'ML & AI', icon: '🧠',
     items: [
       { name: 'PyTorch' }, { name: 'PyTorch Geometric' }, { name: 'TensorFlow' }, { name: 'scikit-learn' },
@@ -830,12 +836,7 @@ const techStack: { category: string; icon: string; items: { name: string }[] }[]
       { name: 'Static Analysis' },
     ],
   },
-  {
-    category: 'Databases & Data Stores', icon: '🗄️',
-    items: [
-      { name: 'PostgreSQL' }, { name: 'MySQL' }, { name: 'MongoDB' }, { name: 'Redis' },
-    ],
-  },
+
   {
     category: 'Frameworks & UI', icon: '🛠️',
     items: [
