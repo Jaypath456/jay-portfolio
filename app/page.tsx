@@ -1295,14 +1295,14 @@ export default function Home() {
                     <SectionHeader whiteText="Featured" tealText="Projects" subtitle="Projects I built, tested and kept improving" />
                     <motion.div className="grid grid-cols-1 xl:grid-cols-2 gap-4" initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} variants={listVariants}>
                       <ProjectCard
-                        date="Nov 2026"
+                        date="Oct 2026"
                         icon="LDG" title="LedgerFlow: Payments Backend & Double-Entry Ledger" href="https://github.com/Jaypath456/ledgerFlow"
                         desc="Connected two Spring Boot services through Kafka to record payments in a PostgreSQL double-entry ledger. Retries don't post payments twice and account locks protect balances when requests overlap. Passed 84 tests on real PostgreSQL and Kafka; one load-test ramp sustained about 1,200 payments per second on a single laptop."
                         note="Personal project · Local tests and load measurements"
                         tags={['Java', 'Spring Boot', 'Kafka', 'PostgreSQL', 'Docker Compose']}
                       />
                       <ProjectCard
-                        date="Nov 2026"
+                        date="Mar 2026"
                         icon="OPS" title="LaunchOps: Employee Onboarding Workflows" href="https://github.com/Jaypath456/LaunchOps"
                         desc="Built an onboarding platform with Django, MongoDB and React, with 20 tasks across HR, IT, managers and employees. Roles, prerequisites and evidence checks control completion while worker retries avoid creating duplicate accounts in simulated services. Passed 126 backend tests and 47 frontend tests; three local crash campaigns kept data checks intact with failed jobs flagged for IT review."
                         note="Personal project · External services are simulated"
